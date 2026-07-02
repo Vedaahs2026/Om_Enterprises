@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand: #0D47A1;       /* Deep Blue */
+  --color-brand-hover: #1565C0; /* Secondary Blue */
+  --color-brand-light: #F8FAFC; /* Light Background */
+  --color-brand-dark: #212121;  /* Text Charcoal */
+  --color-brand-accent: #FF9800; /* Industrial Amber Accent */
+  --font-inter: var(--font-inter);
+  --font-playfair: var(--font-playfair);
+}
+
+body {
+  @apply bg-brand-light text-brand-dark font-inter antialiased overflow-x-hidden max-w-full;
+}
+
+/* Optional custom classes */
+.btn-primary {
+  @apply bg-brand text-white hover:bg-brand-hover transition-all font-bold rounded-xl py-3.5 px-6 shadow-md border border-transparent hover:border-brand-accent;
+}
+.input-field {
+  @apply w-full bg-white border border-brand/20 rounded-xl py-3 px-4 text-brand placeholder-brand/50 focus:outline-none focus:border-brand-accent focus:ring-1 focus:ring-brand-accent transition-all shadow-sm;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  @apply bg-brand/5 rounded-full;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-brand/20 rounded-full hover:bg-brand/30 transition-colors;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+.no-scrollbar {
+  -ms-overflow-style: none !important;  /* IE and Edge */
+  scrollbar-width: none !important;  /* Firefox */
+}
+
+.sidebar-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(197, 160, 89, 0.2) transparent;
+}
+.sidebar-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+.sidebar-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sidebar-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(197, 160, 89, 0.2);
+  border-radius: 9999px;
+}
+.sidebar-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(197, 160, 89, 0.4);
+}
+
