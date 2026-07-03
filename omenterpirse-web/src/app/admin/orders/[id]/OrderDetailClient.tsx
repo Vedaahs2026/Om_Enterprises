@@ -122,14 +122,14 @@ export default function OrderDetailClient({
       <div className="mb-6">
         <Link 
           href="/admin/orders" 
-          className="inline-flex items-center gap-2 text-xs font-bold text-[#C5A059] hover:text-[#1B3022] uppercase tracking-wider transition-colors mb-4 cursor-pointer"
+          className="inline-flex items-center gap-2 text-xs font-bold text-[#FF9800] hover:text-[#0D47A1] uppercase tracking-wider transition-colors mb-4 cursor-pointer"
         >
           <ArrowLeft size={14} /> Back to Orders List
         </Link>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <div className="flex flex-wrap items-center gap-3">
-              <h1 className="text-3xl font-playfair font-bold text-[#1B3022]">Order #00{order.id}</h1>
+              <h1 className="text-3xl font-playfair font-bold text-[#0D47A1]">Order #00{order.id}</h1>
               <span className={`px-2.5 py-0.5 border text-[9px] font-black uppercase tracking-widest rounded-full ${getStatusBadgeStyle(order.status || "")}`}>
                 {order.status || "Pending"}
               </span>
@@ -153,7 +153,7 @@ export default function OrderDetailClient({
           </div>
           <div className="text-left sm:text-right">
             <span className="block text-[8px] font-black text-brand/30 uppercase tracking-widest mb-0.5">Total Amount</span>
-            <span className="text-2xl font-bold text-[#1B3022] font-sans">₹{order.totalAmount.toLocaleString()}</span>
+            <span className="text-2xl font-bold text-[#0D47A1] font-sans">₹{order.totalAmount.toLocaleString()}</span>
           </div>
         </div>
       </div>
@@ -209,7 +209,7 @@ export default function OrderDetailClient({
         </div>
         <div>
           <p className="text-[8px] font-black text-brand/35 uppercase tracking-wider mb-1">Shipping State</p>
-          <span className="px-2.5 py-1 bg-[#C5A059]/10 text-[#C5A059] font-bold text-xs rounded-lg uppercase tracking-wide">
+          <span className="px-2.5 py-1 bg-[#FF9800]/10 text-[#FF9800] font-bold text-xs rounded-lg uppercase tracking-wide">
             {order.shippingStatus || "PENDING"}
           </span>
         </div>
@@ -223,11 +223,11 @@ export default function OrderDetailClient({
                   href={isManual ? (parsedShippingDetails?.trackingUrl || "#") : `https://www.xpressbees.com/track?awb=${order.awbNumber}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#C5A059] font-bold text-xs hover:underline flex items-center gap-1.5 cursor-pointer"
+                  className="text-[#FF9800] font-bold text-xs hover:underline flex items-center gap-1.5 cursor-pointer"
                   title={isManual ? `Track with ${parsedShippingDetails?.courierName || "courier"}` : "Track with Xpressbees"}
                 >
                   {order.awbNumber}
-                  <span className="text-[8px] px-1 bg-[#C5A059]/10 rounded font-normal uppercase">Track ↗</span>
+                  <span className="text-[8px] px-1 bg-[#FF9800]/10 rounded font-normal uppercase">Track ↗</span>
                 </a>
               );
             })()
@@ -295,14 +295,14 @@ export default function OrderDetailClient({
                 <button
                   type="button"
                   onClick={() => setIsAddressModalOpen(true)}
-                  className="absolute bottom-5 right-5 flex items-center gap-1 px-2 py-1 rounded-lg border border-[#C5A059]/20 bg-[#C5A059]/5 text-[#C5A059] hover:bg-[#C5A059] hover:text-white transition-all duration-200 cursor-pointer shadow-xs font-bold text-[9px] uppercase tracking-wider"
+                  className="absolute bottom-5 right-5 flex items-center gap-1 px-2 py-1 rounded-lg border border-[#FF9800]/20 bg-[#FF9800]/5 text-[#FF9800] hover:bg-[#FF9800] hover:text-white transition-all duration-200 cursor-pointer shadow-xs font-bold text-[9px] uppercase tracking-wider"
                   title="Edit shipping address"
                 >
                   <Pencil size={10} className="shrink-0" />
                   <span>Edit</span>
                 </button>
               )}
-              <MapPin size={18} className="text-[#C5A059] shrink-0 mt-0.5" />
+              <MapPin size={18} className="text-[#FF9800] shrink-0 mt-0.5" />
               <div className="min-w-0 flex-1 pr-6">
                 <p className="text-xs text-brand font-medium leading-relaxed italic break-words">
                   "{order.shippingAddress}"
@@ -338,15 +338,15 @@ export default function OrderDetailClient({
                           </span>
                           <XCircle size={16} className="shrink-0" />
                         </button>
-                        <div className="absolute bottom-full right-0 mb-2 hidden group-hover:block w-48 p-2 bg-[#1B3022] text-white text-[10px] normal-case tracking-normal font-medium rounded-lg shadow-lg z-35 pointer-events-none text-center leading-relaxed">
+                        <div className="absolute bottom-full right-0 mb-2 hidden group-hover:block w-48 p-2 bg-[#0D47A1] text-white text-[10px] normal-case tracking-normal font-medium rounded-lg shadow-lg z-35 pointer-events-none text-center leading-relaxed">
                           {isManual 
                             ? "Cancel this manual shipment. Order will return to Processing state."
                             : "Cancel this Xpressbees shipment. Order will return to Processing state."}
-                          <div className="absolute top-full right-3 w-1.5 h-1.5 bg-[#1B3022] rotate-45 -translate-y-0.5"></div>
+                          <div className="absolute top-full right-3 w-1.5 h-1.5 bg-[#0D47A1] rotate-45 -translate-y-0.5"></div>
                         </div>
                       </div>
                     )}
-                    <FileText size={18} className="text-[#C5A059] shrink-0 mt-0.5" />
+                    <FileText size={18} className="text-[#FF9800] shrink-0 mt-0.5" />
                     <div className="min-w-0 flex-1">
                       {isManual ? (
                         /* Manual Fulfillment UI Grid */

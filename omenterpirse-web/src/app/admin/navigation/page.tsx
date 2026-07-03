@@ -167,7 +167,7 @@ export default function AdminNavigation() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-10 h-10 text-[#C5A059] animate-spin" />
+        <Loader2 className="w-10 h-10 text-[#FF9800] animate-spin" />
       </div>
     );
   }
@@ -182,7 +182,7 @@ export default function AdminNavigation() {
           </div>
           <button 
             onClick={handleAddNew}
-            className="flex items-center space-x-2 bg-[#C5A059] text-white px-6 py-3 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-[#b39150] transition-all shadow-lg"
+            className="flex items-center space-x-2 bg-[#FF9800] text-white px-6 py-3 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-[#F57C00] transition-all shadow-lg"
           >
             <Plus size={16} />
             <span>Add New Link</span>
@@ -217,7 +217,7 @@ export default function AdminNavigation() {
                   value={formData.label}
                   onChange={(e) => setFormData({ ...formData, label: e.target.value })}
                   placeholder="e.g. New Arrivals"
-                  className="w-full bg-brand/5 border border-brand/10 rounded-xl py-3 px-4 text-sm font-bold text-brand focus:outline-none focus:border-[#C5A059]/30 focus:ring-4 focus:ring-[#C5A059]/10 transition-all"
+                  className="w-full bg-brand/5 border border-brand/10 rounded-xl py-3 px-4 text-sm font-bold text-brand focus:outline-none focus:border-[#FF9800]/30 focus:ring-4 focus:ring-[#FF9800]/10 transition-all"
                   required
                 />
               </div>
@@ -243,7 +243,7 @@ export default function AdminNavigation() {
                 value={formData.imageUrl}
                 onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
                 placeholder="e.g. https://images.unsplash.com/... or /images/...png"
-                className="w-full bg-brand/5 border border-brand/10 rounded-xl py-3 px-4 text-sm font-bold text-brand focus:outline-none focus:border-[#C5A059]/30 focus:ring-4 focus:ring-[#C5A059]/10 transition-all"
+                className="w-full bg-brand/5 border border-brand/10 rounded-xl py-3 px-4 text-sm font-bold text-brand focus:outline-none focus:border-[#FF9800]/30 focus:ring-4 focus:ring-[#FF9800]/10 transition-all"
               />
             </div>
             <div className="mt-8 flex justify-end space-x-4">
@@ -256,7 +256,7 @@ export default function AdminNavigation() {
               <button 
                 onClick={() => handleSave(editingId === 0 ? null : editingId)}
                 disabled={isSaving || !formData.label.trim()}
-                className="flex items-center space-x-2 bg-[#1B3022] text-[#C5A059] px-8 py-3 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-[#2c4d37] transition-all shadow-lg disabled:opacity-50"
+                className="flex items-center space-x-2 bg-[#0D47A1] text-[#FF9800] px-8 py-3 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-[#1565C0] transition-all shadow-lg disabled:opacity-50"
               >
                 {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save size={16} />}
                 <span>{editingId === 0 ? "Create Link" : "Save Changes"}</span>

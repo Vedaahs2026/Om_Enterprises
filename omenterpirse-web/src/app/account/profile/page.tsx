@@ -63,7 +63,7 @@ export default function ProfilePage() {
   if (isLoading) {
     return (
       <div className="min-h-[80vh] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-[#C5A059] animate-spin" />
+        <Loader2 className="w-8 h-8 text-[#FF9800] animate-spin" />
       </div>
     );
   }
@@ -72,7 +72,7 @@ export default function ProfilePage() {
     <div className="max-w-4xl mx-auto px-4 py-16">
       <div className="mb-10 flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <Link href="/" className="p-2 rounded-full bg-white border border-brand/5 hover:border-[#C5A059]/30 transition-all text-brand">
+          <Link href="/" className="p-2 rounded-full bg-white border border-brand/5 hover:border-[#FF9800]/30 transition-all text-brand">
             <ArrowLeft size={20} />
           </Link>
           <h1 className="text-4xl font-playfair font-bold text-brand">Edit Profile</h1>
@@ -93,7 +93,7 @@ export default function ProfilePage() {
                   type="text"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className="w-full bg-brand-light border border-brand/10 rounded-2xl py-4 pl-12 pr-4 text-brand font-medium focus:outline-none focus:border-[#C5A059] focus:ring-1 focus:ring-[#C5A059] transition-all"
+                  className="w-full bg-brand-light border border-brand/10 rounded-2xl py-4 pl-12 pr-4 text-brand font-medium focus:outline-none focus:border-[#FF9800] focus:ring-1 focus:ring-[#FF9800] transition-all"
                   placeholder="Your full name"
                   required
                 />

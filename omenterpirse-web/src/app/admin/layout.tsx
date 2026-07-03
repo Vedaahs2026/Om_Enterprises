@@ -12,7 +12,6 @@ import {
   Users, 
   LogOut,
   ChevronRight,
-  Sparkles,
   Box,
   BarChart3,
   AlertTriangle,
@@ -28,7 +27,6 @@ const sidebarLinks = [
   { name: "Categories", href: "/admin/categories", icon: Grid },
   { name: "Navbar Settings", href: "/admin/navigation", icon: Map },
   { name: "Orders", href: "/admin/orders", icon: Package },
-  { name: "Home Banners", href: "/admin/home-banners", icon: Sparkles },
   { name: "Customers", href: "/admin/customers", icon: Users },
 ];
 
@@ -64,7 +62,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <span className="font-bold text-xs tracking-wider text-white uppercase block leading-none">
                 OM Enterprises
               </span>
-              <p className="text-[8px] uppercase tracking-[0.2em] text-[#C5A059] font-black mt-1">Admin Panel</p>
+              <p className="text-[8px] uppercase tracking-[0.2em] text-[#FF9800] font-black mt-1">Admin Panel</p>
             </div>
           </Link>
         </div>
@@ -80,12 +78,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 href={link.href}
                 className={`flex items-center justify-between px-3 py-3 rounded-xl transition-all group ${
                   isActive 
-                    ? "bg-[#C5A059] text-[#0D47A1] shadow-lg translate-x-1" 
+                    ? "bg-[#FF9800] text-[#0D47A1] shadow-lg translate-x-1" 
                     : "text-white/60 hover:text-white hover:bg-white/5"
                 }`}
               >
                 <div className="flex items-center space-x-4">
-                  <Icon size={18} className={isActive ? "text-[#0D47A1]" : "text-[#C5A059]/60 group-hover:text-[#C5A059]"} />
+                  <Icon size={18} className={isActive ? "text-[#0D47A1]" : "text-[#FF9800]/60 group-hover:text-[#FF9800]"} />
                   <span className="text-sm font-bold tracking-tight">{link.name}</span>
                 </div>
                 {isActive && <ChevronRight size={14} className="opacity-50" />}
@@ -109,7 +107,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Main Content */}
       <main className="flex-1 ml-60 min-w-0 h-full overflow-hidden flex flex-col">
         {/* Header decoration */}
-        <div className="h-1 bg-gradient-to-r from-transparent via-[#C5A059]/20 to-transparent flex-shrink-0"></div>
+        <div className="h-1 bg-gradient-to-r from-transparent via-[#FF9800]/20 to-transparent flex-shrink-0"></div>
         <div id="admin-scroll-container" className="flex-1 overflow-y-auto custom-scrollbar">
           {children}
         </div>

@@ -47,7 +47,7 @@ export function SortableBannerItem({ item, onEdit, onDelete }: Props) {
         <button 
           {...attributes} 
           {...listeners}
-          className="cursor-grab active:cursor-grabbing p-2 text-brand/20 hover:text-[#C5A059] transition-colors"
+          className="cursor-grab active:cursor-grabbing p-2 text-brand/20 hover:text-[#FF9800] transition-colors"
         >
           <GripVertical size={20} />
         </button>
@@ -77,7 +77,7 @@ export function SortableBannerItem({ item, onEdit, onDelete }: Props) {
             href={item.linkHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2.5 rounded-lg bg-brand/5 text-brand/60 hover:bg-[#C5A059] hover:text-white transition-all"
+            className="p-2.5 rounded-lg bg-brand/5 text-brand/60 hover:bg-[#FF9800] hover:text-white transition-all"
           >
             <ExternalLink size={14} />
           </a>

@@ -271,7 +271,7 @@ export default function Login() {
   if (!mounted) {
     return (
       <div className="h-screen w-full bg-white flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-[#1B3022]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#0D47A1]" />
       </div>
     );
   }
@@ -346,7 +346,7 @@ export default function Login() {
                 <label className="block text-[10px] font-black text-brand/30 uppercase tracking-[0.3em] ml-2">Mobile Number</label>
                 <div className="relative group">
                   <div className="absolute left-5 top-1/2 -translate-y-1/2 flex items-center space-x-3 border-r border-brand/10 pr-4">
-                    <Phone size={16} className="text-[#C5A059]" />
+                    <Phone size={16} className="text-[#FF9800]" />
                     <span className="text-brand font-bold text-base">+91</span>
                   </div>
                   <input 
@@ -354,7 +354,7 @@ export default function Login() {
                     value={phone}
                     onChange={handlePhoneChange}
                     placeholder="9999999999" 
-                    className="w-full bg-brand/5 border-2 border-transparent focus:border-[#C5A059]/30 focus:bg-white focus:shadow-[0_0_40px_rgba(197,160,89,0.1)] rounded-2xl py-5 pl-24 pr-6 text-brand font-bold text-lg tracking-[0.2em] placeholder:text-brand/10 placeholder:tracking-normal transition-all outline-none"
+                    className="w-full bg-brand/5 border-2 border-transparent focus:border-[#FF9800]/30 focus:bg-white focus:shadow-[0_0_40px_rgba(197,160,89,0.1)] rounded-2xl py-5 pl-24 pr-6 text-brand font-bold text-lg tracking-[0.2em] placeholder:text-brand/10 placeholder:tracking-normal transition-all outline-none"
                     required
                   />
                 </div>
@@ -362,7 +362,7 @@ export default function Login() {
               <button 
                 type="submit" 
                 disabled={loading || phone.length !== 10} 
-                className="w-full bg-[#1B3022] text-[#C5A059] font-black uppercase tracking-[0.2em] text-xs py-5 rounded-2xl shadow-xl hover:bg-[#25422f] hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)] disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-[0.98] flex justify-center items-center space-x-3"
+                className="w-full bg-[#0D47A1] text-[#FF9800] font-black uppercase tracking-[0.2em] text-xs py-5 rounded-2xl shadow-xl hover:bg-[#25422f] hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)] disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-[0.98] flex justify-center items-center space-x-3"
               >
                 {loading ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
@@ -380,7 +380,7 @@ export default function Login() {
                 <label className="block text-[10px] font-black text-brand/30 uppercase tracking-[0.3em] ml-2">Verification Code</label>
                 <div className="relative">
                   <div className="absolute left-6 top-1/2 -translate-y-1/2">
-                    <ShieldCheck className="text-[#C5A059]" size={20} />
+                    <ShieldCheck className="text-[#FF9800]" size={20} />
                   </div>
                   <input 
                     type="text" 
@@ -388,17 +388,17 @@ export default function Login() {
                     value={otp}
                     onChange={handleOtpChange}
                     placeholder="------" 
-                    className="w-full bg-brand/5 border-2 border-transparent focus:border-[#C5A059]/30 focus:bg-white focus:shadow-[0_0_40px_rgba(197,160,89,0.1)] rounded-2xl py-6 px-12 text-brand font-mono font-bold text-center text-4xl tracking-[0.4em] placeholder:text-brand/10 transition-all outline-none"
+                    className="w-full bg-brand/5 border-2 border-transparent focus:border-[#FF9800]/30 focus:bg-white focus:shadow-[0_0_40px_rgba(197,160,89,0.1)] rounded-2xl py-6 px-12 text-brand font-mono font-bold text-center text-4xl tracking-[0.4em] placeholder:text-brand/10 transition-all outline-none"
                     required
                   />
                 </div>
                 <div className="flex justify-between mt-6 px-2">
-                  <button type="button" onClick={() => setStep("phone")} className="text-[10px] text-brand/40 hover:text-[#C5A059] font-black uppercase tracking-widest transition-all">Change Number</button>
+                  <button type="button" onClick={() => setStep("phone")} className="text-[10px] text-brand/40 hover:text-[#FF9800] font-black uppercase tracking-widest transition-all">Change Number</button>
                   <button 
                     type="button" 
                     onClick={handleSendOTP}
                     disabled={timer > 0 || loading}
-                    className={`text-[10px] font-black uppercase tracking-widest transition-all ${timer > 0 ? "text-brand/20 cursor-not-allowed" : "text-[#C5A059] hover:underline"}`}
+                    className={`text-[10px] font-black uppercase tracking-widest transition-all ${timer > 0 ? "text-brand/20 cursor-not-allowed" : "text-[#FF9800] hover:underline"}`}
                   >
                     {timer > 0 ? `Resend in ${timer}s` : "Resend Code"}
                   </button>
@@ -407,7 +407,7 @@ export default function Login() {
               <button 
                 type="submit" 
                 disabled={loading || otp.length !== 6} 
-                className="w-full bg-[#1B3022] text-[#C5A059] font-black uppercase tracking-[0.2em] text-xs py-5 rounded-2xl shadow-xl hover:bg-[#25422f] hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)] disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-[0.98] flex justify-center items-center space-x-3"
+                className="w-full bg-[#0D47A1] text-[#FF9800] font-black uppercase tracking-[0.2em] text-xs py-5 rounded-2xl shadow-xl hover:bg-[#25422f] hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)] disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-[0.98] flex justify-center items-center space-x-3"
               >
                 {loading ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
@@ -425,14 +425,14 @@ export default function Login() {
                 <label className="block text-[10px] font-black text-brand/30 uppercase tracking-[0.3em] ml-2">Full Name</label>
                 <div className="relative">
                   <div className="absolute left-6 top-1/2 -translate-y-1/2">
-                    <User className="text-[#C5A059]" size={20} />
+                    <User className="text-[#FF9800]" size={20} />
                   </div>
                   <input 
                     type="text" 
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     placeholder="John Doe" 
-                    className="w-full bg-brand/5 border-2 border-transparent focus:border-[#C5A059]/30 focus:bg-white focus:shadow-[0_0_40px_rgba(197,160,89,0.1)] rounded-2xl py-5 pl-14 pr-6 text-brand font-bold text-lg transition-all outline-none"
+                    className="w-full bg-brand/5 border-2 border-transparent focus:border-[#FF9800]/30 focus:bg-white focus:shadow-[0_0_40px_rgba(197,160,89,0.1)] rounded-2xl py-5 pl-14 pr-6 text-brand font-bold text-lg transition-all outline-none"
                     required
                   />
                 </div>
@@ -440,7 +440,7 @@ export default function Login() {
               <button 
                 type="submit" 
                 disabled={loading || !fullName.trim()} 
-                className="w-full bg-[#1B3022] text-[#C5A059] font-black uppercase tracking-[0.2em] text-xs py-5 rounded-2xl shadow-xl hover:bg-[#25422f] hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)] disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-[0.98] flex justify-center items-center space-x-3"
+                className="w-full bg-[#0D47A1] text-[#FF9800] font-black uppercase tracking-[0.2em] text-xs py-5 rounded-2xl shadow-xl hover:bg-[#25422f] hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)] disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-[0.98] flex justify-center items-center space-x-3"
               >
                 {loading ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
@@ -454,7 +454,7 @@ export default function Login() {
 
         <div className="mt-16 text-center">
           <p className="text-[10px] text-brand/30 max-w-xs leading-relaxed uppercase tracking-[0.2em] font-black">
-            Secure login powered by Om Enterprises. By continuing, you agree to our <a href="#" className="text-brand/60 hover:text-brand underline decoration-[#C5A059]/30 underline-offset-4 transition-all">Terms</a> & <a href="#" className="text-brand/60 hover:text-brand underline decoration-[#C5A059]/30 underline-offset-4 transition-all">Privacy</a>.
+            Secure login powered by Om Enterprises. By continuing, you agree to our <a href="#" className="text-brand/60 hover:text-brand underline decoration-[#FF9800]/30 underline-offset-4 transition-all">Terms</a> & <a href="#" className="text-brand/60 hover:text-brand underline decoration-[#FF9800]/30 underline-offset-4 transition-all">Privacy</a>.
           </p>
         </div>
       </div>

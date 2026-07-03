@@ -572,7 +572,7 @@ export default function ShippingDimensionsModal({
                         onClick={() => setSelectedCourier(courier.id)}
                         className={`p-4 rounded-2xl border-2 cursor-pointer transition-all flex items-start justify-between ${
                           isSelected
-                            ? "border-[#1B3022] bg-[#1B3022]/[0.03] shadow-xs"
+                            ? "border-[#0D47A1] bg-[#0D47A1]/[0.03] shadow-xs"
                             : "border-brand/5 hover:border-brand/20 hover:bg-brand/[0.01]"
                         }`}
                       >

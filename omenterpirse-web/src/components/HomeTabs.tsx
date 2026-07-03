@@ -53,7 +53,7 @@ export default function HomeTabs({ tabs }: Props) {
                 </div>
 
                 {/* Bottom Banner Section */}
-                <div className="bg-[#1B3022] py-4 px-4 flex items-center justify-center h-[80px]">
+                <div className="bg-[#0D47A1] py-4 px-4 flex items-center justify-center h-[80px]">
                   <h3 className="text-sm md:text-base font-bold text-white tracking-wider uppercase text-center transform transition-transform duration-500 group-hover:scale-102">
                     {tab.title}
                   </h3>

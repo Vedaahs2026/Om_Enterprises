@@ -58,15 +58,15 @@ function SortableSectionItem({
     <div 
       ref={setNodeRef} 
       style={style} 
-      className="bg-white border border-brand/10 rounded-2xl p-6 mb-4 shadow-sm group hover:border-[#C5A059]/30 transition-all"
+      className="bg-white border border-brand/10 rounded-2xl p-6 mb-4 shadow-sm group hover:border-[#FF9800]/30 transition-all"
     >
       <div className="flex items-center justify-between mb-4 pb-4 border-b border-brand/5">
         <div className="flex items-center space-x-4">
-          <button {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing text-brand/20 hover:text-[#C5A059]">
+          <button {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing text-brand/20 hover:text-[#FF9800]">
             <GripVertical size={20} />
           </button>
           <div className="flex items-center space-x-2">
-            <div className="bg-[#C5A059]/10 p-2 rounded-lg text-[#C5A059]">
+            <div className="bg-[#FF9800]/10 p-2 rounded-lg text-[#FF9800]">
               <Settings2 size={16} />
             </div>
             <input 
@@ -94,7 +94,7 @@ function SortableSectionItem({
             value={section.productIds}
             onChange={(e) => onUpdate(section.id, { productIds: e.target.value })}
             placeholder="e.g. 1, 2, 3 (Comma separated product IDs)"
-            className="w-full bg-brand/5 border border-transparent focus:border-[#C5A059]/30 rounded-xl px-4 py-3 text-xs font-bold text-brand outline-none transition-all"
+            className="w-full bg-brand/5 border border-transparent focus:border-[#FF9800]/30 rounded-xl px-4 py-3 text-xs font-bold text-brand outline-none transition-all"
           />
         </div>
       </div>
@@ -190,16 +190,16 @@ export default function PageSectionEditor({ menuItem, onClose }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#1B3022]/80 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0D47A1]/80 backdrop-blur-sm p-4">
       <div className="bg-brand-light w-full max-w-3xl h-[85vh] rounded-[2.5rem] shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200">
         <div className="p-8 bg-white border-b border-brand/5 flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <div className="bg-[#1B3022] p-3 rounded-2xl text-[#C5A059] shadow-lg">
+            <div className="bg-[#0D47A1] p-3 rounded-2xl text-[#FF9800] shadow-lg">
               <Plus size={20} />
             </div>
             <div>
               <h2 className="text-2xl font-playfair font-bold text-brand">Page Designer</h2>
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#C5A059]">{menuItem.label} Context</p>
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#FF9800]">{menuItem.label} Context</p>
             </div>
           </div>
           <button onClick={onClose} className="p-2 text-brand/20 hover:text-brand transition-colors">
@@ -210,7 +210,7 @@ export default function PageSectionEditor({ menuItem, onClose }: Props) {
         <div className="flex-1 overflow-y-auto p-8 bg-brand-light/50">
           {isLoading ? (
             <div className="flex items-center justify-center h-full">
-              <Loader2 className="w-8 h-8 text-[#C5A059] animate-spin" />
+              <Loader2 className="w-8 h-8 text-[#FF9800] animate-spin" />
             </div>
           ) : (
             <>
@@ -252,7 +252,7 @@ export default function PageSectionEditor({ menuItem, onClose }: Props) {
           <button 
             onClick={handleSaveAll}
             disabled={isSaving}
-            className="flex items-center space-x-3 bg-[#C5A059] text-white px-10 py-4 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-[#b39150] transition-all shadow-xl disabled:opacity-50"
+            className="flex items-center space-x-3 bg-[#FF9800] text-white px-10 py-4 rounded-2xl font-bold uppercase tracking-widest text-xs hover:bg-[#F57C00] transition-all shadow-xl disabled:opacity-50"
           >
             {isSaving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
             <span>Save Designer</span>

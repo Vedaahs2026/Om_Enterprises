@@ -314,7 +314,7 @@ export default function CartPage() {
   if (!isHydrated) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-[#C5A059] animate-spin" />
+        <Loader2 className="w-8 h-8 text-[#FF9800] animate-spin" />
       </div>
     );
   }
@@ -436,7 +436,7 @@ export default function CartPage() {
                 key={item.id} 
                 className={`group rounded-3xl p-4 flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-500 border ${
                   isBespoke 
-                    ? 'bg-[#F9F6EE] border-[#C5A059]/40' 
+                    ? 'bg-[#F9F6EE] border-[#FF9800]/40' 
                     : 'bg-white border-brand/40 hover:border-brand/70'
                 }`}
               >
@@ -456,7 +456,7 @@ export default function CartPage() {
                     <div className="flex items-center space-x-2 mb-1">
                       <h3 className="text-base font-bold text-brand leading-tight">{item.name}</h3>
                       {isBespoke && (
-                        <div className="flex items-center space-x-1 px-2 py-0.5 bg-[#C5A059] text-white rounded-full">
+                        <div className="flex items-center space-x-1 px-2 py-0.5 bg-[#FF9800] text-white rounded-full">
                           <Scissors size={10} />
                           <span className="text-[8px] font-black uppercase tracking-widest">Bespoke</span>
                         </div>
@@ -599,13 +599,13 @@ export default function CartPage() {
                             onClick={() => setSelectedAddressIndex(idx)}
                             className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
                               selectedAddressIndex === idx 
-                                ? 'border-[#C5A059] bg-[#C5A059]/5' 
+                                ? 'border-[#FF9800] bg-[#FF9800]/5' 
                                 : 'border-brand/10 hover:border-brand/30'
                             }`}
                           >
                             <div className="flex items-start justify-between gap-3">
                               <p className="text-sm font-medium text-brand whitespace-pre-wrap break-words min-w-0">{addr}</p>
-                              {selectedAddressIndex === idx && <CheckCircle2 size={18} className="text-[#C5A059] flex-shrink-0 mt-1" />}
+                              {selectedAddressIndex === idx && <CheckCircle2 size={18} className="text-[#FF9800] flex-shrink-0 mt-1" />}
                             </div>
                           </div>
                         ))}

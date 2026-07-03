@@ -72,7 +72,7 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
     <div className="fixed inset-0 z-[100] flex flex-col bg-white/95 backdrop-blur-md animate-in fade-in duration-200">
       <div className="flex items-center justify-between px-6 py-4 border-b border-brand/10">
         <form onSubmit={handleSearchSubmit} className="flex-1 max-w-4xl mx-auto flex items-center relative">
-          <button type="submit" aria-label="Submit Search" className="absolute left-4 text-[#C5A059] h-5 w-5 hover:scale-110 transition-transform cursor-pointer flex items-center justify-center bg-transparent border-none">
+          <button type="submit" aria-label="Submit Search" className="absolute left-4 text-[#FF9800] h-5 w-5 hover:scale-110 transition-transform cursor-pointer flex items-center justify-center bg-transparent border-none">
             <Search className="h-5 w-5" />
           </button>
           <input
@@ -90,7 +90,7 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
             </button>
           )}
         </form>
-        <button onClick={onClose} className="p-2 text-brand-dark hover:text-[#C5A059] transition-colors ml-4 bg-brand/5 rounded-full cursor-pointer flex items-center justify-center border-none">
+        <button onClick={onClose} className="p-2 text-brand-dark hover:text-[#FF9800] transition-colors ml-4 bg-brand/5 rounded-full cursor-pointer flex items-center justify-center border-none">
           <X className="h-6 w-6" />
         </button>
       </div>
@@ -99,7 +99,7 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
         <div className="max-w-5xl mx-auto">
           {isLoading && (
             <div className="flex items-center justify-center py-20">
-              <Loader2 className="h-8 w-8 text-[#C5A059] animate-spin" />
+              <Loader2 className="h-8 w-8 text-[#FF9800] animate-spin" />
             </div>
           )}
 
@@ -130,11 +130,11 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
                       <div className="mt-auto">
                         {product.salePrice ? (
                           <div className="flex items-center gap-2">
-                            <span className="text-[#C5A059] font-bold text-sm md:text-base">₹{product.salePrice}</span>
+                            <span className="text-[#FF9800] font-bold text-sm md:text-base">₹{product.salePrice}</span>
                             <span className="text-brand-dark/40 text-xs line-through">₹{product.basePrice}</span>
                           </div>
                         ) : (
-                          <span className="text-[#C5A059] font-bold text-sm md:text-base">₹{product.basePrice}</span>
+                          <span className="text-[#FF9800] font-bold text-sm md:text-base">₹{product.basePrice}</span>
                         )}
                       </div>
                     </div>

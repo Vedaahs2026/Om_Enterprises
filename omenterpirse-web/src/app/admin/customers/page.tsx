@@ -55,13 +55,13 @@ export default function CustomerManagement() {
         </div>
 
         <div className="relative group min-w-[300px]">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-brand/30 group-focus-within:text-[#C5A059] transition-colors" size={18} />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-brand/30 group-focus-within:text-[#FF9800] transition-colors" size={18} />
           <input 
             type="text" 
             placeholder="Search by name or phone..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-white border border-brand/10 rounded-2xl py-4 pl-12 pr-6 text-sm font-bold text-brand focus:outline-none focus:ring-4 focus:ring-[#C5A059]/5 transition-all shadow-sm"
+            className="w-full bg-white border border-brand/10 rounded-2xl py-4 pl-12 pr-6 text-sm font-bold text-brand focus:outline-none focus:ring-4 focus:ring-[#FF9800]/5 transition-all shadow-sm"
           />
         </div>
       </div>
@@ -81,7 +81,7 @@ export default function CustomerManagement() {
               <tr key={customer.id} className="hover:bg-brand/5 transition-all group">
                 <td className="px-8 py-6">
                   <div className="flex items-center space-x-4">
-                    <div className="w-10 h-10 bg-[#C5A059]/10 rounded-xl flex items-center justify-center text-[#C5A059] font-black text-sm">
+                    <div className="w-10 h-10 bg-brand-accent text-white rounded-xl flex items-center justify-center font-black text-sm">
                       {customer.fullName?.charAt(0) || "U"}
                     </div>
                     <div>
@@ -92,13 +92,13 @@ export default function CustomerManagement() {
                 </td>
                 <td className="px-8 py-6">
                   <div className="flex items-center space-x-2 text-brand/60 group-hover:text-brand transition-colors">
-                    <Phone size={14} className="text-[#C5A059]" />
+                    <Phone size={14} className="text-[#FF9800]" />
                     <span className="font-bold text-sm tracking-widest">+91 {customer.phoneNumber}</span>
                   </div>
                 </td>
                 <td className="px-8 py-6">
                   <span className={`inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
-                    customer.role === "admin" ? "bg-[#1B3022] text-[#C5A059]" : "bg-brand/5 text-brand/60"
+                    customer.role === "admin" ? "bg-brand text-white shadow-sm" : "bg-brand/5 text-brand/60"
                   }`}>
                     {customer.role}
                   </span>

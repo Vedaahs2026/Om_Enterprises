@@ -129,13 +129,13 @@ export default function InventoryPage() {
         </div>
 
         <div className="relative group min-w-[350px]">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-brand/30 group-focus-within:text-[#C5A059] transition-colors" size={18} />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-brand/30 group-focus-within:text-[#FF9800] transition-colors" size={18} />
           <input 
             type="text" 
             placeholder="Search products or categories..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-white border border-brand/10 rounded-2xl py-4 pl-12 pr-6 text-sm font-bold text-brand focus:outline-none focus:ring-4 focus:ring-[#C5A059]/5 transition-all shadow-sm"
+            className="w-full bg-white border border-brand/10 rounded-2xl py-4 pl-12 pr-6 text-sm font-bold text-brand focus:outline-none focus:ring-4 focus:ring-[#FF9800]/5 transition-all shadow-sm"
           />
         </div>
       </div>
@@ -194,7 +194,7 @@ export default function InventoryPage() {
                     <div className="flex-1 min-w-0">
                       <h3 className="text-lg font-bold text-brand truncate mb-1">{product.name}</h3>
                       <div className="flex items-center space-x-2">
-                        <span className="text-[10px] font-black text-[#C5A059] uppercase tracking-widest">₹{product.basePrice.toLocaleString()}</span>
+                        <span className="text-[10px] font-black text-[#FF9800] uppercase tracking-widest">₹{product.basePrice.toLocaleString()}</span>
                         <span className="text-brand/10">|</span>
                         <span className="text-[10px] font-bold text-brand/40 uppercase tracking-widest truncate">{product.category}</span>
                       </div>
@@ -232,7 +232,7 @@ export default function InventoryPage() {
                   {product.variations && product.variations.length > 0 && (
                     <div className="mt-6 pt-6 border-t border-brand/5">
                       <p className="text-[10px] font-black text-brand uppercase tracking-widest mb-4 flex items-center gap-2">
-                        <Box size={12} className="text-[#C5A059]" />
+                        <Box size={12} className="text-[#FF9800]" />
                         Variations Stock
                       </p>
                       <div className="space-y-3">
@@ -314,7 +314,7 @@ export default function InventoryPage() {
                           }}
                           className={`w-10 h-10 flex-shrink-0 rounded-full flex items-center justify-center text-xs font-black transition-all ${
                             currentPage === page 
-                              ? 'bg-brand text-[#C5A059] shadow-md scale-110' 
+                              ? 'bg-brand text-[#FF9800] shadow-md scale-110' 
                               : 'text-brand/50 hover:bg-brand/5 hover:text-brand border border-transparent'
                           }`}
                         >

@@ -74,7 +74,7 @@ export default function DowngradeConfirmationModal({
 
           <div className="space-y-4">
             <p className="text-brand text-sm font-medium leading-relaxed">
-              You are about to move this order backwards from <span className="font-bold text-rose-700 bg-rose-50 px-2 py-0.5 rounded">{currentStatus}</span> to <span className="font-bold text-[#C5A059] bg-[#C5A059]/10 px-2 py-0.5 rounded">{targetStatus}</span>.
+              You are about to move this order backwards from <span className="font-bold text-rose-700 bg-rose-50 px-2 py-0.5 rounded">{currentStatus}</span> to <span className="font-bold text-[#FF9800] bg-[#FF9800]/10 px-2 py-0.5 rounded">{targetStatus}</span>.
             </p>
             
             <p className="text-brand/60 text-xs leading-relaxed">

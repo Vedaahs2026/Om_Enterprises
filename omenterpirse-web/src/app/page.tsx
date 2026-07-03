@@ -3,8 +3,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { Sparkles, ChevronDown, ShieldCheck, CheckCircle, Tag, Truck, Wrench, Users, Factory, Building2, Home as HomeIcon, Hammer, HardHat, PhoneCall, Mail, MapPin, ExternalLink, Zap } from "lucide-react";
 import ProductGrid from "@/components/ProductGrid";
-import BannerCarousel from "@/components/BannerCarousel";
 import HomeTabs from "@/components/HomeTabs";
+import BrandMarquee from "@/components/BrandMarquee";
 import { db } from "@/db";
 import { products, productVariations, pageSections, homeCategoryBanners, homeTabs, navigationMenu, categories } from "@/db/schema";
 import { eq, sql, inArray } from "drizzle-orm";
@@ -71,18 +71,6 @@ async function getHomeSections() {
   }
 }
 
-async function getHomeBanners() {
-  try {
-    return await db.select()
-      .from(homeCategoryBanners)
-      .where(eq(homeCategoryBanners.isActive, true))
-      .orderBy(homeCategoryBanners.displayOrder);
-  } catch (error) {
-    console.error("Error fetching banners:", error);
-    return [];
-  }
-}
-
 const categoryImages: Record<string, string> = {
   "/category/wires": "/images/wires_category.png",
   "/category/cables": "/images/cables_category.png",
@@ -119,7 +107,6 @@ async function getHomeTabs() {
 export default async function Home() {
   const featuredProducts = await getFeaturedProducts();
   const homeSections = await getHomeSections();
-  const banners = await getHomeBanners();
   const tabs = await getHomeTabs();
 
   return (
@@ -132,13 +119,6 @@ export default async function Home() {
           className="w-full h-auto"
         />
       </div>
-
-      {/* Banner Carousel */}
-      {banners.length > 0 && (
-        <div className="w-full pb-8">
-          <BannerCarousel banners={banners} />
-        </div>
-      )}
 
       <main id="featured-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 space-y-24 pt-8">
         {/* Home Tabs */}
@@ -161,18 +141,12 @@ export default async function Home() {
         ))}
 
         {/* Trusted Brands Section */}
-        <section className="py-12 border-t border-b border-gray-100">
+        <section className="py-12 border-t border-b border-gray-100 overflow-hidden">
           <div className="text-center mb-10">
             <span className="text-[10px] font-black text-brand uppercase tracking-[0.3em]">Authorized Dealer</span>
             <h2 className="text-3xl font-bold mt-2 text-brand-dark">Brands We Partner With</h2>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 items-center justify-items-center opacity-85">
-            {["Polycab", "Finolex", "KEI", "RR Kabel", "Legrand", "Anchor", "Havells", "Schneider Electric", "ABB", "Siemens", "Philips", "Surya", "Crompton", "Orient", "Usha"].map((brand, index) => (
-              <div key={index} className="px-4 py-3 bg-white rounded-xl border border-gray-100 shadow-sm font-bold text-gray-500 hover:text-brand hover:border-brand/30 hover:scale-105 transition-all text-center w-full text-xs tracking-wider">
-                {brand}
-              </div>
-            ))}
-          </div>
+          <BrandMarquee />
         </section>
 
         {/* Why Choose OM Enterprises */}
@@ -298,7 +272,7 @@ export default async function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full bg-[#0D1B2A] py-20 px-8 text-white/60 font-inter">
+      <footer className="w-full bg-brand py-20 px-8 text-white/60 font-inter">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
           <div className="col-span-1 md:col-span-2 space-y-6">
             <Link href="/" className="flex items-center space-x-2 transition-transform hover:scale-105 duration-300">

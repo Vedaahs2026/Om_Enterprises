@@ -102,22 +102,22 @@ function SortableSectionItem({
     <div 
       ref={setNodeRef} 
       style={style} 
-      className={`bg-white border ${isDragging ? 'border-[#C5A059] shadow-2xl' : 'border-brand/10'} rounded-2xl p-6 mb-4 shadow-sm group hover:border-[#C5A059]/30 transition-all`}
+      className={`bg-white border ${isDragging ? 'border-[#FF9800] shadow-2xl' : 'border-brand/10'} rounded-2xl p-6 mb-4 shadow-sm group hover:border-[#FF9800]/30 transition-all`}
     >
       <div className="flex items-center justify-between mb-4 pb-4 border-b border-brand/5">
         <div className="flex items-center space-x-4">
-          <button {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing text-brand/20 hover:text-[#C5A059] transition-colors p-1">
+          <button {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing text-brand/20 hover:text-[#FF9800] transition-colors p-1">
             <GripVertical size={20} />
           </button>
           <div className="flex items-center space-x-3">
-            <div className="bg-[#C5A059]/10 p-2 rounded-lg text-[#C5A059]">
+            <div className="bg-[#FF9800]/10 p-2 rounded-lg text-[#FF9800]">
               <Settings2 size={16} />
             </div>
             <input 
               type="text" 
               value={section.title}
               onChange={(e) => onUpdate(section.id, { title: e.target.value })}
-              className="text-lg font-playfair font-bold text-brand bg-transparent focus:outline-none focus:border-b border-[#C5A059] transition-all"
+              className="text-lg font-playfair font-bold text-brand bg-transparent focus:outline-none focus:border-b border-[#FF9800] transition-all"
               placeholder="Section Title (e.g. New Arrivals)"
             />
           </div>
@@ -139,7 +139,7 @@ function SortableSectionItem({
             {selectedProducts.map((product) => (
               <div 
                 key={product.id}
-                className="flex items-center space-x-2 bg-brand/5 border border-brand/10 rounded-xl pl-2 pr-3 py-2 group/pill hover:border-[#C5A059]/30 transition-all"
+                className="flex items-center space-x-2 bg-brand/5 border border-brand/10 rounded-xl pl-2 pr-3 py-2 group/pill hover:border-[#FF9800]/30 transition-all"
               >
                 <div className="w-6 h-6 rounded-lg overflow-hidden bg-white border border-brand/5">
                   <img 
@@ -165,7 +165,7 @@ function SortableSectionItem({
             
             <button 
               onClick={() => setIsModalOpen(true)}
-              className="flex items-center space-x-2 bg-[#1B3022] text-white px-4 py-2 rounded-xl font-bold uppercase tracking-widest text-[10px] hover:bg-[#2c4d37] transition-all shadow-sm"
+              className="flex items-center space-x-2 bg-[#0D47A1] text-white px-4 py-2 rounded-xl font-bold uppercase tracking-widest text-[10px] hover:bg-[#1565C0] transition-all shadow-sm"
             >
               <Plus size={14} />
               <span>Add Products</span>
@@ -328,7 +328,7 @@ export default function DesignWorkspace() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-10 h-10 text-[#C5A059] animate-spin" />
+        <Loader2 className="w-10 h-10 text-[#FF9800] animate-spin" />
       </div>
     );
   }
@@ -347,7 +347,7 @@ export default function DesignWorkspace() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
             <div className="flex items-center space-x-3 mb-2">
-              <Layout className="text-[#C5A059]" size={24} />
+              <Layout className="text-[#FF9800]" size={24} />
               <h1 className="text-3xl font-playfair font-bold text-brand">Designing Page: {menuItem?.label}</h1>
             </div>
             <p className="text-brand/60 font-medium">Manage and reorder the product carousels displayed on this page.</p>
@@ -365,7 +365,7 @@ export default function DesignWorkspace() {
             <button 
               onClick={handleSaveAll}
               disabled={isSaving}
-              className="flex items-center space-x-2 bg-[#C5A059] text-white px-8 py-3 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-[#b39150] transition-all shadow-lg disabled:opacity-50"
+              className="flex items-center space-x-2 bg-[#FF9800] text-white px-8 py-3 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-[#F57C00] transition-all shadow-lg disabled:opacity-50"
             >
               {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save size={16} />}
               <span>Save Changes</span>
@@ -411,7 +411,7 @@ export default function DesignWorkspace() {
             <button 
               onClick={handleAddSection}
               disabled={isAddingSection}
-              className="mt-4 text-[#C5A059] font-bold text-sm hover:underline disabled:opacity-50 flex items-center justify-center mx-auto space-x-2"
+              className="mt-4 text-[#FF9800] font-bold text-sm hover:underline disabled:opacity-50 flex items-center justify-center mx-auto space-x-2"
             >
               {isAddingSection && <Loader2 size={14} className="animate-spin" />}
               <span>{isAddingSection ? "Adding..." : "Add your first carousel"}</span>

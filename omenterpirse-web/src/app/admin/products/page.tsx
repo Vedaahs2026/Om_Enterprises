@@ -15,7 +15,7 @@ interface Product {
 }
 
 const LABEL = "block text-[10px] font-black text-brand/40 uppercase tracking-[0.2em] mb-3";
-const INPUT = "w-full bg-brand/5 border border-transparent focus:border-[#C5A059]/50 rounded-2xl px-5 py-4 text-sm font-semibold text-brand outline-none transition-all placeholder:text-brand/20";
+const INPUT = "w-full bg-brand/5 border border-transparent focus:border-[#FF9800]/50 rounded-2xl px-5 py-4 text-sm font-semibold text-brand outline-none transition-all placeholder:text-brand/20";
 
 export default function ProductManagement() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -40,6 +40,9 @@ export default function ProductManagement() {
   const [imageInput, setImageInput] = useState("");
   const [images, setImages] = useState<string[]>([]);
   const [customSizeInput, setCustomSizeInput] = useState("");
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [allVariations, setAllVariations] = useState<string[]>([...DEFAULT_SIZES]);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
   // Sizes & Colors → Variations
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
@@ -77,25 +80,20 @@ export default function ProductManagement() {
     );
   }, [products, searchTerm]);
 
-  // When sizes or colors change → regenerate variation matrix
+  // When selectedSizes or allVariations order changes → regenerate variation matrix in correct order
   useEffect(() => {
     if (selectedSizes.length === 0) { 
       if (!editingId) setVariations([]); 
       return; 
     }
-    const sizesToUse = selectedSizes;
-    
     setVariations(prev => {
-      const newVariations = [...prev];
-      sizesToUse.forEach(size => {
-        const exists = newVariations.find(v => v.size === size);
-        if (!exists) {
-          newVariations.push({ size, stock: 0, sku: "", basePrice: 0, salePrice: 0 });
-        }
+      const activeOrdered = allVariations.filter(size => selectedSizes.includes(size));
+      return activeOrdered.map(size => {
+        const existing = prev.find(v => v.size === size);
+        return existing || { size, stock: 0, sku: "", basePrice: 0, salePrice: 0 };
       });
-      return newVariations.filter(v => sizesToUse.includes(v.size));
     });
-  }, [selectedSizes.length]);
+  }, [selectedSizes, allVariations]);
 
 
   const totalStock = useMemo(() => variations.reduce((a, v) => a + (Number(v.stock) || 0), 0), [variations]);
@@ -110,10 +108,53 @@ export default function ProductManagement() {
   };
 
   const addCustomSize = () => {
-    if (customSizeInput.trim() && !selectedSizes.includes(customSizeInput.trim())) {
-      setSelectedSizes(prev => [...prev, customSizeInput.trim()]);
+    const val = customSizeInput.trim();
+    if (val) {
+      setAllVariations(prev => prev.includes(val) ? prev : [...prev, val]);
+      setSelectedSizes(prev => prev.includes(val) ? prev : [...prev, val]);
       setCustomSizeInput("");
     }
+  };
+
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    setDraggedIndex(index);
+    e.dataTransfer.setData("text/plain", "variation:" + index);
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    if (draggedIndex !== null && dragOverIndex !== index) {
+      setDragOverIndex(index);
+    }
+  };
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null);
+    setDragOverIndex(null);
+  };
+
+  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+    e.preventDefault();
+    setDragOverIndex(null);
+    
+    const data = e.dataTransfer.getData("text/plain");
+    let actIndex = draggedIndex;
+    
+    if (data && data.startsWith("variation:")) {
+      actIndex = parseInt(data.replace("variation:", ""), 10);
+    }
+    
+    if (actIndex !== null && actIndex !== dropIndex && !isNaN(actIndex)) {
+      setAllVariations(prev => {
+        const result = [...prev];
+        const [removed] = result.splice(actIndex, 1);
+        result.splice(dropIndex, 0, removed);
+        return result;
+      });
+    }
+    
+    setDraggedIndex(null);
   };
 
   const addSpecification = () => setSpecifications(prev => [...prev, { key: "", value: "" }]);
@@ -127,6 +168,7 @@ export default function ProductManagement() {
     setIsFeatured(false); setTags(""); setImages([]);
     setSelectedSizes([]); setVariations([]); setCustomSizeInput("");
     setSpecifications([]);
+    setAllVariations([...DEFAULT_SIZES]);
   };
 
   const handleEdit = async (id: number) => {
@@ -150,6 +192,10 @@ export default function ProductManagement() {
           const sizes = Array.from(new Set(p.variations.map((v: any) => v.size))).filter(s => s !== "Default") as string[];
           setSelectedSizes(sizes);
           setVariations(p.variations);
+          
+          // Populate allVariations with database order, followed by other default options
+          const remainingDefaults = DEFAULT_SIZES.filter(s => !sizes.includes(s));
+          setAllVariations([...sizes, ...remainingDefaults]);
         }
         
         // Handle specifications
@@ -261,7 +307,7 @@ export default function ProductManagement() {
   return (
     <div className="h-full w-full overflow-hidden">
       {toast && (
-        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 bg-[#1B3022] text-[#C5A059] px-8 py-4 rounded-2xl shadow-2xl flex items-center space-x-3 font-bold text-sm">
+        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 bg-[#0D47A1] text-[#FF9800] px-8 py-4 rounded-2xl shadow-2xl flex items-center space-x-3 font-bold text-sm">
           <Check size={18} /><span>{toast}</span>
         </div>
       )}
@@ -353,8 +399,8 @@ export default function ProductManagement() {
         <div className="flex-[3] h-full overflow-y-auto custom-scrollbar p-4 md:p-6 border-r border-brand/5">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center space-x-3">
-              <div className="p-2 bg-[#C5A059]/10 rounded-xl">
-                {editingId ? <Edit3 className="text-[#C5A059]" size={22} /> : <Plus className="text-[#C5A059]" size={22} />}
+              <div className="p-2 bg-brand-accent/10 rounded-xl">
+                {editingId ? <Edit3 className="text-brand-accent" size={22} /> : <Plus className="text-brand-accent" size={22} />}
               </div>
               <div>
                 <h1 className="text-3xl font-playfair font-bold text-brand">{editingId ? "Edit Product" : "Add New Product"}</h1>
@@ -433,7 +479,7 @@ export default function ProductManagement() {
               <h3 className="text-xs font-black text-brand/30 uppercase tracking-[0.3em] mb-6 flex items-center gap-2"><span className="w-5 h-5 rounded-full bg-brand text-white text-[8px] flex items-center justify-center font-black">3</span> Product Images ({images.length})</h3>
               <div className="flex gap-3 mb-5">
                 <input value={imageInput} onChange={e => setImageInput(e.target.value)} onKeyDown={e => e.key === "Enter" && (e.preventDefault(), addImage())} placeholder="Paste image URL and press Enter or click Add →" className={`${INPUT} flex-1`} />
-                <button type="button" onClick={addImage} className="bg-[#1B3022] text-[#C5A059] px-5 py-2 rounded-2xl font-bold text-xs hover:bg-[#2c4d37] transition-all whitespace-nowrap">Add URL</button>
+                <button type="button" onClick={addImage} className="bg-[#0D47A1] text-[#FF9800] px-5 py-2 rounded-2xl font-bold text-xs hover:bg-[#1565C0] transition-all whitespace-nowrap">Add URL</button>
               </div>
               {images.length > 0 && (
                 <div className="grid grid-cols-4 sm:grid-cols-6 gap-3">
@@ -464,34 +510,66 @@ export default function ProductManagement() {
 
             {/* ── Section 5: Sizes ── */}
             <div>
-              <h3 className="text-xs font-black text-brand/30 uppercase tracking-[0.3em] mb-6 flex items-center gap-2"><span className="w-5 h-5 rounded-full bg-brand text-white text-[8px] flex items-center justify-center font-black">5</span> Available Weights</h3>
-              <div className="flex flex-wrap gap-2 items-center">
-                {DEFAULT_SIZES.map(size => (
-                  <button key={size} type="button" onClick={() => toggleSize(size)}
-                    className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border ${selectedSizes.includes(size) ? "bg-[#1B3022] text-white border-[#1B3022]" : "bg-brand/5 text-brand/50 border-transparent hover:border-brand/20"}`}>
-                    {size}
-                  </button>
-                ))}
-                
-                {selectedSizes.filter(s => !DEFAULT_SIZES.includes(s)).map(size => (
-                  <button key={size} type="button" onClick={() => toggleSize(size)}
-                    className="px-4 py-2 rounded-xl text-xs font-bold transition-all border bg-[#C5A059] text-white border-[#C5A059] flex items-center gap-2">
-                    {size}
-                    <X size={12} />
-                  </button>
-                ))}
+              <h3 className="text-xs font-black text-brand/30 uppercase tracking-[0.3em] mb-6 flex items-center gap-2">
+                <span className="w-5 h-5 rounded-full bg-brand text-white text-[8px] flex items-center justify-center font-black">5</span> 
+                Available Variations
+              </h3>
+              
+              <div className="space-y-4">
+                {/* Unified Variations List (Draggable & Highlighted when selected) */}
+                <div className="flex flex-wrap gap-2 items-center p-5 bg-brand/5 rounded-2xl border border-brand/5">
+                  {allVariations.map((size, index) => {
+                    const isSelected = selectedSizes.includes(size);
+                    return (
+                      <div
+                        key={size}
+                        draggable
+                        onDragStart={(e) => handleDragStart(e, index)}
+                        onDragOver={(e) => handleDragOver(e, index)}
+                        onDragLeave={() => setDragOverIndex(null)}
+                        onDrop={(e) => handleDrop(e, index)}
+                        onDragEnd={handleDragEnd}
+                        onClick={() => {
+                          setSelectedSizes(prev => 
+                            prev.includes(size) ? prev.filter(x => x !== size) : [...prev, size]
+                          );
+                        }}
+                        className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-all border flex items-center gap-2 cursor-grab active:cursor-grabbing hover:opacity-90 select-none ${
+                          draggedIndex === index ? "opacity-40 scale-95" : ""
+                        } ${
+                          dragOverIndex === index 
+                            ? "border-brand-accent bg-brand-accent/10 text-brand scale-105 shadow-md" 
+                            : isSelected
+                              ? "bg-brand text-white border-brand shadow-sm animate-in fade-in zoom-in-95 duration-200"
+                              : "bg-white text-brand/50 border-brand/10 hover:border-brand/30"
+                        }`}
+                      >
+                        <span className="text-current/30 font-black cursor-grab">⋮⋮</span>
+                        <span>{size}</span>
+                        {isSelected && (
+                          <span className="w-1.5 h-1.5 rounded-full bg-brand-accent animate-pulse ml-1" />
+                        )}
+                      </div>
+                    );
+                  })}
 
-                <div className="flex gap-2 ml-2">
-                  <input 
-                    value={customSizeInput} 
-                    onChange={e => setCustomSizeInput(e.target.value)} 
-                    onKeyDown={e => e.key === "Enter" && (e.preventDefault(), addCustomSize())}
-                    placeholder="Add custom (e.g. 90m)" 
-                    className="bg-brand/5 border border-transparent focus:border-[#C5A059]/50 rounded-xl px-4 py-2 text-xs font-semibold text-brand outline-none transition-all placeholder:text-brand/20 w-40" 
-                  />
-                  <button type="button" onClick={addCustomSize} className="bg-brand text-white p-2 rounded-xl hover:bg-brand-hover transition-all">
-                    <Plus size={16} />
-                  </button>
+                  {/* Add Custom Input inline with list */}
+                  <div className="flex gap-2 ml-auto pl-4 border-l border-brand/10">
+                    <input 
+                      value={customSizeInput} 
+                      onChange={e => setCustomSizeInput(e.target.value)} 
+                      onKeyDown={e => e.key === "Enter" && (e.preventDefault(), addCustomSize())}
+                      placeholder="Add custom (e.g. 100mm)" 
+                      className="bg-white border border-brand/10 focus:border-brand-accent/50 rounded-xl px-4 py-2 text-xs font-semibold text-brand outline-none transition-all placeholder:text-brand/20 w-44 shadow-sm" 
+                    />
+                    <button 
+                      type="button" 
+                      onClick={addCustomSize} 
+                      className="bg-brand text-brand-accent p-2 rounded-xl hover:bg-brand-hover transition-all flex items-center justify-center shadow-md cursor-pointer"
+                    >
+                      <Plus size={16} />
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -507,7 +585,7 @@ export default function ProductManagement() {
                   <table className="w-full text-left text-xs">
                     <thead className="bg-brand text-white/60 font-black uppercase tracking-widest">
                       <tr>
-                        <th className="px-5 py-4">Weight</th>
+                        <th className="px-5 py-4">Variation</th>
                         <th className="px-5 py-4">Base Price (₹)</th>
                         <th className="px-5 py-4">Sale (₹)</th>
                         <th className="px-5 py-4">Stock Left</th>
@@ -524,7 +602,7 @@ export default function ProductManagement() {
                               type="number" 
                               value={v.basePrice ?? ""} 
                               onChange={e => updateVariation(v.size, "basePrice", e.target.value === "" ? "" : parseFloat(e.target.value))} 
-                              className="w-20 bg-brand/5 border border-transparent focus:border-[#C5A059]/40 rounded-lg px-3 py-2 text-xs font-bold outline-none" 
+                              className="w-20 bg-brand/5 border border-transparent focus:border-brand-accent/40 rounded-lg px-3 py-2 text-xs font-bold outline-none" 
                               placeholder="1000" 
                             />
                           </td>
@@ -536,21 +614,23 @@ export default function ProductManagement() {
                               className={`w-20 border transition-all rounded-lg px-3 py-2 text-xs font-bold outline-none ${
                                 v.salePrice && v.basePrice && Number(v.salePrice) >= Number(v.basePrice)
                                   ? "bg-red-50 border-red-200 text-red-600 focus:border-red-400" 
-                                  : "bg-brand/5 border-transparent focus:border-[#C5A059]/40 text-green-600"
+                                  : "bg-brand/5 border-transparent focus:border-brand-accent/40 text-green-600"
                               }`} 
                               placeholder="699" 
                             />
                           </td>
                           <td className="px-5 py-3">
-                            <input type="number" value={v.stock ?? ""} onChange={e => updateVariation(v.size, "stock", e.target.value === "" ? "" : parseInt(e.target.value))} className="w-16 bg-brand/5 border border-transparent focus:border-[#C5A059]/40 rounded-lg px-3 py-2 text-xs font-bold outline-none" />
+                            <input type="number" value={v.stock ?? ""} onChange={e => updateVariation(v.size, "stock", e.target.value === "" ? "" : parseInt(e.target.value))} className="w-16 bg-brand/5 border border-transparent focus:border-brand-accent/40 rounded-lg px-3 py-2 text-xs font-bold outline-none" />
                           </td>
                           <td className="px-5 py-3">
-                            <input type="text" value={v.sku ?? ""} onChange={e => updateVariation(v.size, "sku", e.target.value)} placeholder={`SKU-${v.size}`} className="w-full min-w-[80px] bg-brand/5 border border-transparent focus:border-[#C5A059]/40 rounded-lg px-3 py-2 text-xs font-bold outline-none" />
+                            <input type="text" value={v.sku ?? ""} onChange={e => updateVariation(v.size, "sku", e.target.value)} placeholder={`SKU-${v.size}`} className="w-full min-w-[80px] bg-brand/5 border border-transparent focus:border-brand-accent/40 rounded-lg px-3 py-2 text-xs font-bold outline-none" />
                           </td>
                           <td className="px-5 py-3 text-center">
                             <button 
                               type="button" 
-                              onClick={() => setVariations(prev => prev.filter((_, i) => i !== idx))}
+                              onClick={() => {
+                                setSelectedSizes(prev => prev.filter(x => x !== v.size));
+                              }}
                               className="p-2 text-red-400 hover:bg-red-50 hover:text-red-600 rounded-lg transition-all"
                             >
                               <Trash2 size={14} />
@@ -632,7 +712,7 @@ export default function ProductManagement() {
           <div className="flex flex-col space-y-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <Package className="text-[#C5A059]" size={22} />
+                <Package className="text-[#FF9800]" size={22} />
                 <h2 className="text-2xl font-playfair font-bold text-brand">Inventory</h2>
               </div>
               <span className="text-[10px] font-black text-brand/30 uppercase tracking-widest bg-brand/5 px-3 py-1.5 rounded-full">{products.length} total</span>
@@ -640,13 +720,13 @@ export default function ProductManagement() {
 
             {/* Search Bar */}
             <div className="relative group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-brand/20 group-focus-within:text-[#C5A059] transition-colors" size={16} />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-brand/20 group-focus-within:text-[#FF9800] transition-colors" size={16} />
               <input 
                 type="text" 
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search inventory..."
-                className="w-full bg-white border border-brand/5 focus:border-[#C5A059]/30 rounded-2xl py-4 pl-12 pr-4 text-sm font-bold text-brand outline-none transition-all shadow-sm"
+                className="w-full bg-white border border-brand/5 focus:border-[#FF9800]/30 rounded-2xl py-4 pl-12 pr-4 text-sm font-bold text-brand outline-none transition-all shadow-sm"
               />
             </div>
 

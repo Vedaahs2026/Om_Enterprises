@@ -96,7 +96,7 @@ export default function MyOrdersPage() {
   if (loading) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center">
-        <Loader2 className="w-8 h-8 text-[#C5A059] animate-spin mb-4" />
+        <Loader2 className="w-8 h-8 text-[#FF9800] animate-spin mb-4" />
         <p className="text-[10px] font-black text-brand/40 uppercase tracking-[0.2em]">Preparing your harvest details...</p>
       </div>
     );
@@ -180,7 +180,7 @@ export default function MyOrdersPage() {
                       <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest shadow-sm ${
                         order.status?.toLowerCase() === 'delivered' ? 'bg-green-500/20 text-green-300' : 
                         order.status?.toLowerCase() === 'cancelled' ? 'bg-red-500/20 text-red-300' : 
-                        'bg-[#C5A059]/20 text-[#C5A059]'
+                        'bg-[#FF9800]/20 text-[#FF9800]'
                       }`}>
                         {order.status}
                       </span>
@@ -355,7 +355,7 @@ export default function MyOrdersPage() {
                       
                       {/* Address Card */}
                       <div className="flex gap-3 p-5 bg-white rounded-2xl border border-brand/5 shadow-sm mb-4">
-                        <MapPin size={18} className="text-[#C5A059] flex-shrink-0 mt-0.5" />
+                        <MapPin size={18} className="text-[#FF9800] flex-shrink-0 mt-0.5" />
                         <div className="min-w-0 flex-1">
                           <p className="text-xs text-brand font-medium leading-relaxed italic">
                             "{order.shippingAddress || "No address provided"}"
@@ -429,7 +429,7 @@ export default function MyOrdersPage() {
       )}
       {/* Floating Toast Notification */}
       {toastMsg && (
-        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 bg-[#1B3022] text-[#C5A059] px-8 py-4 rounded-2xl shadow-2xl flex items-center space-x-3 font-bold text-xs animate-in fade-in slide-in-from-bottom-5 duration-300 border border-[#C5A059]/20">
+        <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 bg-[#0D47A1] text-[#FF9800] px-8 py-4 rounded-2xl shadow-2xl flex items-center space-x-3 font-bold text-xs animate-in fade-in slide-in-from-bottom-5 duration-300 border border-[#FF9800]/20">
           <CheckCircle2 size={16} />
           <span className="uppercase tracking-widest">{toastMsg}</span>
         </div>

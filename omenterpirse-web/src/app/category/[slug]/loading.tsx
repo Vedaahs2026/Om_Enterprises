@@ -8,7 +8,7 @@ export default function Loading() {
           {/* Main outer ring */}
           <div className="w-16 h-16 border-4 border-brand/10 rounded-full"></div>
           {/* Spinning inner ring */}
-          <div className="w-16 h-16 border-4 border-t-[#C5A059] border-r-[#C5A059] rounded-full animate-spin absolute top-0 left-0"></div>
+          <div className="w-16 h-16 border-4 border-t-[#FF9800] border-r-[#FF9800] rounded-full animate-spin absolute top-0 left-0"></div>
           {/* Pulsing center dot */}
           <div className="w-2 h-2 bg-brand rounded-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-pulse"></div>
         </div>

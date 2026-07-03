@@ -145,7 +145,7 @@ export default function NdrActionModal({
       <div className="relative w-full max-w-lg bg-white rounded-3xl border border-brand/5 shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
         
         {/* Header */}
-        <div className="px-6 py-5 bg-[#1B3022] text-white flex items-center justify-between">
+        <div className="px-6 py-5 bg-[#0D47A1] text-white flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400">
               <AlertTriangle size={20} className="animate-pulse" />
@@ -187,7 +187,7 @@ export default function NdrActionModal({
               <select
                 value={action}
                 onChange={(e) => setAction(e.target.value as any)}
-                className="w-full px-4 py-3 bg-white border border-brand/10 rounded-xl shadow-xs focus:outline-none focus:ring-2 focus:ring-[#C5A059]/10 focus:border-[#C5A059] text-sm text-brand font-bold uppercase tracking-wider cursor-pointer"
+                className="w-full px-4 py-3 bg-white border border-brand/10 rounded-xl shadow-xs focus:outline-none focus:ring-2 focus:ring-[#FF9800]/10 focus:border-[#FF9800] text-sm text-brand font-bold uppercase tracking-wider cursor-pointer"
               >
                 <option value="re-attempt">⚡ Re-Attempt Delivery</option>
                 <option value="update-phone">📞 Update Customer Phone Number</option>
@@ -201,7 +201,7 @@ export default function NdrActionModal({
             {action === "re-attempt" && (
               <div className="animate-in slide-in-from-top-2 duration-200">
                 <label className="block text-[9px] font-black text-brand/40 uppercase tracking-widest mb-2 flex items-center gap-1.5">
-                  <Calendar size={12} className="text-[#C5A059]" /> Preferred Re-attempt Date *
+                  <Calendar size={12} className="text-[#FF9800]" /> Preferred Re-attempt Date *
                 </label>
                 <input
                   type="date"
@@ -209,7 +209,7 @@ export default function NdrActionModal({
                   min={todayStr}
                   value={reAttemptDate}
                   onChange={(e) => setReAttemptDate(e.target.value)}
-                  className="w-full px-4 py-3 bg-white border border-brand/10 rounded-xl shadow-xs focus:outline-none focus:border-[#C5A059] text-xs font-semibold text-brand"
+                  className="w-full px-4 py-3 bg-white border border-brand/10 rounded-xl shadow-xs focus:outline-none focus:border-[#FF9800] text-xs font-semibold text-brand"
                 />
               </div>
             )}
@@ -217,7 +217,7 @@ export default function NdrActionModal({
             {action === "update-phone" && (
               <div className="animate-in slide-in-from-top-2 duration-200">
                 <label className="block text-[9px] font-black text-brand/40 uppercase tracking-widest mb-2 flex items-center gap-1.5">
-                  <Phone size={12} className="text-[#C5A059]" /> New 10-Digit Mobile Number *
+                  <Phone size={12} className="text-[#FF9800]" /> New 10-Digit Mobile Number *
                 </label>
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-bold text-brand/40">+91</span>
@@ -228,7 +228,7 @@ export default function NdrActionModal({
                     placeholder="Enter phone number"
                     value={phone}
                     onChange={handlePhoneChange}
-                    className="w-full pl-12 pr-4 py-3 bg-white border border-brand/10 rounded-xl shadow-xs focus:outline-none focus:border-[#C5A059] text-sm font-bold text-brand font-mono"
+                    className="w-full pl-12 pr-4 py-3 bg-white border border-brand/10 rounded-xl shadow-xs focus:outline-none focus:border-[#FF9800] text-sm font-bold text-brand font-mono"
                   />
                 </div>
                 <p className="text-[10px] text-brand/40 font-medium mt-1">Must be a valid 10-digit Indian mobile number.</p>
@@ -238,7 +238,7 @@ export default function NdrActionModal({
             {action === "update-address" && (
               <div className="animate-in slide-in-from-top-2 duration-200">
                 <label className="block text-[9px] font-black text-brand/40 uppercase tracking-widest mb-2 flex items-center gap-1.5">
-                  <MapPin size={12} className="text-[#C5A059]" /> New Delivery Address *
+                  <MapPin size={12} className="text-[#FF9800]" /> New Delivery Address *
                 </label>
                 <textarea
                   required
@@ -246,7 +246,7 @@ export default function NdrActionModal({
                   placeholder="Enter complete alternate delivery address, including flat/house number, area, city, state, and 6-digit pincode."
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
-                  className="w-full px-4 py-3 bg-white border border-brand/10 rounded-xl shadow-xs focus:outline-none focus:border-[#C5A059] text-xs font-medium text-brand leading-relaxed"
+                  className="w-full px-4 py-3 bg-white border border-brand/10 rounded-xl shadow-xs focus:outline-none focus:border-[#FF9800] text-xs font-medium text-brand leading-relaxed"
                 />
               </div>
             )}
@@ -254,7 +254,7 @@ export default function NdrActionModal({
             {/* General Remarks Textarea (Required for all) */}
             <div>
               <label className="block text-[9px] font-black text-brand/40 uppercase tracking-widest mb-2 flex items-center gap-1.5">
-                <MessageSquare size={12} className="text-[#C5A059]" /> Resolution Remarks / Instructions *
+                <MessageSquare size={12} className="text-[#FF9800]" /> Resolution Remarks / Instructions *
               </label>
               <textarea
                 required
@@ -262,7 +262,7 @@ export default function NdrActionModal({
                 placeholder="Provide instructions to the delivery agent (e.g. 'Customer is available after 5 PM', 'Call before delivery')."
                 value={remarks}
                 onChange={(e) => setRemarks(e.target.value)}
-                className="w-full px-4 py-3 bg-white border border-brand/10 rounded-xl shadow-xs focus:outline-none focus:border-[#C5A059] text-xs font-medium text-brand leading-relaxed"
+                className="w-full px-4 py-3 bg-white border border-brand/10 rounded-xl shadow-xs focus:outline-none focus:border-[#FF9800] text-xs font-medium text-brand leading-relaxed"
               />
             </div>
           </div>
@@ -295,7 +295,7 @@ export default function NdrActionModal({
             <button
               type="submit"
               disabled={loading || success}
-              className="flex-1 py-3 px-4 bg-[#1B3022] hover:bg-brand disabled:bg-brand/30 disabled:cursor-not-allowed text-white rounded-xl font-bold text-xs uppercase tracking-wider shadow-md transition-all cursor-pointer flex items-center justify-center gap-2"
+              className="flex-1 py-3 px-4 bg-[#0D47A1] hover:bg-brand disabled:bg-brand/30 disabled:cursor-not-allowed text-white rounded-xl font-bold text-xs uppercase tracking-wider shadow-md transition-all cursor-pointer flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>

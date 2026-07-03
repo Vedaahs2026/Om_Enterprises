@@ -86,7 +86,7 @@ export default function ReportsPage() {
         {[
           { label: "Revenue", value: `₹${data.current.revenue.toLocaleString()}`, lastValue: `₹${data.lastMonth.revenue.toLocaleString()}`, trend: trends.revenue, icon: TrendingUp, color: "bg-orange-500" },
           { label: "Items Sold", value: data.current.itemsSold, lastValue: data.lastMonth.itemsSold, trend: trends.itemsSold, icon: Package, color: "bg-green-500" },
-          { label: "Orders", value: data.current.orders, lastValue: data.lastMonth.orders, trend: trends.orders, icon: ShoppingBag, color: "bg-[#C5A059]" },
+          { label: "Orders", value: data.current.orders, lastValue: data.lastMonth.orders, trend: trends.orders, icon: ShoppingBag, color: "bg-[#FF9800]" },
           { label: "New Users", value: data.current.users, lastValue: data.lastMonth.users, trend: trends.users, icon: Users, color: "bg-blue-500" },
         ].map((stat) => (
           <div key={stat.label} className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-brand/5 group relative overflow-hidden">
@@ -149,7 +149,7 @@ export default function ReportsPage() {
                     <div className="flex items-center space-x-3">
                       <span className="text-sm font-bold text-brand/60">{month.orders}</span>
                       <div className="w-20 h-1.5 bg-brand/5 rounded-full overflow-hidden">
-                        <div className="h-full bg-[#C5A059] rounded-full" style={{ width: `${Math.min(100, (month.orders / 50) * 100)}%` }} />
+                        <div className="h-full bg-[#FF9800] rounded-full" style={{ width: `${Math.min(100, (month.orders / 50) * 100)}%` }} />
                       </div>
                     </div>
                   </td>

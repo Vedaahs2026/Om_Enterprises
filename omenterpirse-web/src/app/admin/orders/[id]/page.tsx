@@ -53,7 +53,7 @@ export default async function OrderDetailPage({ params }: PageProps) {
           </p>
           <Link
             href="/admin/orders"
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#1B3022] hover:bg-brand text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-xs transition-colors cursor-pointer"
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#0D47A1] hover:bg-brand text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-xs transition-colors cursor-pointer"
           >
             <ArrowLeft size={14} /> Back to Orders
           </Link>

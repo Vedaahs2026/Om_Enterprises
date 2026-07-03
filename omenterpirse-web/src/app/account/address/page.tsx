@@ -52,7 +52,7 @@ export default function AddressPage() {
   if (loading) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center">
-        <Loader2 className="w-8 h-8 text-[#C5A059] animate-spin mb-4" />
+        <Loader2 className="w-8 h-8 text-[#FF9800] animate-spin mb-4" />
         <p className="text-[10px] font-black text-brand/40 uppercase tracking-widest">Loading Addresses...</p>
       </div>
     );
@@ -78,7 +78,7 @@ export default function AddressPage() {
         {addresses.length > 0 ? (
           <div className="flex flex-col h-full flex-1 z-10">
             <div className="flex items-center space-x-3 text-brand/40 mb-6">
-              <MapPin size={18} className="text-[#C5A059]" />
+              <MapPin size={18} className="text-[#FF9800]" />
               <h2 className="text-xs font-black uppercase tracking-[0.2em]">Saved Delivery Addresses</h2>
             </div>
             

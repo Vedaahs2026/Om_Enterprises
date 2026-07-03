@@ -68,8 +68,8 @@ export default function AdminDashboard() {
       label: "Total Orders", 
       value: stats?.totalOrders || 0, 
       icon: ShoppingBag, 
-      color: "bg-[#C5A059]", 
-      bg: "bg-[#C5A059]/10",
+      color: "bg-[#FF9800]", 
+      bg: "bg-[#FF9800]/10",
       trend: "+5% from yesterday"
     },
     { 
@@ -95,7 +95,7 @@ export default function AdminDashboard() {
       <div className="mb-10">
         <h1 className="text-4xl font-playfair font-bold text-brand">Dashboard Overview</h1>
         <p className="mt-2 text-brand/60 font-medium tracking-tight flex items-center">
-          <Sparkles size={16} className="text-[#C5A059] mr-2" />
+          <Sparkles size={16} className="text-brand-accent mr-2" />
           Welcome back to the Om Enterprises management hub.
         </p>
       </div>
@@ -118,7 +118,7 @@ export default function AdminDashboard() {
                 <h3 className="text-[10px] font-black text-brand/30 uppercase tracking-[0.2em] mb-1">{stat.label}</h3>
                 <div className="flex items-baseline space-x-2">
                   <span className="text-4xl font-bold text-brand tracking-tighter font-sans">{stat.value}</span>
-                  <ArrowUpRight size={16} className="text-[#C5A059] opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <ArrowUpRight size={16} className="text-brand-accent opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
               </div>
               <p className="mt-4 text-[9px] font-black text-brand/20 uppercase tracking-[0.15em]">
@@ -150,22 +150,22 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        <div className="bg-[#1B3022] rounded-[2rem] p-8 shadow-2xl relative overflow-hidden group">
-          <div className="absolute -top-20 -right-20 w-64 h-64 bg-[#C5A059]/10 rounded-full blur-3xl group-hover:bg-[#C5A059]/20 transition-colors"></div>
+        <div className="bg-brand rounded-[2rem] p-8 shadow-2xl relative overflow-hidden group">
+          <div className="absolute -top-20 -right-20 w-64 h-64 bg-brand-accent/10 rounded-full blur-3xl group-hover:bg-brand-accent/20 transition-colors"></div>
           <h3 className="text-xl font-playfair font-bold text-white mb-6 relative z-10">Quick Actions</h3>
           <div className="grid grid-cols-2 gap-4 relative z-10">
             <button 
               onClick={() => router.push("/admin/products")}
               className="bg-white/5 hover:bg-white/10 p-4 rounded-2xl transition-all text-left group/btn shadow-lg"
             >
-              <p className="text-[10px] font-black text-[#C5A059] uppercase tracking-widest mb-1 group-hover/btn:translate-x-1 transition-transform">Products</p>
+              <p className="text-[10px] font-black text-brand-accent uppercase tracking-widest mb-1 group-hover/btn:translate-x-1 transition-transform">Products</p>
               <p className="text-sm font-bold text-white">Add New</p>
             </button>
             <button 
               onClick={() => router.push("/admin/navigation")}
               className="bg-white/5 hover:bg-white/10 p-4 rounded-2xl transition-all text-left group/btn shadow-lg"
             >
-              <p className="text-[10px] font-black text-[#C5A059] uppercase tracking-widest mb-1 group-hover/btn:translate-x-1 transition-transform">Menus</p>
+              <p className="text-[10px] font-black text-brand-accent uppercase tracking-widest mb-1 group-hover/btn:translate-x-1 transition-transform">Menus</p>
               <p className="text-sm font-bold text-white">Manage Nav</p>
             </button>
           </div>

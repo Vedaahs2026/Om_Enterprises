@@ -226,7 +226,7 @@ function FulfillmentActionsPanel({
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="w-full flex items-center justify-between pl-4 pr-10 py-3 bg-white border border-brand/10 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[#C5A059]/10 focus:border-[#C5A059] transition-all text-brand text-xs font-bold uppercase tracking-widest cursor-pointer text-left"
+          className="w-full flex items-center justify-between pl-4 pr-10 py-3 bg-white border border-brand/10 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FF9800]/10 focus:border-[#FF9800] transition-all text-brand text-xs font-bold uppercase tracking-widest cursor-pointer text-left"
         >
           <span className="truncate">{selectedActionObj ? selectedActionObj.label : "Select Action"}</span>
           <ChevronDown
@@ -248,14 +248,14 @@ function FulfillmentActionsPanel({
                   setIsOpen(false);
                 }}
                 className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-left text-xs font-bold uppercase tracking-wider transition-colors cursor-pointer hover:bg-brand/[0.03] ${
-                  selectedAction === action.id ? "text-[#C5A059] bg-[#C5A059]/5" : "text-brand"
+                  selectedAction === action.id ? "text-[#FF9800] bg-[#FF9800]/5" : "text-brand"
                 }`}
               >
                 <div className="relative group shrink-0" onClick={(e) => e.stopPropagation()}>
-                  <Info size={14} className="text-brand/40 hover:text-[#C5A059] transition-colors cursor-help" />
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block w-48 p-2.5 bg-[#1B3022] text-white text-[10px] normal-case tracking-normal font-medium rounded-lg shadow-lg z-30 pointer-events-none text-center">
+                  <Info size={14} className="text-brand/40 hover:text-[#FF9800] transition-colors cursor-help" />
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block w-48 p-2.5 bg-[#0D47A1] text-white text-[10px] normal-case tracking-normal font-medium rounded-lg shadow-lg z-30 pointer-events-none text-center">
                     {action.tooltipText}
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-[#1B3022] rotate-45 -translate-y-0.5"></div>
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-[#0D47A1] rotate-45 -translate-y-0.5"></div>
                   </div>
                 </div>
                 <span className="truncate">{action.label}</span>
@@ -269,7 +269,7 @@ function FulfillmentActionsPanel({
         type="button"
         disabled={!selectedAction || selectedAction === currentStatus}
         onClick={handleUpdateStatus}
-        className="px-6 py-3 bg-[#1B3022] hover:bg-brand disabled:bg-brand/10 disabled:text-brand/30 disabled:cursor-not-allowed text-white rounded-xl font-bold text-xs uppercase tracking-wider shadow-sm transition-all cursor-pointer flex items-center justify-center min-w-[140px]"
+        className="px-6 py-3 bg-[#0D47A1] hover:bg-brand disabled:bg-brand/10 disabled:text-brand/30 disabled:cursor-not-allowed text-white rounded-xl font-bold text-xs uppercase tracking-wider shadow-sm transition-all cursor-pointer flex items-center justify-center min-w-[140px]"
       >
         UPDATE STATUS
       </button>
@@ -451,7 +451,7 @@ export default function AdminOrders() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-10 h-10 text-[#C5A059] animate-spin" />
+        <Loader2 className="w-10 h-10 text-[#FF9800] animate-spin" />
       </div>
     );
   }
@@ -461,8 +461,8 @@ export default function AdminOrders() {
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-start justify-between mb-8 gap-6">
         <div className="flex-1">
-          <h1 className="text-4xl font-playfair font-bold text-[#1B3022] mb-1">Order Fulfillment</h1>
-          <p className="text-[#C5A059] text-sm font-medium tracking-wide">
+          <h1 className="text-4xl font-playfair font-bold text-[#0D47A1] mb-1">Order Fulfillment</h1>
+          <p className="text-[#FF9800] text-sm font-medium tracking-wide">
             Track and manage customer purchases and custom fits.
           </p>
         </div>
@@ -473,14 +473,14 @@ export default function AdminOrders() {
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="flex-1 px-3 py-3 bg-white border border-brand/10 rounded-xl shadow-sm focus:outline-none focus:border-[#C5A059] transition-all text-brand text-xs font-medium cursor-pointer"
+              className="flex-1 px-3 py-3 bg-white border border-brand/10 rounded-xl shadow-sm focus:outline-none focus:border-[#FF9800] transition-all text-brand text-xs font-medium cursor-pointer"
               title="Start Date"
             />
             <input 
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
-              className="flex-1 px-3 py-3 bg-white border border-brand/10 rounded-xl shadow-sm focus:outline-none focus:border-[#C5A059] transition-all text-brand text-xs font-medium cursor-pointer"
+              className="flex-1 px-3 py-3 bg-white border border-brand/10 rounded-xl shadow-sm focus:outline-none focus:border-[#FF9800] transition-all text-brand text-xs font-medium cursor-pointer"
               title="End Date"
             />
           </div>
@@ -488,7 +488,7 @@ export default function AdminOrders() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full pl-4 pr-10 py-3 bg-white border border-brand/10 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[#C5A059]/10 focus:border-[#C5A059] transition-all text-brand text-xs font-bold uppercase tracking-widest cursor-pointer appearance-none"
+              className="w-full pl-4 pr-10 py-3 bg-white border border-brand/10 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FF9800]/10 focus:border-[#FF9800] transition-all text-brand text-xs font-bold uppercase tracking-widest cursor-pointer appearance-none"
             >
               <option value="all">All Statuses</option>
               <option value="Order Placed">Order Placed</option>
@@ -508,7 +508,7 @@ export default function AdminOrders() {
               placeholder="Search order # or mobile..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 bg-white border border-brand/10 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[#C5A059]/10 focus:border-[#C5A059] transition-all text-brand text-sm font-medium placeholder:text-brand/20"
+              className="w-full pl-12 pr-4 py-3 bg-white border border-brand/10 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FF9800]/10 focus:border-[#FF9800] transition-all text-brand text-sm font-medium placeholder:text-brand/20"
             />
           </div>
         </div>
@@ -555,8 +555,8 @@ export default function AdminOrders() {
                 onClick={() => setExpandedOrder(expandedOrder === order.id ? null : order.id)}
               >
                 <div className="flex items-center gap-4">
-                  <div className="bg-[#1B3022]/5 p-3 rounded-xl group-hover:bg-[#C5A059] group-hover:text-white transition-colors">
-                    <FileText size={20} className="text-[#C5A059] group-hover:text-white" />
+                  <div className="bg-[#0D47A1]/5 p-3 rounded-xl group-hover:bg-[#FF9800] group-hover:text-white transition-colors">
+                    <FileText size={20} className="text-[#FF9800] group-hover:text-white" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2 mb-0.5">
@@ -675,7 +675,7 @@ export default function AdminOrders() {
                     </div>
                     <div>
                       <p className="text-[8px] font-black text-brand/35 uppercase tracking-wider mb-1">Shipping State</p>
-                      <span className="px-2.5 py-1 bg-[#C5A059]/10 text-[#C5A059] font-bold text-xs rounded-lg uppercase tracking-wide">
+                      <span className="px-2.5 py-1 bg-[#FF9800]/10 text-[#FF9800] font-bold text-xs rounded-lg uppercase tracking-wide">
                         {order.shippingStatus || "PENDING"}
                       </span>
                     </div>
@@ -686,11 +686,11 @@ export default function AdminOrders() {
                           href={`https://www.xpressbees.com/track?awb=${order.awbNumber}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-[#C5A059] font-bold text-xs hover:underline flex items-center gap-1.5"
+                          className="text-[#FF9800] font-bold text-xs hover:underline flex items-center gap-1.5"
                           title="Track with Xpressbees"
                         >
                           {order.awbNumber}
-                          <span className="text-[8px] px-1 bg-[#C5A059]/10 rounded font-normal uppercase">Track ↗</span>
+                          <span className="text-[8px] px-1 bg-[#FF9800]/10 rounded font-normal uppercase">Track ↗</span>
                         </a>
                       ) : (
                         <span className="text-brand/30 text-xs font-semibold">Not Allocated</span>
@@ -749,14 +749,14 @@ export default function AdminOrders() {
                                   setActiveEditAddressStr(order.shippingAddress || "");
                                   setActiveEditAddressPhone(order.customerPhone || "");
                                 }}
-                                className="absolute bottom-4 right-4 flex items-center gap-1 px-2 py-1 rounded-lg border border-[#C5A059]/20 bg-[#C5A059]/5 text-[#C5A059] hover:bg-[#C5A059] hover:text-white transition-all duration-200 cursor-pointer shadow-xs font-bold text-[9px] uppercase tracking-wider"
+                                className="absolute bottom-4 right-4 flex items-center gap-1 px-2 py-1 rounded-lg border border-[#FF9800]/20 bg-[#FF9800]/5 text-[#FF9800] hover:bg-[#FF9800] hover:text-white transition-all duration-200 cursor-pointer shadow-xs font-bold text-[9px] uppercase tracking-wider"
                                 title="Edit shipping address"
                               >
                                 <Pencil size={10} className="shrink-0" />
                                 <span>Edit</span>
                               </button>
                             )}
-                            <MapPin size={16} className="text-[#C5A059] shrink-0 mt-0.5" />
+                            <MapPin size={16} className="text-[#FF9800] shrink-0 mt-0.5" />
                             <div className="min-w-0 flex-1 pr-6">
                               {/* Scrollable & Wrapping Address Container */}
                               <div className="max-h-24 overflow-y-auto pr-2 custom-scrollbar">
@@ -807,14 +807,14 @@ export default function AdminOrders() {
                                       </span>
                                       <XCircle size={16} className="shrink-0" />
                                     </button>
-                                    <div className="absolute bottom-full right-0 mb-2 hidden group-hover:block w-48 p-2 bg-[#1B3022] text-white text-[10px] normal-case tracking-normal font-medium rounded-lg shadow-lg z-30 pointer-events-none text-center leading-relaxed">
+                                    <div className="absolute bottom-full right-0 mb-2 hidden group-hover:block w-48 p-2 bg-[#0D47A1] text-white text-[10px] normal-case tracking-normal font-medium rounded-lg shadow-lg z-30 pointer-events-none text-center leading-relaxed">
                                       Cancel this Xpressbees shipment. Order will return to Processing state.
-                                      <div className="absolute top-full right-3 w-1.5 h-1.5 bg-[#1B3022] rotate-45 -translate-y-0.5"></div>
+                                      <div className="absolute top-full right-3 w-1.5 h-1.5 bg-[#0D47A1] rotate-45 -translate-y-0.5"></div>
                                     </div>
                                   </div>
                                 )}
                                 
-                                <FileText size={16} className="text-[#C5A059] shrink-0 mt-0.5" />
+                                <FileText size={16} className="text-[#FF9800] shrink-0 mt-0.5" />
                                 <div className="min-w-0 flex-1">
                                   {/* Grid Content */}
                                   <div className="grid grid-cols-2 gap-x-6 gap-y-4 mb-4">

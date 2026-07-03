@@ -212,25 +212,25 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-[#1B3022] flex flex-col justify-center items-center p-4 font-inter">
-      <div className="w-full max-w-md bg-white rounded-3xl p-10 shadow-2xl border-t-[12px] border-t-[#C5A059] relative overflow-hidden">
+    <div className="min-h-screen bg-brand-light flex flex-col justify-center items-center p-4 font-inter">
+      <div className="w-full max-w-md bg-white rounded-3xl p-10 shadow-2xl border border-brand/5 border-t-[12px] border-t-brand-accent relative overflow-hidden">
         {/* Subtle background decoration */}
-        <div className="absolute -top-10 -right-10 w-32 h-32 bg-[#C5A059]/5 rounded-full blur-3xl"></div>
+        <div className="absolute -top-10 -right-10 w-32 h-32 bg-brand-accent/5 rounded-full blur-3xl"></div>
 
         {/* Invisible reCAPTCHA container */}
         <div ref={recaptchaRef}></div>
 
         <div className="text-center mb-10">
-          <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-[#1B3022] flex items-center justify-center shadow-2xl relative">
-            <Lock className="text-[#C5A059]" size={32} />
-            <div className="absolute -bottom-2 -right-2 bg-[#C5A059] p-1.5 rounded-lg shadow-lg">
-              <ShieldCheck size={16} className="text-[#1B3022]" />
+          <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-brand flex items-center justify-center shadow-lg relative">
+            <Lock className="text-brand-accent" size={32} />
+            <div className="absolute -bottom-2 -right-2 bg-brand-accent p-1.5 rounded-lg shadow-lg">
+              <ShieldCheck size={16} className="text-brand" />
             </div>
           </div>
-          <h2 className="text-3xl font-playfair font-bold text-[#1B3022] mb-3">
+          <h2 className="text-3xl font-playfair font-bold text-brand mb-3">
             Admin Portal
           </h2>
-          <p className="text-[#1B3022]/60 text-sm font-medium uppercase tracking-widest">
+          <p className="text-brand-dark/60 text-sm font-medium uppercase tracking-widest">
             {step === "phone" ? "Authorization Required" : "Security Verification"}
           </p>
         </div>
@@ -245,18 +245,18 @@ export default function AdminLogin() {
         {step === "phone" && (
           <form onSubmit={handleSendOTP} className="space-y-6">
             <div>
-              <label className="block text-[10px] font-black text-[#1B3022]/40 uppercase mb-2 tracking-[0.2em] ml-1">Admin Phone</label>
+              <label className="block text-[10px] font-black text-brand-dark/40 uppercase mb-2 tracking-[0.2em] ml-1">Admin Phone</label>
               <div className="relative group">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center space-x-2 border-r border-[#1B3022]/10 pr-3">
-                  <Phone size={14} className="text-[#C5A059]" />
-                  <span className="text-[#1B3022] font-bold text-sm">+91</span>
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center space-x-2 border-r border-brand/10 pr-3">
+                  <Phone size={14} className="text-brand-accent" />
+                  <span className="text-brand-dark font-bold text-sm">+91</span>
                 </div>
                 <input
                   type="tel"
                   value={phone}
                   onChange={handlePhoneChange}
                   placeholder="9999999999"
-                  className="w-full bg-[#1B3022]/5 border-2 border-transparent focus:border-[#C5A059]/30 focus:bg-white rounded-xl py-4 pl-20 pr-4 text-[#1B3022] font-bold tracking-widest transition-all outline-none"
+                  className="w-full bg-brand-dark/5 border-2 border-transparent focus:border-brand-accent/30 focus:bg-white rounded-xl py-4 pl-20 pr-4 text-brand-dark font-bold tracking-widest transition-all outline-none"
                   required
                 />
               </div>
@@ -264,7 +264,7 @@ export default function AdminLogin() {
             <button
               type="submit"
               disabled={loading || phone.length !== 10}
-              className="w-full bg-[#1B3022] text-white font-bold py-5 rounded-2xl shadow-xl hover:bg-[#2c4d37] disabled:opacity-50 transition-all active:scale-95 flex justify-center items-center space-x-2 group"
+              className="w-full bg-brand text-white font-bold py-5 rounded-2xl shadow-xl hover:bg-brand-hover disabled:opacity-50 transition-all active:scale-95 flex justify-center items-center space-x-2 group"
             >
               {loading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
@@ -281,27 +281,27 @@ export default function AdminLogin() {
         {step === "otp" && (
           <form onSubmit={handleVerifyOTP} className="space-y-6">
             <div>
-              <label className="block text-[10px] font-black text-[#1B3022]/40 uppercase mb-2 tracking-[0.2em] ml-1">Security Code</label>
+              <label className="block text-[10px] font-black text-brand-dark/40 uppercase mb-2 tracking-[0.2em] ml-1">Security Code</label>
               <div className="relative">
-                <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 text-[#C5A059]" size={18} />
+                <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-accent" size={18} />
                 <input
                   type="text"
                   inputMode="numeric"
                   value={otp}
                   onChange={handleOtpChange}
                   placeholder="123456"
-                  className="w-full bg-[#1B3022]/5 border-2 border-transparent focus:border-[#C5A059]/30 focus:bg-white rounded-xl py-4 px-12 text-[#1B3022] font-mono font-bold text-center text-2xl tracking-[0.5em] transition-all outline-none"
+                  className="w-full bg-brand-dark/5 border-2 border-transparent focus:border-brand-accent/30 focus:bg-white rounded-xl py-4 px-12 text-brand-dark font-mono font-bold text-center text-2xl tracking-[0.5em] transition-all outline-none"
                   required
                 />
               </div>
               <div className="flex justify-center mt-4">
-                <button type="button" onClick={() => setStep("phone")} className="text-[10px] text-[#1B3022]/40 hover:text-[#1B3022] font-black uppercase tracking-widest transition-colors">Use different account</button>
+                <button type="button" onClick={() => setStep("phone")} className="text-[10px] text-brand-dark/40 hover:text-brand font-black uppercase tracking-widest transition-colors">Use different account</button>
               </div>
             </div>
             <button
               type="submit"
               disabled={loading || otp.length !== 6}
-              className="w-full bg-[#C5A059] text-white font-bold py-5 rounded-2xl shadow-xl hover:bg-[#b39150] disabled:opacity-50 transition-all active:scale-95 flex justify-center items-center space-x-2"
+              className="w-full bg-brand-accent text-white font-bold py-5 rounded-2xl shadow-xl hover:bg-brand-accent/90 disabled:opacity-50 transition-all active:scale-95 flex justify-center items-center space-x-2"
             >
               {loading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
@@ -313,7 +313,7 @@ export default function AdminLogin() {
         )}
       </div>
 
-      <p className="mt-10 text-center text-[10px] text-white/30 max-w-xs leading-relaxed uppercase tracking-[0.3em] font-bold">
+      <p className="mt-10 text-center text-[10px] text-brand-dark/30 max-w-xs leading-relaxed uppercase tracking-[0.3em] font-bold">
         Om Enterprises Management Infrastructure
       </p>
     </div>

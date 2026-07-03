@@ -99,7 +99,7 @@ export default function CancelShipmentModal({
               Are you sure you want to cancel the registered courier shipment for order <strong>#00{orderId}</strong>? The order status will revert to <strong>Processing</strong> state.
             </p>
             <div className="bg-brand/5 p-3 rounded-xl border border-brand/5 font-semibold text-brand text-center select-all">
-              Airway Bill (AWB) to Void: <code className="text-[#C5A059] font-mono text-sm">{awbNumber}</code>
+              Airway Bill (AWB) to Void: <code className="text-[#FF9800] font-mono text-sm">{awbNumber}</code>
             </div>
           </div>
 
@@ -114,7 +114,7 @@ export default function CancelShipmentModal({
               placeholder={`Type exact AWB: ${awbNumber}`}
               value={typedAwb}
               onChange={(e) => setTypedAwb(e.target.value)}
-              className="w-full px-4 py-3 bg-white border border-brand/10 rounded-xl shadow-xs focus:outline-none focus:ring-2 focus:ring-[#C5A059]/10 focus:border-[#C5A059] text-sm font-bold text-brand font-mono text-center"
+              className="w-full px-4 py-3 bg-white border border-brand/10 rounded-xl shadow-xs focus:outline-none focus:ring-2 focus:ring-[#FF9800]/10 focus:border-[#FF9800] text-sm font-bold text-brand font-mono text-center"
               autoComplete="off"
             />
           </div>

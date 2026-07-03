@@ -48,7 +48,7 @@ export function SortableNavItem({ item, onEdit, onDelete }: Props) {
         <button 
           {...attributes} 
           {...listeners}
-          className="cursor-grab active:cursor-grabbing p-2 text-brand/20 hover:text-[#C5A059] transition-colors"
+          className="cursor-grab active:cursor-grabbing p-2 text-brand/20 hover:text-[#FF9800] transition-colors"
         >
           <GripVertical size={20} />
         </button>
@@ -68,7 +68,7 @@ export function SortableNavItem({ item, onEdit, onDelete }: Props) {
         <div className="flex justify-end space-x-2">
           <Link 
             href={`/admin/navigation/design/${item.id}`}
-            className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-[#C5A059]/10 text-[#C5A059] hover:bg-[#C5A059] hover:text-white transition-all text-[10px] font-black uppercase tracking-widest"
+            className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-[#FF9800]/10 text-[#FF9800] hover:bg-[#FF9800] hover:text-white transition-all text-[10px] font-black uppercase tracking-widest"
           >
             <Layout size={12} />
             <span>Design Page</span>

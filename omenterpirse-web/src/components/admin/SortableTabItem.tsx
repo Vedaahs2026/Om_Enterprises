@@ -47,7 +47,7 @@ export function SortableTabItem({ item, onEdit, onDelete }: Props) {
         <button 
           {...attributes} 
           {...listeners}
-          className="cursor-grab active:cursor-grabbing p-2 text-brand/20 hover:text-[#C5A059] transition-colors"
+          className="cursor-grab active:cursor-grabbing p-2 text-brand/20 hover:text-[#FF9800] transition-colors"
         >
           <GripVertical size={20} />
         </button>

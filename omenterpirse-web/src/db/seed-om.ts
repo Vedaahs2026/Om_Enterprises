@@ -384,21 +384,21 @@ async function seed() {
     await db.insert(homeCategoryBanners).values([
       {
         title: "FR & FRLS Electrical Wires",
-        imageUrl: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=1200&q=80",
+        imageUrl: "https://images.unsplash.com/photo-1621905252507-b354bc25edac?w=1200&q=80",
         linkHref: "/category/wires",
         displayOrder: 1,
         isActive: true
       },
       {
         title: "Heavy Armoured Power Cables",
-        imageUrl: "https://images.unsplash.com/photo-1558486012-817176f84c6d?w=1200&q=80",
+        imageUrl: "https://images.unsplash.com/photo-1601524909162-be87252be298?w=1200&q=80",
         linkHref: "/category/cables",
         displayOrder: 2,
         isActive: true
       },
       {
         title: "Modular Switches & Switchgears",
-        imageUrl: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=1200&q=80",
+        imageUrl: "https://images.unsplash.com/photo-1606206591513-ad60137d478a?w=1200&q=80",
         linkHref: "/category/switchgears",
         displayOrder: 3,
         isActive: true

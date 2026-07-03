@@ -55,12 +55,12 @@ function SearchResults() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <SearchIcon className="text-[#C5A059]" size={24} />
-            <h1 className="text-3xl md:text-5xl font-playfair font-bold text-[#1B3022]">
+            <SearchIcon className="text-[#FF9800]" size={24} />
+            <h1 className="text-3xl md:text-5xl font-playfair font-bold text-[#0D47A1]">
               Search Results
             </h1>
           </div>
-          <p className="text-[#1B3022]/60 italic">
+          <p className="text-[#0D47A1]/60 italic">
             {loading ? "Searching..." : products.length > 0 
               ? `Found ${products.length} premium selections for "${query}"` 
               : `No results found for "${query}"`}
@@ -68,7 +68,7 @@ function SearchResults() {
         </div>
 
         {!loading && products.length > 0 && (
-          <button className="flex items-center gap-2 px-6 py-2.5 bg-white border border-[#1B3022]/10 rounded-full text-[10px] font-black uppercase tracking-widest text-[#1B3022] hover:bg-[#FDFBF7] transition-all">
+          <button className="flex items-center gap-2 px-6 py-2.5 bg-white border border-[#0D47A1]/10 rounded-full text-[10px] font-black uppercase tracking-widest text-[#0D47A1] hover:bg-[#FDFBF7] transition-all">
             <SlidersHorizontal size={14} />
             Filter & Sort
           </button>
@@ -77,22 +77,22 @@ function SearchResults() {
 
       {loading ? (
         <div className="flex flex-col items-center justify-center py-32">
-          <Loader2 className="animate-spin text-[#C5A059] mb-4" size={48} strokeWidth={1.5} />
-          <p className="text-[#1B3022]/40 font-black uppercase tracking-[0.3em] text-[10px]">Scouring our harvest...</p>
+          <Loader2 className="animate-spin text-[#FF9800] mb-4" size={48} strokeWidth={1.5} />
+          <p className="text-[#0D47A1]/40 font-black uppercase tracking-[0.3em] text-[10px]">Scouring our harvest...</p>
         </div>
       ) : products.length === 0 ? (
-        <div className="py-32 text-center bg-[#FDFBF7] rounded-[3rem] border border-[#1B3022]/5">
+        <div className="py-32 text-center bg-[#FDFBF7] rounded-[3rem] border border-[#0D47A1]/5">
           <div className="max-w-md mx-auto px-6">
             <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-8 shadow-sm">
-              <SearchIcon size={32} className="text-[#1B3022]/20" />
+              <SearchIcon size={32} className="text-[#0D47A1]/20" />
             </div>
-            <h3 className="text-2xl font-playfair font-bold text-[#1B3022] mb-4">No Matches Found</h3>
-            <p className="text-[#1B3022]/60 mb-8 leading-relaxed">
+            <h3 className="text-2xl font-playfair font-bold text-[#0D47A1] mb-4">No Matches Found</h3>
+            <p className="text-[#0D47A1]/60 mb-8 leading-relaxed">
               We couldn't find any products matching your search. Try checking your spelling or using more general terms.
             </p>
             <Link 
               href="/" 
-              className="inline-block px-10 py-4 bg-[#C5A059] text-white rounded-full font-black uppercase tracking-widest text-[10px] hover:bg-[#B38E46] transition-all shadow-lg"
+              className="inline-block px-10 py-4 bg-[#FF9800] text-white rounded-full font-black uppercase tracking-widest text-[10px] hover:bg-[#B38E46] transition-all shadow-lg"
             >
               Browse All Products
             </Link>
@@ -130,7 +130,7 @@ export default function SearchPage() {
     <main className="min-h-screen bg-white">
       <Suspense fallback={
         <div className="flex items-center justify-center min-h-screen">
-          <Loader2 className="animate-spin text-[#C5A059]" size={40} />
+          <Loader2 className="animate-spin text-[#FF9800]" size={40} />
         </div>
       }>
         <SearchResults />

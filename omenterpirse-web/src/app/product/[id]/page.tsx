@@ -332,7 +332,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
               return (
                 <div className="mt-16 border-t border-brand/5 pt-10">
                   <h2 className="text-2xl font-playfair font-bold text-brand mb-6">Product Specifications</h2>
-                  <div className="bg-[#1B3022]/[0.02] rounded-[2rem] p-8 border border-brand/5 shadow-sm max-w-3xl">
+                  <div className="bg-[#0D47A1]/[0.02] rounded-[2rem] p-8 border border-brand/5 shadow-sm max-w-3xl">
                     <span className="text-[10px] font-black text-[#0D47A1] uppercase tracking-[0.2em] mb-6 block">Details</span>
                     <div className="space-y-4">
                       {specs.map((spec: any, idx: number) => (
@@ -391,7 +391,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
 
         {/* Floating Toast Notification */}
         {toast && (
-          <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 bg-[#1B3022] text-[#C5A059] px-8 py-4 rounded-2xl shadow-2xl flex items-center space-x-3 font-bold text-sm animate-in fade-in slide-in-from-bottom-5 duration-300">
+          <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 bg-[#0D47A1] text-[#FF9800] px-8 py-4 rounded-2xl shadow-2xl flex items-center space-x-3 font-bold text-sm animate-in fade-in slide-in-from-bottom-5 duration-300">
             <Check size={18} />
             <span>{toast}</span>
           </div>

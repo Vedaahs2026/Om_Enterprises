@@ -89,12 +89,12 @@ export default function NdrDashboard() {
         <div>
           <Link 
             href="/admin/orders" 
-            className="inline-flex items-center gap-2 text-xs font-bold text-[#C5A059] hover:text-[#1B3022] uppercase tracking-wider transition-colors mb-3 cursor-pointer"
+            className="inline-flex items-center gap-2 text-xs font-bold text-[#FF9800] hover:text-[#0D47A1] uppercase tracking-wider transition-colors mb-3 cursor-pointer"
           >
             <ArrowLeft size={14} /> Back to Fulfillment
           </Link>
-          <h1 className="text-4xl font-playfair font-bold text-[#1B3022] mb-1">Non-Delivery Reports (NDR)</h1>
-          <p className="text-[#C5A059] text-sm font-medium tracking-wide">
+          <h1 className="text-4xl font-playfair font-bold text-[#0D47A1] mb-1">Non-Delivery Reports (NDR)</h1>
+          <p className="text-[#FF9800] text-sm font-medium tracking-wide">
             Manage failed courier deliveries and coordinate real-time re-attempt instructions to prevent Return-To-Origin (RTO).
           </p>
         </div>
@@ -103,7 +103,7 @@ export default function NdrDashboard() {
           <select
             value={filterMode}
             onChange={(e) => setFilterMode(e.target.value as 'LOCAL' | 'ALL')}
-            className="bg-white border border-[#1B3022]/10 text-[#1B3022] font-bold text-xs uppercase tracking-wider rounded-xl px-4 py-3 focus:outline-none focus:border-[#C5A059] transition-all cursor-pointer shadow-xs"
+            className="bg-white border border-[#0D47A1]/10 text-[#0D47A1] font-bold text-xs uppercase tracking-wider rounded-xl px-4 py-3 focus:outline-none focus:border-[#FF9800] transition-all cursor-pointer shadow-xs"
           >
             <option value="LOCAL">Nuts Spice Co NDRs</option>
             <option value="ALL">All NDRs</option>
@@ -112,7 +112,7 @@ export default function NdrDashboard() {
             type="button"
             onClick={() => fetchNdrList(true)}
             disabled={loading || refreshing}
-            className="flex items-center justify-center gap-2 px-5 py-3 bg-[#1B3022] hover:bg-brand disabled:bg-brand/40 text-white rounded-xl font-bold text-xs uppercase tracking-wider transition-all shadow-sm cursor-pointer"
+            className="flex items-center justify-center gap-2 px-5 py-3 bg-[#0D47A1] hover:bg-brand disabled:bg-brand/40 text-white rounded-xl font-bold text-xs uppercase tracking-wider transition-all shadow-sm cursor-pointer"
           >
             <RefreshCw size={14} className={`${refreshing ? "animate-spin" : ""}`} />
             {refreshing ? "Refreshing..." : "Sync Exceptions"}
@@ -134,7 +134,7 @@ export default function NdrDashboard() {
       {/* Main Content Pane */}
       {loading ? (
         <div className="flex items-center justify-center min-h-[40vh]">
-          <Loader2 className="w-10 h-10 text-[#C5A059] animate-spin" />
+          <Loader2 className="w-10 h-10 text-[#FF9800] animate-spin" />
         </div>
       ) : error ? (
         <div className="bg-white rounded-3xl p-16 text-center border border-rose-100 shadow-sm max-w-xl mx-auto">
@@ -148,7 +148,7 @@ export default function NdrDashboard() {
           <button
             type="button"
             onClick={() => fetchNdrList()}
-            className="px-5 py-2.5 bg-[#1B3022] hover:bg-brand text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-xs transition-colors cursor-pointer"
+            className="px-5 py-2.5 bg-[#0D47A1] hover:bg-brand text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-xs transition-colors cursor-pointer"
           >
             Retry Connection
           </button>
@@ -189,7 +189,7 @@ export default function NdrDashboard() {
                         {item.isLocal && item.orderId ? (
                           <Link 
                             href={`/admin/orders/${item.orderId}`}
-                            className="inline-flex items-center gap-1 text-[10px] font-bold text-[#C5A059] hover:underline mt-1"
+                            className="inline-flex items-center gap-1 text-[10px] font-bold text-[#FF9800] hover:underline mt-1"
                           >
                             View Order <ExternalLink size={10} />
                           </Link>
@@ -202,7 +202,7 @@ export default function NdrDashboard() {
                     </td>
                     <td className="px-6 py-4.5 whitespace-nowrap">
                       <div className="flex items-center gap-2 text-xs font-semibold text-brand/50">
-                        <Calendar size={14} className="text-[#C5A059]" />
+                        <Calendar size={14} className="text-[#FF9800]" />
                         {new Date(item.reportedAt).toLocaleDateString('en-GB', {
                           day: 'numeric',
                           month: 'short',
@@ -258,7 +258,7 @@ export default function NdrDashboard() {
                     </td>
                     <td className="px-6 py-4.5 whitespace-nowrap text-center">
                       <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-brand/5 border border-brand/10 text-xs font-bold text-brand">
-                        <Clock size={12} className="text-[#C5A059]" />
+                        <Clock size={12} className="text-[#FF9800]" />
                         {item.attempts}
                       </span>
                     </td>
@@ -294,7 +294,7 @@ export default function NdrDashboard() {
  
                   <div className="space-y-3 mb-5">
                     <div className="flex items-center gap-2 text-xs font-semibold text-brand/40">
-                      <Calendar size={14} className="text-[#C5A059]" />
+                      <Calendar size={14} className="text-[#FF9800]" />
                       Reported: {new Date(item.reportedAt).toLocaleDateString('en-GB', {
                         day: 'numeric',
                         month: 'short',
@@ -348,7 +348,7 @@ export default function NdrDashboard() {
                   {item.isLocal && item.orderId ? (
                     <Link 
                       href={`/admin/orders/${item.orderId}`}
-                      className="inline-flex items-center gap-1.5 text-xs font-bold text-[#C5A059] hover:underline"
+                      className="inline-flex items-center gap-1.5 text-xs font-bold text-[#FF9800] hover:underline"
                     >
                       View Order <ExternalLink size={12} />
                     </Link>

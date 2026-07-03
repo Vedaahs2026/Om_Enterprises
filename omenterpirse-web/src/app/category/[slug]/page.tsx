@@ -116,7 +116,7 @@ export default async function CategoryPage({ params }: PageProps) {
       <div className="min-h-[70vh] flex flex-col items-center justify-center px-4">
         <h1 className="text-4xl font-playfair font-bold text-brand mb-4">Category Not Found</h1>
         <p className="text-brand/60 mb-8">We couldn't find any products in the "{categoryName}" collection.</p>
-        <Link href="/" className="text-[#C5A059] font-bold uppercase tracking-widest text-xs hover:underline">Return Home</Link>
+        <Link href="/" className="text-[#FF9800] font-bold uppercase tracking-widest text-xs hover:underline">Return Home</Link>
       </div>
     );
   }
@@ -126,7 +126,7 @@ export default async function CategoryPage({ params }: PageProps) {
       {/* Header */}
       <div className="mb-10 text-center">
         <h1 className="text-5xl md:text-6xl font-playfair font-bold text-brand mb-4 tracking-tight">{categoryName}</h1>
-        <div className="w-24 h-1 bg-[#C5A059] mx-auto rounded-full mb-4"></div>
+        <div className="w-24 h-1 bg-[#FF9800] mx-auto rounded-full mb-4"></div>
         <p className="text-brand/70 max-w-2xl mx-auto font-inter leading-relaxed">
           Explore our curated selection of premium {categoryName.toLowerCase()} pieces, 
           each designed with meticulous attention to detail and crafted for an impeccable fit.
@@ -151,7 +151,7 @@ export default async function CategoryPage({ params }: PageProps) {
       ) : (
         <section className="py-4 text-center bg-brand/5 rounded-[3rem] border border-brand/10 px-8">
           <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
-            <ShoppingBag className="text-[#C5A059]" size={32} />
+            <ShoppingBag className="text-[#FF9800]" size={32} />
           </div>
           <h2 className="text-2xl font-playfair font-bold text-brand mb-3">Collection Coming Soon</h2>
           <p className="text-brand/60 max-w-sm mx-auto">

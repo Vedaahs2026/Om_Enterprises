@@ -162,7 +162,7 @@ export default function ProductSelectorModal({
         {/* Header */}
         <div className="p-8 border-b border-brand/5 flex items-center justify-between bg-brand text-white">
           <div className="flex items-center space-x-4">
-            <div className="bg-[#C5A059] p-3 rounded-2xl">
+            <div className="bg-[#FF9800] p-3 rounded-2xl">
               <Package size={24} className="text-white" />
             </div>
             <div>
@@ -193,7 +193,7 @@ export default function ProductSelectorModal({
                     value={newName}
                     onChange={(e) => setNewName(e.target.value)}
                     placeholder="e.g. Silk Saree"
-                    className="w-full bg-brand/5 border border-transparent focus:border-[#C5A059]/50 rounded-2xl px-5 py-4 text-sm font-semibold text-brand outline-none transition-all"
+                    className="w-full bg-brand/5 border border-transparent focus:border-[#FF9800]/50 rounded-2xl px-5 py-4 text-sm font-semibold text-brand outline-none transition-all"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
@@ -204,7 +204,7 @@ export default function ProductSelectorModal({
                       value={newPrice}
                       onChange={(e) => setNewPrice(e.target.value)}
                       placeholder="1200"
-                      className="w-full bg-brand/5 border border-transparent focus:border-[#C5A059]/50 rounded-2xl px-5 py-4 text-sm font-semibold text-brand outline-none transition-all"
+                      className="w-full bg-brand/5 border border-transparent focus:border-[#FF9800]/50 rounded-2xl px-5 py-4 text-sm font-semibold text-brand outline-none transition-all"
                     />
                   </div>
                   <div>
@@ -214,7 +214,7 @@ export default function ProductSelectorModal({
                       value={newSalePrice}
                       onChange={(e) => setNewSalePrice(e.target.value)}
                       placeholder="999"
-                      className="w-full bg-brand/5 border border-transparent focus:border-[#C5A059]/50 rounded-2xl px-5 py-4 text-sm font-semibold text-brand outline-none transition-all"
+                      className="w-full bg-brand/5 border border-transparent focus:border-[#FF9800]/50 rounded-2xl px-5 py-4 text-sm font-semibold text-brand outline-none transition-all"
                     />
                   </div>
                 </div>
@@ -225,7 +225,7 @@ export default function ProductSelectorModal({
                     value={newCategory}
                     onChange={(e) => setNewCategory(e.target.value)}
                     placeholder="e.g. Saree, Nighty"
-                    className="w-full bg-brand/5 border border-transparent focus:border-[#C5A059]/50 rounded-2xl px-5 py-4 text-sm font-semibold text-brand outline-none transition-all"
+                    className="w-full bg-brand/5 border border-transparent focus:border-[#FF9800]/50 rounded-2xl px-5 py-4 text-sm font-semibold text-brand outline-none transition-all"
                   />
                 </div>
               </div>
@@ -233,7 +233,7 @@ export default function ProductSelectorModal({
               <div className="space-y-6">
                 <div>
                   <label className="block text-[10px] font-black text-brand/40 uppercase tracking-[0.2em] mb-2">Image URL</label>
-                  <div className="border-2 border-dashed border-brand/10 rounded-3xl p-6 text-center hover:border-[#C5A059]/30 transition-all group">
+                  <div className="border-2 border-dashed border-brand/10 rounded-3xl p-6 text-center hover:border-[#FF9800]/30 transition-all group">
                     {newImageUrl ? (
                       <div className="relative aspect-video rounded-2xl overflow-hidden mb-4">
                         <img src={newImageUrl} className="w-full h-full object-cover" />
@@ -241,7 +241,7 @@ export default function ProductSelectorModal({
                       </div>
                     ) : (
                       <div className="py-4">
-                        <Plus size={32} className="mx-auto text-brand/10 mb-2 group-hover:text-[#C5A059]/50 transition-colors" />
+                        <Plus size={32} className="mx-auto text-brand/10 mb-2 group-hover:text-[#FF9800]/50 transition-colors" />
                         <p className="text-[10px] font-black text-brand/30 uppercase tracking-widest">Paste Image Link Below</p>
                       </div>
                     )}
@@ -250,7 +250,7 @@ export default function ProductSelectorModal({
                       value={newImageUrl}
                       onChange={(e) => setNewImageUrl(e.target.value)}
                       placeholder="https://..."
-                      className="w-full bg-white border border-brand/10 rounded-xl py-3 px-4 text-xs font-bold text-brand outline-none focus:border-[#C5A059]/30 transition-all shadow-sm"
+                      className="w-full bg-white border border-brand/10 rounded-xl py-3 px-4 text-xs font-bold text-brand outline-none focus:border-[#FF9800]/30 transition-all shadow-sm"
                     />
                   </div>
                 </div>
@@ -321,7 +321,7 @@ export default function ProductSelectorModal({
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search products by name or category..."
-                  className="w-full bg-white border border-brand/10 rounded-xl py-3 pl-12 pr-4 text-sm font-bold text-brand outline-none focus:border-[#C5A059]/30 transition-all shadow-sm"
+                  className="w-full bg-white border border-brand/10 rounded-xl py-3 pl-12 pr-4 text-sm font-bold text-brand outline-none focus:border-[#FF9800]/30 transition-all shadow-sm"
                 />
               </form>
             </div>
@@ -344,7 +344,7 @@ export default function ProductSelectorModal({
                         onClick={() => toggleProduct(product.id)}
                         className={`flex items-center space-x-5 p-2.5 rounded-2xl border-2 cursor-pointer transition-all ${
                           isSelected 
-                            ? "border-[#C5A059] bg-[#C5A059]/5 shadow-md" 
+                            ? "border-[#FF9800] bg-[#FF9800]/5 shadow-md" 
                             : "border-brand/5 hover:border-brand/10"
                         }`}
                       >
@@ -361,7 +361,7 @@ export default function ProductSelectorModal({
                         </div>
                         <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${
                           isSelected 
-                            ? "bg-[#C5A059] border-[#C5A059] text-white" 
+                            ? "bg-[#FF9800] border-[#FF9800] text-white" 
                             : "border-brand/10 text-transparent"
                         }`}>
                           <Plus size={14} strokeWidth={3} />
@@ -394,7 +394,7 @@ export default function ProductSelectorModal({
               <button 
                 onClick={handleAddProduct}
                 disabled={isSaving}
-                className="bg-[#1B3022] text-[#C5A059] px-8 py-3 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-[#2c4d37] transition-all shadow-lg shadow-brand/10 disabled:opacity-50 flex items-center space-x-2"
+                className="bg-[#0D47A1] text-[#FF9800] px-8 py-3 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-[#1565C0] transition-all shadow-lg shadow-brand/10 disabled:opacity-50 flex items-center space-x-2"
               >
                 {isSaving && <Loader2 size={14} className="animate-spin" />}
                 <span>Save & Select</span>
@@ -414,7 +414,7 @@ export default function ProductSelectorModal({
                 </button>
                 <button 
                   onClick={() => onConfirm(selectedIds)}
-                  className="bg-[#1B3022] text-[#C5A059] px-8 py-3 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-[#2c4d37] transition-all shadow-lg shadow-brand/10"
+                  className="bg-[#0D47A1] text-[#FF9800] px-8 py-3 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-[#1565C0] transition-all shadow-lg shadow-brand/10"
                 >
                   Confirm Selection
                 </button>

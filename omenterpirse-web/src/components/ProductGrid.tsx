@@ -70,7 +70,7 @@ export default function ProductGrid({ initialProducts, title = "Om Enterprises S
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6"
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6"
         >
           {initialProducts.map((product) => {
             const images = JSON.parse(product.images || "[]");
