@@ -211,20 +211,42 @@ export default async function Home() {
             <span className="text-[10px] font-black text-brand uppercase tracking-[0.3em]">Sector Focus</span>
             <h2 className="text-3xl font-bold mt-2 text-brand-dark">Industries We Serve</h2>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-6 gap-6">
-            {[
-              { icon: <HomeIcon size={24} />, title: "Residential" },
-              { icon: <Building2 size={24} />, title: "Commercial" },
-              { icon: <Factory size={24} />, title: "Industrial" },
-              { icon: <Hammer size={24} />, title: "Construction" },
-              { icon: <Wrench size={24} />, title: "Manufacturing" },
-              { icon: <HardHat size={24} />, title: "Infrastructure" }
-            ].map((ind, i) => (
-              <div key={i} className="flex flex-col items-center justify-center p-6 bg-white border border-gray-100 rounded-2xl hover:border-brand/20 hover:shadow-lg transition-all text-center">
-                <div className="text-brand mb-4">{ind.icon}</div>
-                <span className="text-xs font-bold text-brand-dark">{ind.title}</span>
-              </div>
-            ))}
+          
+          <div className="relative w-full overflow-hidden py-4">
+            <style dangerouslySetInnerHTML={{__html: `
+              @keyframes marquee-ind {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(-33.33%); }
+              }
+              .animate-marquee-ind {
+                display: flex;
+                width: max-content;
+                animation: marquee-ind 20s linear infinite;
+              }
+              .animate-marquee-ind:hover {
+                animation-play-state: paused;
+              }
+            `}} />
+            
+            {/* Gradient Fades for Left and Right edges */}
+            <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+            <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+
+            <div className="flex w-max animate-marquee-ind">
+              {[...Array(3)].flatMap((_, repIdx) => [
+                { icon: <HomeIcon size={24} />, title: "Residential" },
+                { icon: <Building2 size={24} />, title: "Commercial" },
+                { icon: <Factory size={24} />, title: "Industrial" },
+                { icon: <Hammer size={24} />, title: "Construction" },
+                { icon: <Wrench size={24} />, title: "Manufacturing" },
+                { icon: <HardHat size={24} />, title: "Infrastructure" }
+              ].map((ind, i) => (
+                <div key={`${repIdx}-${i}`} className="flex flex-col items-center justify-center p-6 bg-white border border-gray-100 rounded-2xl hover:border-brand/20 hover:shadow-lg transition-all text-center w-48 h-32 select-none mx-3 flex-shrink-0">
+                  <div className="text-brand mb-4">{ind.icon}</div>
+                  <span className="text-xs font-bold text-brand-dark">{ind.title}</span>
+                </div>
+              )))}
+            </div>
           </div>
         </section>
 
