@@ -1,5 +1,17 @@
 import { db } from "./index";
-import { users, navigationMenu, products, productVariations, pageSections, homeCategoryBanners, homeTabs } from "./schema";
+import { 
+  users, 
+  navigationMenu, 
+  products, 
+  productVariations, 
+  pageSections, 
+  homeCategoryBanners, 
+  homeTabs,
+  cartItems,
+  orderItems,
+  orders,
+  otpVerifications
+} from "./schema";
 import { eq } from "drizzle-orm";
 
 async function seed() {
@@ -8,12 +20,16 @@ async function seed() {
   try {
     // 1. Clear existing database entries
     console.log("Clearing existing tables...");
+    await db.delete(cartItems);
+    await db.delete(orderItems);
+    await db.delete(orders);
     await db.delete(productVariations);
     await db.delete(products);
     await db.delete(pageSections);
     await db.delete(navigationMenu);
     await db.delete(homeCategoryBanners);
     await db.delete(homeTabs);
+    await db.delete(otpVerifications);
     await db.delete(users);
 
     // 2. Users (Admin and fallback admin)
@@ -63,7 +79,7 @@ async function seed() {
         description: "Flame Retardant (FR) multi-strand copper wiring. Superior conductivity and high heat resistance for residential conduits.",
         basePrice: 2200,
         salePrice: 1850,
-        images: JSON.stringify(["https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&q=80"]),
+        images: JSON.stringify(["/images/wires_category.png"]),
         category: "wires",
         tags: "wires,fr,polycab,wiring,house",
         isFeatured: true,
@@ -74,7 +90,7 @@ async function seed() {
         description: "Flame Retardant Low Smoke (FRLS) copper wires. Reduces toxic gas emissions in the event of an electrical fire.",
         basePrice: 2800,
         salePrice: 2400,
-        images: JSON.stringify(["https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&q=80"]),
+        images: JSON.stringify(["/images/wires_category.png"]),
         category: "wires",
         tags: "wires,frls,finolex,industrial",
         isFeatured: false,
@@ -85,7 +101,7 @@ async function seed() {
         description: "Flame Retardant Low Smoke & Halogen Free (FRLSH) wires for highest safety margins in building installations.",
         basePrice: 3200,
         salePrice: 2750,
-        images: JSON.stringify(["https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&q=80"]),
+        images: JSON.stringify(["/images/wires_category.png"]),
         category: "wires",
         tags: "wires,frlsh,rrkabel,home",
         isFeatured: false,
@@ -98,7 +114,7 @@ async function seed() {
         description: "Heavy-duty underground power transmission cable with steel wire armouring. High tensile strength, ISI certified.",
         basePrice: 14500,
         salePrice: 12500,
-        images: JSON.stringify(["https://images.unsplash.com/photo-1558486012-817176f84c6d?w=800&q=80"]),
+        images: JSON.stringify(["/images/cables_category.png"]),
         category: "cables",
         tags: "cables,armoured,copper,power,polycab",
         isFeatured: true,
@@ -109,7 +125,7 @@ async function seed() {
         description: "Aluminium conductor power cables insulated with PVC. High corrosion resistance and lightweight.",
         basePrice: 9500,
         salePrice: 8200,
-        images: JSON.stringify(["https://images.unsplash.com/photo-1558486012-817176f84c6d?w=800&q=80"]),
+        images: JSON.stringify(["/images/cables_category.png"]),
         category: "cables",
         tags: "cables,unarmoured,aluminium,kei",
         isFeatured: false,
@@ -122,7 +138,7 @@ async function seed() {
         description: "Elegant modular switch with smooth rocker action and high contact reliability. Designed for millions of clicks.",
         basePrice: 90,
         salePrice: 75,
-        images: JSON.stringify(["https://images.unsplash.com/photo-1618220179428-22790b461013?w=800&q=80"]),
+        images: JSON.stringify(["/images/switches_category.png"]),
         category: "switches",
         tags: "switches,modular,anchor,roma",
         isFeatured: true,
@@ -133,7 +149,7 @@ async function seed() {
         description: "Dual-rated shuttered socket for premium home and office modular plates. High tension brass terminals.",
         basePrice: 280,
         salePrice: 220,
-        images: JSON.stringify(["https://images.unsplash.com/photo-1618220179428-22790b461013?w=800&q=80"]),
+        images: JSON.stringify(["/images/switches_category.png"]),
         category: "switches",
         tags: "socket,modular,legrand,arteor",
         isFeatured: false,
@@ -146,7 +162,7 @@ async function seed() {
         description: "Domestic and commercial miniature circuit breaker protecting against overload currents and short circuits.",
         basePrice: 350,
         salePrice: 285,
-        images: JSON.stringify(["https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&q=80"]),
+        images: JSON.stringify(["/images/mcb_db_category.png"]),
         category: "mcb-db",
         tags: "mcb,schneider,switchgear",
         isFeatured: true,
@@ -157,7 +173,7 @@ async function seed() {
         description: "Residual Current Circuit Breaker with high sensitivity to prevent shock hazards and electrical leakage fires.",
         basePrice: 4200,
         salePrice: 3550,
-        images: JSON.stringify(["https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&q=80"]),
+        images: JSON.stringify(["/images/mcb_db_category.png"]),
         category: "mcb-db",
         tags: "rccb,abb,switchgear",
         isFeatured: false,
@@ -168,7 +184,7 @@ async function seed() {
         description: "Sleek and robust sheet steel enclosure DB board with IP43 protection and insulated neutral bars.",
         basePrice: 3200,
         salePrice: 2600,
-        images: JSON.stringify(["https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&q=80"]),
+        images: JSON.stringify(["/images/mcb_db_category.png"]),
         category: "mcb-db",
         tags: "db,distribution,siemens",
         isFeatured: false,
@@ -205,7 +221,7 @@ async function seed() {
         description: "Ceiling fan featuring aerodynamically designed blades and heavy duty motor for low power consumption.",
         basePrice: 3200,
         salePrice: 2650,
-        images: JSON.stringify(["https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&q=80"]),
+        images: JSON.stringify(["https://images.unsplash.com/photo-1618944913480-b67ee16d7b77?w=800&q=80"]),
         category: "fans",
         tags: "fan,ceiling,havells",
         isFeatured: true,
@@ -216,7 +232,7 @@ async function seed() {
         description: "Oscillating wall fan with high speed air delivery and smooth silent operation.",
         basePrice: 2900,
         salePrice: 2400,
-        images: JSON.stringify(["https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&q=80"]),
+        images: JSON.stringify(["https://images.unsplash.com/photo-1618944913480-b67ee16d7b77?w=800&q=80"]),
         category: "fans",
         tags: "fan,wall,crompton",
         isFeatured: false,
@@ -253,7 +269,7 @@ async function seed() {
         description: "High-grade industrial self-locking zip ties. UV resistant nylon, perfect for cable grouping.",
         basePrice: 150,
         salePrice: 120,
-        images: JSON.stringify(["https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=800&q=80"]),
+        images: JSON.stringify(["https://images.unsplash.com/photo-1581092162384-8987c1d64718?w=800&q=80"]),
         category: "fittings",
         tags: "cabletie,nylon,fittings,zip",
         isFeatured: true,
@@ -264,7 +280,7 @@ async function seed() {
         description: "Nickel-plated brass compression glands providing weatherproof seal and armored grip for mains cables.",
         basePrice: 450,
         salePrice: 380,
-        images: JSON.stringify(["https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=800&q=80"]),
+        images: JSON.stringify(["https://images.unsplash.com/photo-1581092162384-8987c1d64718?w=800&q=80"]),
         category: "fittings",
         tags: "gland,brass,fittings,compression",
         isFeatured: false,
