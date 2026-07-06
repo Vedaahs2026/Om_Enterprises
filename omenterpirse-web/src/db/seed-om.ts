@@ -10,7 +10,8 @@ import {
   cartItems,
   orderItems,
   orders,
-  otpVerifications
+  otpVerifications,
+  categories
 } from "./schema";
 import { eq } from "drizzle-orm";
 
@@ -30,6 +31,7 @@ async function seed() {
     await db.delete(homeCategoryBanners);
     await db.delete(homeTabs);
     await db.delete(otpVerifications);
+    await db.delete(categories);
     await db.delete(users);
 
     // 2. Users (Admin and fallback admin)
@@ -63,6 +65,21 @@ async function seed() {
       { label: "Industrial Electrical", href: "/category/industrial", order: 9, isActive: false },
       { label: "Home Electrical", href: "/category/home-products", order: 10, isActive: false },
     ]).returning();
+
+    // 3b. Categories (10 categories for B2B product management)
+    console.log("Seeding Categories...");
+    await db.insert(categories).values([
+      { name: "Electrical Wires", slug: "wires", imageUrl: "/images/wires_category.png", displayOrder: 1, isActive: true },
+      { name: "Electrical Cables", slug: "cables", imageUrl: "/images/cables_category.png", displayOrder: 2, isActive: true },
+      { name: "Switches & Modular", slug: "switches", imageUrl: "/images/switches_category.png", displayOrder: 3, isActive: true },
+      { name: "MCBs & DBs", slug: "mcb-db", imageUrl: "/images/mcb_db_category.png", displayOrder: 4, isActive: true },
+      { name: "LED Lighting", slug: "lighting", imageUrl: "https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?w=800&q=80", displayOrder: 5, isActive: true },
+      { name: "Fans", slug: "fans", imageUrl: "https://images.unsplash.com/photo-1618944913480-b67ee16d7b77?w=800&q=80", displayOrder: 6, isActive: true },
+      { name: "Conduits & Pipes", slug: "conduits", imageUrl: "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=800&q=80", displayOrder: 7, isActive: true },
+      { name: "Fittings & Accessories", slug: "fittings", imageUrl: "https://images.unsplash.com/photo-1581092162384-8987c1d64718?w=800&q=80", displayOrder: 8, isActive: true },
+      { name: "Industrial Electrical", slug: "industrial", imageUrl: "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&q=80", displayOrder: 9, isActive: true },
+      { name: "Home Electrical", slug: "home-products", imageUrl: "https://images.unsplash.com/photo-1558002038-1055907df827?w=800&q=80", displayOrder: 10, isActive: true },
+    ]);
 
     // Map menu labels to IDs
     const menuMap = navItems.reduce((acc, item) => {
