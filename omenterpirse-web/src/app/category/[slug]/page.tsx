@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { db } from "@/db";
 import { navigationMenu, pageSections, products, categories } from "@/db/schema";
 import { eq, inArray, asc, sql } from "drizzle-orm";

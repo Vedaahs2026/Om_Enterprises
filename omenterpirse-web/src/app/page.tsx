@@ -1,4 +1,6 @@
 // Homepage - Server Component for maximum performance
+export const dynamic = "force-dynamic";
+
 import Link from "next/link";
 import Image from "next/image";
 import { Sparkles, ChevronDown, ShieldCheck, CheckCircle, Tag, Truck, Wrench, Users, Factory, Building2, Home as HomeIcon, Hammer, HardHat, PhoneCall, Mail, MapPin, ExternalLink, Zap } from "lucide-react";
