@@ -31,12 +31,26 @@ interface Product {
   colorImages?: string | null;
 }
 
-const colorMap: Record<string, string> = {
-  Red: "bg-red-600",
-  Yellow: "bg-yellow-400",
-  Blue: "bg-blue-600",
-  Black: "bg-black",
-  Green: "bg-green-600"
+const resolveColorCSS = (colorName: string): string => {
+  const normalized = colorName.trim().toUpperCase();
+  if (normalized.startsWith("#")) return normalized;
+  
+  const map: Record<string, string> = {
+    "BLACK": "#000000",
+    "WHITE": "#FAFAFA",
+    "NAVY": "#1B2A4A",
+    "FOREST GREEN": "#1C3B2B",
+    "MAROON": "#7D1C1C",
+    "BEIGE": "#F2E8D5",
+    "GOLD": "#C5A059",
+    "RED": "#E53935",
+    "SKY BLUE": "#63C2DE",
+    "PINK": "#E83E8C",
+    "GREY": "#8F9BA6",
+    "BROWN": "#8B4513",
+  };
+  
+  return map[normalized] || colorName;
 };
 
 export default function ProductPage({ params }: { params: Promise<{ id: string }> }) {
@@ -100,27 +114,9 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
     fetchProduct();
   }, [id]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-brand-light">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand"></div>
-      </div>
-    );
-  }
-
-  if (!product) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-brand-light">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-brand mb-4">Product Not Found</h1>
-          <Link href="/" className="text-brand-accent hover:underline">Back to Home</Link>
-        </div>
-      </div>
-    );
-  }
-
   // Get images list (color-specific images if available, otherwise default images)
   const images = useMemo(() => {
+    if (!product) return [];
     if (selectedColor && product.colorImages) {
       try {
         const colorImagesMap = JSON.parse(product.colorImages);
@@ -134,26 +130,12 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
     return JSON.parse(product.images || "[]");
   }, [selectedColor, product]);
 
-  const variations = product.variations || [];
-
   // Sync main image to the first image of the active images list when it changes
   useEffect(() => {
     if (images.length > 0) {
       setMainImage(images[0]);
     }
   }, [images]);
-
-  // Get unique sizes
-  const availableSizes = Array.from(new Set(variations.map(v => v.size)));
-
-  // Get unique colors for the selected size
-  const availableColors = Array.from(
-    new Set(
-      variations
-        .filter(v => v.size === selectedSize && v.color)
-        .map(v => v.color)
-    )
-  ) as string[];
 
   // Sync selected color when size changes
   useEffect(() => {
@@ -181,6 +163,39 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
       setMainImage(matchedVar.imageUrl);
     }
   }, [selectedSize, selectedColor, product]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-brand-light">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand"></div>
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-brand-light">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-brand mb-4">Product Not Found</h1>
+          <Link href="/" className="text-brand-accent hover:underline">Back to Home</Link>
+        </div>
+      </div>
+    );
+  }
+
+  const variations = product.variations || [];
+
+  // Get unique sizes
+  const availableSizes = Array.from(new Set(variations.map(v => v.size)));
+
+  // Get unique colors for the selected size
+  const availableColors = Array.from(
+    new Set(
+      variations
+        .filter(v => v.size === selectedSize && v.color)
+        .map(v => v.color)
+    )
+  ) as string[];
 
   // Current selected variation
   const currentVariation = variations.find(
@@ -357,22 +372,24 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                   </span>
                 </div>
                 <div className="flex flex-wrap gap-3">
-                  {availableColors.map((color) => {
-                    const bgClass = colorMap[color] || "bg-gray-200";
-                    const isSelected = selectedColor === color;
-                    return (
-                      <button
-                        key={color}
-                        onClick={() => setSelectedColor(color)}
-                        className={`w-8 h-8 rounded-full border-2 transition-all cursor-pointer flex items-center justify-center ${
-                          isSelected ? "border-brand-accent scale-110 shadow-md" : "border-transparent hover:border-brand/20"
-                        }`}
-                        title={color}
-                      >
-                        <span className={`w-6 h-6 rounded-full ${bgClass} block shadow-inner`} />
-                      </button>
-                    );
-                  })}
+                   {availableColors.map((color) => {
+                     const isSelected = selectedColor === color;
+                     return (
+                       <button
+                         key={color}
+                         onClick={() => setSelectedColor(color)}
+                         className={`w-8 h-8 rounded-full border-2 transition-all cursor-pointer flex items-center justify-center ${
+                           isSelected ? "border-brand-accent scale-110 shadow-md" : "border-transparent hover:border-brand/20"
+                         }`}
+                         title={color}
+                       >
+                         <span 
+                           className="w-6 h-6 rounded-full block shadow-inner border border-brand/10" 
+                           style={{ backgroundColor: resolveColorCSS(color) }}
+                         />
+                       </button>
+                     );
+                   })}
                 </div>
               </div>
             )}

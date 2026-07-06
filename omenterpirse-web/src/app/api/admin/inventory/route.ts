@@ -8,8 +8,8 @@ export async function GET() {
     // Fetch all products
     const allProducts = await db.select().from(products);
     
-    // Fetch all variations for stock calculation
-    const allVariations = await db.select().from(productVariations);
+    // Fetch all variations for stock calculation in creation order
+    const allVariations = await db.select().from(productVariations).orderBy(productVariations.id);
 
     // Fetch all order items and their associated order status
     const allOrderItems = await db
@@ -47,6 +47,7 @@ export async function GET() {
         return {
           id: v.id,
           size: v.size,
+          color: v.color,
           stock: v.stock,
           sold: vSold,
           toBeDelivered: vToDeliver,

@@ -27,12 +27,35 @@ interface ProductStats {
   variations: {
     id: number;
     size: string;
+    color?: string | null;
     stock: number;
     sold: number;
     toBeDelivered: number;
     remaining: number;
   }[];
 }
+
+const resolveColorCSS = (colorName: string): string => {
+  const normalized = colorName.trim().toUpperCase();
+  if (normalized.startsWith("#")) return normalized;
+  
+  const map: Record<string, string> = {
+    "BLACK": "#000000",
+    "WHITE": "#FAFAFA",
+    "NAVY": "#1B2A4A",
+    "FOREST GREEN": "#1C3B2B",
+    "MAROON": "#7D1C1C",
+    "BEIGE": "#F2E8D5",
+    "GOLD": "#C5A059",
+    "RED": "#E53935",
+    "SKY BLUE": "#63C2DE",
+    "PINK": "#E83E8C",
+    "GREY": "#8F9BA6",
+    "BROWN": "#8B4513",
+  };
+  
+  return map[normalized] || colorName;
+};
 
 export default function InventoryPage() {
   const [data, setData] = useState<Record<string, ProductStats[]>>({});
@@ -177,9 +200,9 @@ export default function InventoryPage() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 animate-in fade-in slide-in-from-top-2 duration-300">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-in fade-in slide-in-from-top-2 duration-300">
               {currentProducts.map((product) => (
-                <div key={product.id} className="bg-white rounded-[2rem] border border-brand/5 p-6 shadow-sm hover:shadow-md transition-all group overflow-hidden relative">
+                <div key={product.id} className="bg-white rounded-[2rem] border border-brand/5 p-5 shadow-sm hover:shadow-md transition-all group overflow-hidden relative">
                   {/* Product Header */}
                   <div className="flex items-start space-x-4 mb-6">
                     <div className="w-20 h-20 bg-brand/5 rounded-2xl overflow-hidden flex-shrink-0 border border-brand/5">
@@ -229,41 +252,107 @@ export default function InventoryPage() {
                   </div>
 
                   {/* Variations Breakdown */}
-                  {product.variations && product.variations.length > 0 && (
-                    <div className="mt-6 pt-6 border-t border-brand/5">
-                      <p className="text-[10px] font-black text-brand uppercase tracking-widest mb-4 flex items-center gap-2">
-                        <Box size={12} className="text-[#FF9800]" />
-                        Variations Stock
-                      </p>
-                      <div className="space-y-3">
-                        {product.variations.map((v) => (
-                          <div key={v.id} className="flex items-center justify-between p-3 bg-brand/[0.02] rounded-xl border border-brand/5 group/v">
-                            <div className="flex items-center gap-3">
-                              <span className="w-12 text-[10px] font-black text-brand bg-white border border-brand/5 px-2 py-1 rounded-lg text-center shadow-sm">
-                                {v.size}
-                              </span>
+                  {(() => {
+                    const groupedVariations = product.variations ? product.variations.reduce((acc: any[], v) => {
+                      let group = acc.find(g => g.size === v.size);
+                      if (!group) {
+                        group = { size: v.size, items: [] };
+                        acc.push(group);
+                      }
+                      group.items.push(v);
+                      return acc;
+                    }, []) : [];
+
+                    if (groupedVariations.length === 0) return null;
+
+                    return (
+                      <div className="mt-6 pt-6 border-t border-brand/5">
+                        <p className="text-[10px] font-black text-brand uppercase tracking-widest mb-4 flex items-center gap-2">
+                          <Box size={12} className="text-[#FF9800]" />
+                          Variations Stock
+                        </p>
+                        <div className="space-y-4">
+                          {groupedVariations.map((group: any) => (
+                            <div key={group.size} className="bg-brand/[0.01] rounded-2xl border border-brand/5 p-4 w-full">
+                              {/* Header Row (Grid) */}
+                              <div className="grid grid-cols-[1fr_52px_36px_56px] gap-x-2 items-center pb-3">
+                                {/* Size Badge */}
+                                <span className="px-3 py-1 text-xs font-black text-brand bg-white border border-brand/10 rounded-xl shadow-sm justify-self-start">
+                                  {group.size}
+                                </span>
+
+                                {/* Header Labels and Summed Values */}
+                                <div className="text-right">
+                                  <p className="text-[6.5px] font-black text-red-500 uppercase tracking-widest mb-0.5 leading-tight">STOCK<br/>LEFT</p>
+                                  <p className="text-xs font-black text-red-600 leading-none">
+                                    {group.items.reduce((sum: number, item: any) => sum + (item.remaining || 0), 0)}
+                                  </p>
+                                </div>
+                                <div className="text-right">
+                                  <p className="text-[6.5px] font-black text-green-600 uppercase tracking-widest mb-0.5 leading-tight">SOLD</p>
+                                  <p className="text-xs font-black text-green-700 leading-none">
+                                    {group.items.reduce((sum: number, item: any) => sum + (item.sold || 0), 0)}
+                                  </p>
+                                </div>
+                                <div className="text-right">
+                                  <p className="text-[6.5px] font-black text-blue-600 uppercase tracking-widest mb-0.5 leading-tight">TO<br/>DELIVER</p>
+                                  <p className="text-xs font-black text-blue-700 leading-none">
+                                    {group.items.reduce((sum: number, item: any) => sum + (item.toBeDelivered || 0), 0)}
+                                  </p>
+                                </div>
+                              </div>
+
+                              {/* Dotted Separator */}
+                              <div className="border-t border-dashed border-brand/10 my-3" />
+
+                              {/* Color Rows List */}
+                              <div className="space-y-3">
+                                {group.items.map((v: any) => (
+                                  <div key={v.id} className="grid grid-cols-[1fr_52px_36px_56px] gap-x-2 items-center py-1">
+                                    {/* Color Label */}
+                                    <div className="flex items-center gap-2">
+                                      {v.color ? (
+                                        <>
+                                          <span 
+                                            className="w-2.5 h-2.5 rounded-full border border-brand/10 shadow-inner shrink-0" 
+                                            style={{ backgroundColor: resolveColorCSS(v.color) }}
+                                          />
+                                          <span className="text-[11px] font-semibold text-brand/80 truncate">
+                                            {v.color}
+                                          </span>
+                                        </>
+                                      ) : (
+                                        <span className="text-[11px] font-semibold text-brand/40 italic">
+                                          No Color
+                                        </span>
+                                      )}
+                                    </div>
+
+                                    {/* Stock Stats Aligned Underneath Headers */}
+                                    <div className="text-right">
+                                      <span className="text-[9px] font-bold text-red-500 whitespace-nowrap">
+                                        {v.remaining} left
+                                      </span>
+                                    </div>
+                                    <div className="text-right">
+                                      <span className="text-[9px] font-bold text-green-600 whitespace-nowrap">
+                                        {v.sold} sold
+                                      </span>
+                                    </div>
+                                    <div className="text-right">
+                                      <span className="text-[9px] font-bold text-blue-500 whitespace-nowrap">
+                                        {v.toBeDelivered} pending
+                                      </span>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
                             </div>
-                            <div className="flex items-center gap-2 sm:gap-4">
-                              <div className="text-center min-w-[60px]">
-                                <p className="text-[7px] font-black text-brand uppercase tracking-widest mb-0.5">Stock Left</p>
-                                <p className={`text-xs font-black ${v.remaining === 0 ? 'text-red-600' : 'text-brand'}`}>
-                                  {v.remaining}
-                                </p>
-                              </div>
-                              <div className="text-center min-w-[50px]">
-                                <p className="text-[7px] font-black text-green-600 uppercase tracking-widest mb-0.5">Sold</p>
-                                <p className="text-xs font-black text-green-700">{v.sold}</p>
-                              </div>
-                              <div className="text-center min-w-[70px]">
-                                <p className="text-[7px] font-black text-blue-600 uppercase tracking-widest mb-0.5">To be Delivered</p>
-                                <p className="text-xs font-black text-blue-700">{v.toBeDelivered}</p>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    );
+                  })()}
 
                   {/* Low Stock Warning */}
                   {product.remaining < 10 && product.remaining > 0 && (

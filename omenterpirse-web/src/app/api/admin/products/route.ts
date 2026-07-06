@@ -26,7 +26,7 @@ export async function GET(request: Request) {
       const product = await db.select().from(products).where(eq(products.id, parseInt(id))).limit(1);
       if (!product.length) return NextResponse.json({ success: false, error: "Not found" }, { status: 404 });
       
-      const variations = await db.select().from(productVariations).where(eq(productVariations.productId, parseInt(id)));
+      const variations = await db.select().from(productVariations).where(eq(productVariations.productId, parseInt(id))).orderBy(productVariations.id);
       
       const productOrderItems = await db
         .select({
@@ -63,7 +63,7 @@ export async function GET(request: Request) {
     ).orderBy(desc(products.id));
     
     // Fetch all variations for stock calculation
-    const allVariations = await db.select().from(productVariations);
+    const allVariations = await db.select().from(productVariations).orderBy(productVariations.id);
 
     // Fetch all order items and their associated order status
     const allOrderItems = await db
