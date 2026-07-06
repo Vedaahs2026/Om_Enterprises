@@ -25,6 +25,7 @@ type CategoryItem = {
   id: number;
   name: string;
   slug: string;
+  tagline?: string | null;
   imageUrl?: string | null;
   displayOrder: number;
   isActive: boolean;
@@ -40,7 +41,7 @@ export default function AdminCategories() {
 
   // Form State
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [formData, setFormData] = useState({ name: "", slug: "", imageUrl: "", displayOrder: 0, isActive: true });
+  const [formData, setFormData] = useState({ name: "", slug: "", imageUrl: "", tagline: "", displayOrder: 0, isActive: true });
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -75,6 +76,7 @@ export default function AdminCategories() {
       name: item.name, 
       slug: item.slug, 
       imageUrl: item.imageUrl || "", 
+      tagline: item.tagline || "",
       displayOrder: item.displayOrder, 
       isActive: item.isActive 
     });
@@ -82,11 +84,11 @@ export default function AdminCategories() {
 
   const handleCancel = () => {
     setEditingId(null);
-    setFormData({ name: "", slug: "", imageUrl: "", displayOrder: 0, isActive: true });
+    setFormData({ name: "", slug: "", imageUrl: "", tagline: "", displayOrder: 0, isActive: true });
   };
 
   const handleAddNew = () => {
-    setFormData({ name: "", slug: "", imageUrl: "", displayOrder: items.length, isActive: true });
+    setFormData({ name: "", slug: "", imageUrl: "", tagline: "", displayOrder: items.length, isActive: true });
     setEditingId(0);
   };
 
@@ -224,6 +226,16 @@ export default function AdminCategories() {
                     placeholder="e.g. Electrical Cables"
                     className="w-full bg-brand/5 border border-brand/10 rounded-xl py-3 px-4 text-sm font-bold text-brand focus:outline-none focus:border-[#FF9800]/30 focus:ring-4 focus:ring-[#FF9800]/10 transition-all"
                     required
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-brand/40 uppercase tracking-widest mb-2 ml-1">Tag Line (Optional)</label>
+                  <input 
+                    type="text" 
+                    value={formData.tagline}
+                    onChange={(e) => setFormData({ ...formData, tagline: e.target.value })}
+                    placeholder="e.g. High-quality wires for safe installations"
+                    className="w-full bg-brand/5 border border-brand/10 rounded-xl py-3 px-4 text-sm font-bold text-brand focus:outline-none focus:border-[#FF9800]/30 focus:ring-4 focus:ring-[#FF9800]/10 transition-all"
                   />
                 </div>
                 <div>

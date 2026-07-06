@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, use, useMemo } from "react";
-import { Sparkles, ArrowLeft, ClipboardList, Check, X, Minus, Plus } from "lucide-react";
+import { Sparkles, ArrowLeft, ShoppingCart, Check, X, Minus, Plus } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/store/useCartStore";
@@ -93,6 +93,20 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
           const images = JSON.parse(data.images || "[]");
           if (images.length > 0) {
             setMainImage(images[0]);
+          } else if (data.colorImages) {
+            try {
+              const colorImagesMap = typeof data.colorImages === "string" 
+                ? JSON.parse(data.colorImages) 
+                : data.colorImages;
+              if (colorImagesMap) {
+                for (const imgList of Object.values(colorImagesMap)) {
+                  if (Array.isArray(imgList) && imgList.length > 0) {
+                    setMainImage(imgList[0]);
+                    break;
+                  }
+                }
+              }
+            } catch {}
           }
           // Fetch related products
           try {
@@ -127,7 +141,21 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
         console.error("Failed to parse colorImages", e);
       }
     }
-    return JSON.parse(product.images || "[]");
+    const generalImages = JSON.parse(product.images || "[]");
+    if (generalImages.length > 0) return generalImages;
+    if (product.colorImages) {
+      try {
+        const colorImagesMap = JSON.parse(product.colorImages);
+        if (colorImagesMap) {
+          for (const imgList of Object.values(colorImagesMap)) {
+            if (Array.isArray(imgList) && imgList.length > 0) {
+              return imgList;
+            }
+          }
+        }
+      } catch {}
+    }
+    return [];
   }, [selectedColor, product]);
 
   // Sync main image to the first image of the active images list when it changes
@@ -241,7 +269,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
     });
 
     setAdded(true);
-    setToast("Item successfully added to quote request!");
+    setToast("Item successfully added to cart!");
     setQuantity(1);
     setTimeout(() => {
       setAdded(false);
@@ -286,11 +314,13 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                 alt={product.name}
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
-              <div className="absolute top-6 right-6">
-                <div className="bg-white/90 backdrop-blur-md p-3 rounded-full shadow-lg border border-brand/5 text-brand-accent">
-                  <Sparkles size={20} />
+              {product.isFeatured && (
+                <div className="absolute top-6 right-6">
+                  <div className="bg-white/90 backdrop-blur-md p-3 rounded-full shadow-lg border border-brand/5 text-brand-accent">
+                    <Sparkles size={20} />
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
 
@@ -397,7 +427,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
 
             {/* Quantity & Add to Cart */}
             <div className="mb-4 pt-6 border-t border-brand/5">
-              <h4 className="text-[10px] font-black text-brand uppercase tracking-widest mb-4">2. Quantity & Add to Quote Request</h4>
+              <h4 className="text-[10px] font-black text-brand uppercase tracking-widest mb-4">2. Quantity & Add to Cart</h4>
               <div className="flex flex-wrap items-center gap-6">
                 <div className="flex items-center bg-brand/5 rounded-xl border border-brand/5 p-1">
                   <button 
@@ -428,10 +458,10 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                   {added ? (
                     <Check size={18} className="text-brand-accent animate-in zoom-in duration-300" />
                   ) : (
-                    <ClipboardList size={18} className="transition-all" />
+                    <ShoppingCart size={18} className="transition-all" />
                   )}
                   <span className={added ? "text-brand-accent transition-colors duration-300" : ""}>
-                    {selectedSize && remainingStock <= 0 ? "Out of Stock" : added ? "Added to Quote!" : "Add to Quote Request"}
+                    {selectedSize && remainingStock <= 0 ? "Out of Stock" : added ? "Added to Cart!" : "Add to Cart"}
                   </span>
                 </button>
               </div>

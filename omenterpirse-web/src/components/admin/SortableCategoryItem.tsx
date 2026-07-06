@@ -9,6 +9,7 @@ interface CategoryItem {
   id: number;
   name: string;
   slug: string;
+  tagline?: string | null;
   imageUrl?: string | null;
   isActive: boolean;
   displayOrder: number;
@@ -69,6 +70,9 @@ export function SortableCategoryItem({ item, onEdit, onDelete }: Props) {
           </div>
           <div>
             <span className="text-sm font-bold text-brand uppercase tracking-wider block">{item.name}</span>
+            {item.tagline && (
+              <span className="text-xs text-[#FF9800] font-medium block mt-0.5">{item.tagline}</span>
+            )}
             <span className="text-[10px] font-semibold text-brand/40 block mt-1">Slug: {item.slug}</span>
           </div>
         </div>

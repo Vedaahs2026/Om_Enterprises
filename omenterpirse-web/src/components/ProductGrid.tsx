@@ -55,8 +55,8 @@ const taglinesByTitle: Record<string, string> = {
   "Emergency Lights, Bells & Strips": "Safe, durable household chimes, power strips, and backup solutions.",
 };
 
-export default function ProductGrid({ initialProducts, title = "Featured Collections", showTitle = true }: ProductGridProps) {
-  const tagline = taglinesByTitle[title] || "Powering your projects with certified, reliable electrical solutions.";
+export default function ProductGrid({ initialProducts, title = "Featured Collections", showTitle = true, tagline }: ProductGridProps) {
+  const displayTagline = tagline || taglinesByTitle[title] || "Powering your projects with certified, reliable electrical solutions.";
 
   return (
     <section className="py-0">
@@ -70,7 +70,7 @@ export default function ProductGrid({ initialProducts, title = "Featured Collect
         >
           <div>
             <h2 className="text-4xl font-playfair font-bold mb-3 text-brand">{title}</h2>
-            <p className="text-brand/60 italic">{tagline}</p>
+            <p className="text-brand/60 italic">{displayTagline}</p>
           </div>
         </motion.div>
       )}
@@ -89,8 +89,25 @@ export default function ProductGrid({ initialProducts, title = "Featured Collect
           className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6"
         >
           {initialProducts.map((product) => {
-            const images = JSON.parse(product.images || "[]");
-            const firstImage = images.length > 0 ? images[0] : "/images/placeholder.png";
+            const firstImage = (() => {
+              const images = JSON.parse(product.images || "[]");
+              if (images.length > 0) return images[0];
+              if (product.colorImages) {
+                try {
+                  const colorImagesMap = typeof product.colorImages === "string" 
+                    ? JSON.parse(product.colorImages) 
+                    : product.colorImages;
+                  if (colorImagesMap) {
+                    for (const imgList of Object.values(colorImagesMap)) {
+                      if (Array.isArray(imgList) && imgList.length > 0) {
+                        return imgList[0];
+                      }
+                    }
+                  }
+                } catch {}
+              }
+              return "/images/placeholder.png";
+            })();
 
             return (
               <motion.div key={product.id} variants={itemVariants}>

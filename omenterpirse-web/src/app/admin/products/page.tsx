@@ -305,7 +305,8 @@ export default function ProductManagement() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return showToast("Product name is required.");
-    if (images.length < 1) return showToast("Add at least 1 image URL.");
+    const hasColorImages = Object.values(colorImages).some(imgList => Array.isArray(imgList) && imgList.length > 0);
+    if (images.length < 1 && !hasColorImages) return showToast("Add at least 1 general image URL or a color-specific image URL.");
     if (variations.length === 0) return showToast("Please add at least one size/color variation.");
     const overpricedVariation = variations.find(v => Number(v.salePrice) > Number(v.basePrice));
     if (overpricedVariation) return showToast(`Sale Price must be lower than or equal to Base Price for: ${overpricedVariation.size}`);

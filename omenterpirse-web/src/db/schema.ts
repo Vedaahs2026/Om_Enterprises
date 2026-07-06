@@ -145,4 +145,5 @@ export const categories = sqliteTable("categories", {
   imageUrl: text("image_url"),
   displayOrder: integer("display_order").notNull().default(0),
   isActive: integer("is_active", { mode: "boolean" }).notNull().default(true),
+  tagline: text("tagline"),
 });

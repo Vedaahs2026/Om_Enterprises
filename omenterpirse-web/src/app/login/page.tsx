@@ -362,7 +362,7 @@ export default function Login() {
               <button 
                 type="submit" 
                 disabled={loading || phone.length !== 10} 
-                className="w-full bg-[#0D47A1] text-[#FF9800] font-black uppercase tracking-[0.2em] text-xs py-5 rounded-2xl shadow-xl hover:bg-[#25422f] hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)] disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-[0.98] flex justify-center items-center space-x-3"
+                className="w-full bg-[#0D47A1] text-[#FF9800] font-black uppercase tracking-[0.2em] text-xs py-5 rounded-2xl shadow-xl hover:bg-[#FF9800] hover:text-white hover:shadow-[0_20px_40px_rgba(255,152,0,0.15)] disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-[0.98] flex justify-center items-center space-x-3"
               >
                 {loading ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
@@ -407,7 +407,7 @@ export default function Login() {
               <button 
                 type="submit" 
                 disabled={loading || otp.length !== 6} 
-                className="w-full bg-[#0D47A1] text-[#FF9800] font-black uppercase tracking-[0.2em] text-xs py-5 rounded-2xl shadow-xl hover:bg-[#25422f] hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)] disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-[0.98] flex justify-center items-center space-x-3"
+                className="w-full bg-[#0D47A1] text-[#FF9800] font-black uppercase tracking-[0.2em] text-xs py-5 rounded-2xl shadow-xl hover:bg-[#FF9800] hover:text-white hover:shadow-[0_20px_40px_rgba(255,152,0,0.15)] disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-[0.98] flex justify-center items-center space-x-3"
               >
                 {loading ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
@@ -440,7 +440,7 @@ export default function Login() {
               <button 
                 type="submit" 
                 disabled={loading || !fullName.trim()} 
-                className="w-full bg-[#0D47A1] text-[#FF9800] font-black uppercase tracking-[0.2em] text-xs py-5 rounded-2xl shadow-xl hover:bg-[#25422f] hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)] disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-[0.98] flex justify-center items-center space-x-3"
+                className="w-full bg-[#0D47A1] text-[#FF9800] font-black uppercase tracking-[0.2em] text-xs py-5 rounded-2xl shadow-xl hover:bg-[#FF9800] hover:text-white hover:shadow-[0_20px_40px_rgba(255,152,0,0.15)] disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-[0.98] flex justify-center items-center space-x-3"
               >
                 {loading ? (
                   <Loader2 className="w-5 h-5 animate-spin" />

@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import { 
   LayoutDashboard, 
   Map, 
-  Shirt, 
+  Zap, 
   Package, 
   Users, 
   LogOut,
@@ -23,7 +23,7 @@ const sidebarLinks = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { name: "Reports", href: "/admin/reports", icon: BarChart3 },
   { name: "Inventory", href: "/admin/inventory", icon: Box },
-  { name: "Products", href: "/admin/products", icon: Shirt },
+  { name: "Products", href: "/admin/products", icon: Zap },
   { name: "Categories", href: "/admin/categories", icon: Grid },
   { name: "Navbar Settings", href: "/admin/navigation", icon: Map },
   { name: "Orders", href: "/admin/orders", icon: Package },

@@ -47,6 +47,7 @@ export async function POST(request: Request) {
       imageUrl: body.imageUrl || null,
       displayOrder: body.displayOrder || 0,
       isActive: body.isActive !== undefined ? body.isActive : true,
+      tagline: body.tagline || null,
     }).returning();
     
     return NextResponse.json({ success: true, data: result[0] });

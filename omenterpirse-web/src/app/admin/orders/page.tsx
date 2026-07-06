@@ -28,7 +28,9 @@ import {
   Info,
   Download,
   AlertTriangle,
-  Pencil
+  Pencil,
+  PhoneCall,
+  Scissors
 } from "lucide-react";
 
 type OrderItem = {
@@ -561,9 +563,37 @@ export default function AdminOrders() {
                   <div>
                     <div className="flex items-center gap-2 mb-0.5">
                       <h3 className="text-lg font-bold text-brand">Order <span className="text-brand/30 font-medium">#00{order.id}</span></h3>
-                      <span className={`px-2 py-0.5 border text-[8px] font-black uppercase tracking-widest rounded-full ${getStatusBadgeStyle(order.status)}`}>
-                        {order.status}
-                      </span>
+                      <select
+                        value={getCurrentStatusKey(order)}
+                        onClick={(e) => e.stopPropagation()}
+                        onChange={async (e) => {
+                          const val = e.target.value;
+                          if (val === "3_AWB_GENERATED") {
+                            setActiveAwbOrderId(order.id);
+                          } else if (val === "CANCELLED") {
+                            setActiveCancelOrderId(order.id);
+                          } else if (val === "0_PLACED") {
+                            await handleStatusTransition(order.id, { orderStatus: "0_PLACED", shippingStatus: "PENDING" });
+                          } else if (val === "1_CONFIRMED") {
+                            await handleStatusTransition(order.id, { orderStatus: "1_CONFIRMED", shippingStatus: "PENDING" });
+                          } else if (val === "2_PROCESSING") {
+                            await handleStatusTransition(order.id, { orderStatus: "2_PROCESSING", shippingStatus: "PENDING" });
+                          } else if (val === "4_PICKUP_REQUESTED") {
+                            await handleStatusTransition(order.id, { shippingStatus: "4_PICKUP_REQUESTED" });
+                          } else if (val === "DELIVERED") {
+                            await handleStatusTransition(order.id, { shippingStatus: "DELIVERED" });
+                          }
+                        }}
+                        className={`px-3 py-1 border text-[9px] font-black uppercase tracking-widest rounded-full cursor-pointer focus:outline-none appearance-none transition-colors pr-6 bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:8px] bg-[right_6px_center] bg-no-repeat ${getStatusBadgeStyle(order.status)}`}
+                      >
+                        <option value="0_PLACED">Pending</option>
+                        <option value="1_CONFIRMED">Confirmed</option>
+                        <option value="2_PROCESSING">Processing</option>
+                        <option value="3_AWB_GENERATED">Shipped</option>
+                        <option value="4_PICKUP_REQUESTED">On the Way</option>
+                        <option value="DELIVERED">Delivered</option>
+                        <option value="CANCELLED">Cancelled</option>
+                      </select>
                       {(() => {
                         const parsed = (() => {
                           if (!order.shippingDetails) return null;
@@ -665,274 +695,193 @@ export default function AdminOrders() {
                     </div>
                   )}
 
-                  {/* State Machine Status Header */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-brand/5 p-4 rounded-2xl border border-brand/5 mt-4">
-                    <div>
-                      <p className="text-[8px] font-black text-brand/35 uppercase tracking-wider mb-1">Order State</p>
-                      <span className="px-2.5 py-1 bg-brand/10 text-brand font-bold text-xs rounded-lg uppercase tracking-wide">
-                        {order.orderStatus || "0_PLACED"}
-                      </span>
-                    </div>
-                    <div>
-                      <p className="text-[8px] font-black text-brand/35 uppercase tracking-wider mb-1">Shipping State</p>
-                      <span className="px-2.5 py-1 bg-[#FF9800]/10 text-[#FF9800] font-bold text-xs rounded-lg uppercase tracking-wide">
-                        {order.shippingStatus || "PENDING"}
-                      </span>
-                    </div>
-                    <div>
-                      <p className="text-[8px] font-black text-brand/35 uppercase tracking-wider mb-1">Airway Bill (AWB)</p>
-                      {order.awbNumber ? (
-                        <a
-                          href={`https://www.xpressbees.com/track?awb=${order.awbNumber}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-[#FF9800] font-bold text-xs hover:underline flex items-center gap-1.5"
-                          title="Track with Xpressbees"
-                        >
-                          {order.awbNumber}
-                          <span className="text-[8px] px-1 bg-[#FF9800]/10 rounded font-normal uppercase">Track ↗</span>
-                        </a>
-                      ) : (
-                        <span className="text-brand/30 text-xs font-semibold">Not Allocated</span>
-                      )}
-                    </div>
-                  </div>
+                  {/* Simplifed Order Details Layout (Matching Image 2) */}
+                  {(() => {
+                    const str = order.shippingAddress || "";
+                    const nameMatch = str.match(/Name:\s*([^,]+)/);
+                    const contactMatch = str.match(/(?:Contact|Phone):\s*([^,]+)/);
+                    const parsedAddress = {
+                      name: nameMatch ? nameMatch[1].trim() : "N/A",
+                      phone: contactMatch ? contactMatch[1].trim() : order.customerPhone || "N/A"
+                    };
 
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-4">
-                    <div className="flex flex-col gap-6">
-                      <div>
-                        <h4 className="text-[9px] font-black text-brand/30 uppercase tracking-[0.2em] mb-4">Items Purchased</h4>
-                        <div className="space-y-2">
-                          {order.items.map((item) => (
-                            <div key={item.id} className="flex items-center justify-between p-3 bg-white rounded-xl border border-brand/5 shadow-sm">
-                              <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 bg-brand/5 rounded-lg flex items-center justify-center">
-                                  <Package size={14} className="text-brand/30" />
+                    return (
+                      <div className="mt-4 space-y-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                          {/* Left Column: Customer Details & Delivery Address */}
+                          <div className="space-y-6">
+                            {/* Customer Details */}
+                            <div>
+                              <h4 className="text-[10px] font-black text-brand/35 uppercase tracking-widest mb-3 flex items-center gap-1.5">
+                                <User size={12} className="text-[#FF9800]" />
+                                Customer Details
+                              </h4>
+                              <div className="bg-white rounded-2xl border border-brand/5 p-4 shadow-sm space-y-3">
+                                <div className="flex justify-between items-center text-xs">
+                                  <span className="text-brand/40 font-bold uppercase tracking-wider">Name</span>
+                                  <span className="text-brand font-black">{parsedAddress.name}</span>
                                 </div>
-                                <div>
-                                  <p className="text-xs font-bold text-brand">{item.productName}</p>
-                                  <p className="text-[9px] font-bold text-brand/40 uppercase tracking-widest">Qty: {item.quantity} • {item.size}</p>
+                                <div className="flex justify-between items-center text-xs">
+                                  <span className="text-brand/40 font-bold uppercase tracking-wider">Phone</span>
+                                  <a href={`tel:${parsedAddress.phone}`} className="text-brand font-black flex items-center gap-1 hover:underline">
+                                    <PhoneCall size={10} className="text-[#FF9800]" />
+                                    {parsedAddress.phone}
+                                  </a>
                                 </div>
                               </div>
-                              <p className="text-xs font-bold text-brand font-sans">₹{item.price * item.quantity}</p>
                             </div>
-                          ))}
-                        </div>
-                      </div>
 
-                      <PaymentDetailsCard
-                        paymentMode={order.paymentMode}
-                        paymentStatus={order.paymentStatus}
-                        amountPaid={order.amountPaid}
-                        razorpayOrderId={order.razorpayOrderId}
-                        razorpayPaymentId={order.razorpayPaymentId}
-                        paymentId={order.paymentId}
-                        totalAmount={order.totalAmount}
-                      />
-                    </div>
-                    
-                    <div className="flex flex-col justify-between">
-                      <div className="space-y-6">
-                        <div>
-                          <h4 className="text-[9px] font-black text-brand/30 uppercase tracking-[0.2em] mb-4">Delivery Address</h4>
-                          <div className="flex gap-3 p-4 bg-white rounded-2xl border border-brand/5 shadow-sm relative group">
-                            {(!order.awbNumber && 
-                              order.status?.toLowerCase() !== "cancelled" && 
-                              order.orderStatus !== "CANCELLED" && 
-                              (order.shippingStatus || "").toUpperCase() !== "3_AWB_GENERATED" && 
-                              (order.shippingStatus || "").toUpperCase() !== "4_PICKUP_REQUESTED" && 
-                              (order.shippingStatus || "").toUpperCase() !== "DELIVERED") && (
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setActiveEditAddressOrderId(order.id);
-                                  setActiveEditAddressStr(order.shippingAddress || "");
-                                  setActiveEditAddressPhone(order.customerPhone || "");
-                                }}
-                                className="absolute bottom-4 right-4 flex items-center gap-1 px-2 py-1 rounded-lg border border-[#FF9800]/20 bg-[#FF9800]/5 text-[#FF9800] hover:bg-[#FF9800] hover:text-white transition-all duration-200 cursor-pointer shadow-xs font-bold text-[9px] uppercase tracking-wider"
-                                title="Edit shipping address"
-                              >
-                                <Pencil size={10} className="shrink-0" />
-                                <span>Edit</span>
-                              </button>
-                            )}
-                            <MapPin size={16} className="text-[#FF9800] shrink-0 mt-0.5" />
-                            <div className="min-w-0 flex-1 pr-6">
-                              {/* Scrollable & Wrapping Address Container */}
-                              <div className="max-h-24 overflow-y-auto pr-2 custom-scrollbar">
+                            {/* Delivery Address */}
+                            <div>
+                              <div className="flex justify-between items-center mb-3">
+                                <h4 className="text-[10px] font-black text-brand/35 uppercase tracking-widest flex items-center gap-1.5">
+                                  <MapPin size={12} className="text-[#FF9800]" />
+                                  Delivery Address
+                                </h4>
+                                {(!order.awbNumber && 
+                                  order.status?.toLowerCase() !== "cancelled" && 
+                                  order.orderStatus !== "CANCELLED" && 
+                                  (order.shippingStatus || "").toUpperCase() !== "3_AWB_GENERATED" && 
+                                  (order.shippingStatus || "").toUpperCase() !== "4_PICKUP_REQUESTED" && 
+                                  (order.shippingStatus || "").toUpperCase() !== "DELIVERED") && (
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setActiveEditAddressOrderId(order.id);
+                                      setActiveEditAddressStr(order.shippingAddress || "");
+                                      setActiveEditAddressPhone(order.customerPhone || "");
+                                    }}
+                                    className="flex items-center gap-1 px-2 py-0.5 rounded-lg border border-[#FF9800]/20 bg-[#FF9800]/5 text-[#FF9800] hover:bg-[#FF9800] hover:text-white transition-all duration-200 cursor-pointer shadow-xs font-bold text-[8px] uppercase tracking-widest"
+                                    title="Edit shipping address"
+                                  >
+                                    <Pencil size={8} className="shrink-0" />
+                                    <span>Edit</span>
+                                  </button>
+                                )}
+                              </div>
+                              <div className="bg-white rounded-2xl border border-brand/5 p-4 shadow-sm">
                                 <p className="text-xs text-brand font-medium leading-relaxed italic break-words">
-                                  "{order.shippingAddress}"
+                                  {order.shippingAddress}
                                 </p>
                               </div>
-                              <div className="mt-3 pt-3 border-t border-brand/5">
-                                <p className="text-[8px] font-black text-brand/30 uppercase tracking-widest mb-0.5">Customer Phone</p>
-                                <p className="text-xs text-brand font-bold">{order.customerPhone}</p>
+                            </div>
+
+                            {/* Shipping Details & Documents */}
+                            {(() => {
+                              let shippingDetails: any = null;
+                              if (order.shippingDetails) {
+                                try {
+                                  shippingDetails = JSON.parse(order.shippingDetails);
+                                } catch (e) {
+                                  console.error("Failed to parse shipping details:", e);
+                                }
+                              }
+                              const labelUrl = shippingDetails?.label || shippingDetails?.labelUrl;
+                              const manifestUrl = shippingDetails?.manifestUrl;
+
+                              if (!labelUrl && !manifestUrl && !order.awbNumber) return null;
+
+                              return (
+                                <div>
+                                  <h4 className="text-[10px] font-black text-brand/35 uppercase tracking-widest mb-3 flex items-center gap-1.5">
+                                    <Truck size={12} className="text-[#FF9800]" />
+                                    Shipping Documents
+                                  </h4>
+                                  <div className="flex flex-wrap gap-3 p-4 bg-white rounded-2xl border border-brand/5 shadow-sm relative">
+                                    {order.awbNumber && (
+                                      <div className="text-xs font-bold text-brand w-full pb-2 border-b border-brand/5 flex justify-between">
+                                        <span className="text-brand/40 uppercase tracking-wider">AWB Number</span>
+                                        <a
+                                          href={`https://www.xpressbees.com/track?awb=${order.awbNumber}`}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="text-[#FF9800] hover:underline"
+                                        >
+                                          {order.awbNumber} ↗
+                                        </a>
+                                      </div>
+                                    )}
+                                    
+                                    <div className="flex gap-2 w-full pt-1">
+                                      {labelUrl && (
+                                        <a
+                                          href={labelUrl}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-bold rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 transition-colors shadow-sm cursor-pointer"
+                                        >
+                                          <Download size={14} /> Label
+                                        </a>
+                                      )}
+                                      {manifestUrl && (
+                                        <a
+                                          href={manifestUrl}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-bold rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-700 transition-colors shadow-sm cursor-pointer"
+                                        >
+                                          <Download size={14} /> Manifest
+                                        </a>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })()}
+                          </div>
+
+                          {/* Right Column: Customizations & Items & Order Summary */}
+                          <div className="space-y-6">
+                            {/* Items & Customizations */}
+                            <div>
+                              <h4 className="text-[10px] font-black text-brand/35 uppercase tracking-widest mb-3 flex items-center gap-1.5">
+                                <Scissors size={12} className="text-[#FF9800]" />
+                                Customizations & Items
+                              </h4>
+                              <div className="space-y-2">
+                                {order.items.map((item) => (
+                                  <div key={item.id} className="flex items-center justify-between p-4 bg-white rounded-2xl border border-brand/5 shadow-sm">
+                                    <div className="flex items-center gap-3">
+                                      <div className="w-10 h-10 bg-brand/5 rounded-xl flex items-center justify-center text-brand/30">
+                                        <Package size={18} />
+                                      </div>
+                                      <div>
+                                        <p className="text-xs font-bold text-brand">{item.productName}</p>
+                                        <p className="text-[9px] font-bold text-brand/40 uppercase tracking-widest mt-0.5">
+                                          {item.size} — Qty: {item.quantity}
+                                        </p>
+                                      </div>
+                                    </div>
+                                    <p className="text-xs font-black text-brand">₹{(item.price * item.quantity).toLocaleString()}</p>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Order Summary */}
+                            <div>
+                              <div className="bg-white rounded-2xl border border-brand/5 p-4 shadow-sm space-y-3">
+                                <p className="text-[10px] font-black text-brand/30 uppercase tracking-widest border-b border-brand/5 pb-2">Order Summary</p>
+                                <div className="flex justify-between items-center text-xs">
+                                  <span className="text-brand/40 font-bold uppercase tracking-wider">Actual Price (Subtotal)</span>
+                                  <span className="text-brand font-black">₹{order.totalAmount.toLocaleString()}</span>
+                                </div>
+                                <div className="flex justify-between items-center text-xs">
+                                  <span className="text-brand/40 font-bold uppercase tracking-wider">Shipping</span>
+                                  <span className="text-[#FF9800] font-black">Free</span>
+                                </div>
+                                <div className="border-t border-brand/5 pt-3 flex justify-between items-center text-sm font-black text-brand">
+                                  <span>Grand Total</span>
+                                  <span className="text-brand text-lg font-sans">₹{order.totalAmount.toLocaleString()}</span>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
 
-                        {(() => {
-                          let shippingDetails: any = null;
-                          if (order.shippingDetails) {
-                            try {
-                              shippingDetails = JSON.parse(order.shippingDetails);
-                            } catch (e) {
-                              console.error("Failed to parse shipping details:", e);
-                            }
-                          }
-                          const labelUrl = shippingDetails?.label || shippingDetails?.labelUrl;
-                          const manifestUrl = shippingDetails?.manifestUrl;
-
-                          if (!labelUrl && !manifestUrl && !order.awbNumber) return null;
-
-                          return (
-                            <div>
-                              <h4 className="text-[9px] font-black text-brand/30 uppercase tracking-[0.2em] mb-4">Shipping Details & Documents</h4>
-                              <div className="flex gap-3 p-4 bg-white rounded-2xl border border-brand/5 shadow-sm relative">
-                                
-                                {/* Cancel Shipment Button with Slide-out Animation & Tooltip */}
-                                {order.awbNumber && order.shippingStatus !== "DELIVERED" && (
-                                  <div className="absolute bottom-4 right-4 group">
-                                    <button
-                                      type="button"
-                                      onClick={() => {
-                                        setActiveCancelShipmentId(order.id);
-                                        setActiveCancelShipmentAwb(order.awbNumber || null);
-                                      }}
-                                      className="flex items-center gap-0 hover:gap-2 px-2.5 py-1.5 text-rose-600 hover:bg-rose-50 rounded-xl border border-transparent hover:border-rose-100 transition-all duration-300 ease-out cursor-pointer overflow-hidden max-w-[34px] hover:max-w-[150px] group/btn shadow-xs"
-                                    >
-                                      <span className="text-[9px] font-black uppercase tracking-wider text-rose-600 opacity-0 group-hover/btn:opacity-100 max-w-0 group-hover/btn:max-w-[100px] transition-all duration-300 ease-out overflow-hidden whitespace-nowrap">
-                                        Cancel Shipment
-                                      </span>
-                                      <XCircle size={16} className="shrink-0" />
-                                    </button>
-                                    <div className="absolute bottom-full right-0 mb-2 hidden group-hover:block w-48 p-2 bg-[#0D47A1] text-white text-[10px] normal-case tracking-normal font-medium rounded-lg shadow-lg z-30 pointer-events-none text-center leading-relaxed">
-                                      Cancel this Xpressbees shipment. Order will return to Processing state.
-                                      <div className="absolute top-full right-3 w-1.5 h-1.5 bg-[#0D47A1] rotate-45 -translate-y-0.5"></div>
-                                    </div>
-                                  </div>
-                                )}
-                                
-                                <FileText size={16} className="text-[#FF9800] shrink-0 mt-0.5" />
-                                <div className="min-w-0 flex-1">
-                                  {/* Grid Content */}
-                                  <div className="grid grid-cols-2 gap-x-6 gap-y-4 mb-4">
-                                    <div>
-                                      <span className="block text-[9px] font-black text-brand/40 uppercase tracking-widest mb-1">
-                                        Invoice Number
-                                      </span>
-                                      <span className="text-xs font-bold text-brand font-mono">
-                                        {shippingDetails?.invoiceNumber || "N/A"}
-                                      </span>
-                                    </div>
-                                    <div>
-                                      <span className="block text-[9px] font-black text-brand/40 uppercase tracking-widest mb-1">
-                                        Invoice Date
-                                      </span>
-                                      <span className="text-xs font-bold text-brand">
-                                        {shippingDetails?.invoiceDate ? new Date(shippingDetails.invoiceDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : "N/A"}
-                                      </span>
-                                    </div>
-                                    <div>
-                                      <span className="block text-[9px] font-black text-brand/40 uppercase tracking-widest mb-1">
-                                        Weight
-                                      </span>
-                                      <span className="text-xs font-bold text-brand">
-                                        {(() => {
-                                          const w = shippingDetails?.weight;
-                                          if (w === undefined || w === null || w === "") return "N/A";
-                                          const val = parseFloat(w);
-                                          if (isNaN(val)) return "N/A";
-                                          return val < 15 ? `${val} kg` : `${val} g`;
-                                        })()}
-                                      </span>
-                                    </div>
-                                    <div>
-                                      <span className="block text-[9px] font-black text-brand/40 uppercase tracking-widest mb-1">
-                                        Dimensions
-                                      </span>
-                                      <span className="text-xs font-bold text-brand">
-                                        {(() => {
-                                          const l = shippingDetails?.length;
-                                          const w = shippingDetails?.breadth || shippingDetails?.width;
-                                          const h = shippingDetails?.height;
-                                          if (!l && !w && !h) return "N/A";
-                                          return `${l || "N/A"} x ${w || "N/A"} x ${h || "N/A"} cm`;
-                                        })()}
-                                      </span>
-                                    </div>
-                                    <div className="col-span-2">
-                                      <span className="block text-[9px] font-black text-brand/40 uppercase tracking-widest mb-1">
-                                        Courier ID
-                                      </span>
-                                      <span className="text-xs font-semibold text-brand font-mono">
-                                        {shippingDetails?.courierId || "N/A"}
-                                      </span>
-                                    </div>
-                                  </div>
-
-                                  {/* Download Buttons Section */}
-                                  {(labelUrl || manifestUrl) && (
-                                    <div className="flex flex-wrap gap-4 pt-4 border-t border-brand/5">
-                                      {labelUrl && (
-                                        <div className="relative group">
-                                          <a
-                                            href={labelUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md bg-emerald-50 hover:bg-emerald-100 text-emerald-700 transition-colors shadow-sm cursor-pointer"
-                                          >
-                                            <Download size={16} />
-                                            Order Label
-                                          </a>
-                                          <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-gray-900 text-white text-xs rounded shadow-lg z-50 text-center">
-                                            Download the PDF shipping label. Print and attach this securely to the package.
-                                            <div className="absolute top-full left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45 -translate-y-1"></div>
-                                          </div>
-                                        </div>
-                                      )}
-                                      {manifestUrl && (
-                                        <div className="relative group">
-                                          <a
-                                            href={manifestUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md bg-amber-50 hover:bg-amber-100 text-amber-700 transition-colors shadow-sm cursor-pointer"
-                                          >
-                                            <Download size={16} />
-                                            View Manifest
-                                          </a>
-                                          <div className="hidden group-hover:block absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-gray-900 text-white text-xs rounded shadow-lg z-50 text-center">
-                                            Download the pickup manifest PDF. The courier agent must sign this upon package handover.
-                                            <div className="absolute top-full left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45 -translate-y-1"></div>
-                                          </div>
-                                        </div>
-                                      )}
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          );
-                        })()}
                       </div>
-
-                      {/* Action buttons progression panel */}
-                      <div className="mt-6 flex flex-col gap-3">
-                        <p className="text-[9px] font-black text-brand/30 uppercase tracking-[0.2em] mb-1">Fulfillment Actions</p>
-                        
-                        <FulfillmentActionsPanel
-                          order={order}
-                          onStatusTransition={handleStatusTransition}
-                          setActiveCancelOrderId={setActiveCancelOrderId}
-                          setActiveAwbOrderId={setActiveAwbOrderId}
-                          setActiveCancelShipmentId={setActiveCancelShipmentId}
-                          setActiveCancelShipmentAwb={setActiveCancelShipmentAwb}
-                        />
-                      </div>
-                    </div>
-                  </div>
+                    );
+                  })()}
                 </div>
               )}
             </div>

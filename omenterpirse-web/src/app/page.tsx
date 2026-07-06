@@ -106,8 +106,48 @@ async function getHomeTabs() {
   }
 }
 
+async function getCategoriesWithProducts() {
+  try {
+    const activeCategories = await db.select()
+      .from(categories)
+      .where(eq(categories.isActive, true))
+      .orderBy(categories.displayOrder);
+
+    const categoriesWithProducts = await Promise.all(
+      activeCategories.map(async (cat) => {
+        const catProducts = await db.select({
+          id: products.id,
+          name: products.name,
+          description: products.description,
+          basePrice: products.basePrice,
+          salePrice: products.salePrice,
+          images: products.images,
+          category: products.category,
+          isFeatured: products.isFeatured,
+          totalStock: sql<number>`SUM(${productVariations.stock})`.mapWith(Number)
+        })
+        .from(products)
+        .leftJoin(productVariations, eq(products.id, productVariations.productId))
+        .where(sql`LOWER(${products.category}) = ${cat.slug.toLowerCase()}`)
+        .groupBy(products.id);
+
+        return {
+          ...cat,
+          products: catProducts
+        };
+      })
+    );
+
+    return categoriesWithProducts.filter(cat => cat.products.length > 0);
+  } catch (error) {
+    console.error("Error fetching categories with products:", error);
+    return [];
+  }
+}
+
 export default async function Home() {
   const featuredProducts = await getFeaturedProducts();
+  const categoriesWithProducts = await getCategoriesWithProducts();
   const homeSections = await getHomeSections();
   const tabs = await getHomeTabs();
 
@@ -128,10 +168,31 @@ export default async function Home() {
           <HomeTabs tabs={tabs as any} />
         )}
 
-        {/* Static Featured Section */}
-        <div id="featured-harvest" className="scroll-mt-28">
-          <ProductGrid initialProducts={featuredProducts as any} />
-        </div>
+        {/* Featured Collections (Static Featured Section) */}
+        {featuredProducts.length > 0 && (
+          <div id="featured-harvest" className="scroll-mt-28">
+            <ProductGrid title="Featured Collections" initialProducts={featuredProducts as any} />
+          </div>
+        )}
+
+        {/* Our Collections Section -> Categories with Products */}
+        {categoriesWithProducts.length > 0 && (
+          <div id="our-collections" className="scroll-mt-28 space-y-24">
+            <div className="text-center mb-12">
+              <span className="text-[10px] font-black text-brand uppercase tracking-[0.3em]">Explore Categories</span>
+              <h2 className="text-3xl font-bold mt-2 text-brand-dark font-playfair">Our Collections</h2>
+            </div>
+            {categoriesWithProducts.map((cat) => (
+              <div key={cat.id} id={`category-${cat.slug}`} className="scroll-mt-28 border-b border-brand/5 pb-16 last:border-0 last:pb-0">
+                <ProductGrid 
+                  title={cat.name} 
+                  tagline={cat.tagline || undefined} 
+                  initialProducts={cat.products as any} 
+                />
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Dynamic Sections (Grids) */}
         {homeSections.map((section) => (
