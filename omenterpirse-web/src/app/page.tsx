@@ -162,13 +162,12 @@ export default async function Home() {
         />
       </div>
 
-      <main id="featured-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 space-y-16 pt-8">
+      <main id="featured-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 space-y-10 pt-8">
         {/* Home Tabs */}
         {tabs.length > 0 && (
-          <div className="space-y-8">
+          <div className="space-y-6">
             <div className="text-center">
-              <span className="text-[10px] font-black text-brand uppercase tracking-[0.3em]">Explore Our Catalog</span>
-              <h2 className="text-3xl font-bold mt-2 text-brand-dark font-playfair">Categories</h2>
+              <h2 className="text-5xl md:text-6xl font-playfair font-bold text-brand">Categories</h2>
             </div>
             <HomeTabs tabs={tabs as any} />
           </div>
@@ -183,9 +182,9 @@ export default async function Home() {
 
         {/* Our Collections Section -> Categories with Products */}
         {categoriesWithProducts.length > 0 && (
-          <div id="our-collections" className="scroll-mt-28 space-y-16">
+          <div id="our-collections" className="scroll-mt-28 space-y-10">
             {categoriesWithProducts.map((cat) => (
-              <div key={cat.id} id={`category-${cat.slug}`} className="scroll-mt-28 border-b border-brand/5 pb-10 last:border-0 last:pb-0">
+              <div key={cat.id} id={`category-${cat.slug}`} className="scroll-mt-28 border-b border-brand/5 pb-6 last:border-0 last:pb-0">
                 <ProductGrid 
                   title={cat.name} 
                   tagline={cat.tagline || undefined} 
@@ -206,8 +205,8 @@ export default async function Home() {
         ))}
 
         {/* Trusted Brands Section */}
-        <section className="py-12 border-t border-b border-gray-100 overflow-hidden">
-          <div className="text-center mb-10">
+        <section className="py-6 border-t border-b border-gray-100 overflow-hidden">
+          <div className="text-center mb-6">
             <span className="text-[10px] font-black text-brand uppercase tracking-[0.3em]">Authorized Dealer</span>
             <h2 className="text-3xl font-bold mt-2 text-brand-dark">Brands We Partner With</h2>
           </div>
@@ -299,12 +298,12 @@ export default async function Home() {
 
             <div className="flex w-max animate-marquee-ind">
               {[...Array(3)].flatMap((_, repIdx) => [
-                { icon: <HomeIcon size={24} />, title: "Residential" },
-                { icon: <Building2 size={24} />, title: "Commercial" },
-                { icon: <Factory size={24} />, title: "Industrial" },
-                { icon: <Hammer size={24} />, title: "Construction" },
-                { icon: <Wrench size={24} />, title: "Manufacturing" },
-                { icon: <HardHat size={24} />, title: "Infrastructure" }
+                { icon: <HomeIcon size={40} />, title: "Residential" },
+                { icon: <Building2 size={40} />, title: "Commercial" },
+                { icon: <Factory size={40} />, title: "Industrial" },
+                { icon: <Hammer size={40} />, title: "Construction" },
+                { icon: <Wrench size={40} />, title: "Manufacturing" },
+                { icon: <HardHat size={40} />, title: "Infrastructure" }
               ].map((ind, i) => (
                 <div key={`${repIdx}-${i}`} className="flex flex-col items-center justify-center p-6 bg-white border border-gray-100 rounded-2xl hover:border-brand/20 hover:shadow-lg transition-all text-center w-48 h-32 select-none mx-3 flex-shrink-0">
                   <div className="text-brand mb-4">{ind.icon}</div>
