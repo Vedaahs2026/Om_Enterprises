@@ -93,46 +93,54 @@ export default async function CategoryPage({ params }: PageProps) {
           };
         })
       );
-      sectionsWithProducts = hydratedStandalone.filter(s => s.products.length > 0);
+      sectionsWithProducts = hydratedStandalone;
     }
   }
 
-  // 4. Second Fallback: If still nothing, search products by category column or brand tag matching
-  if (sectionsWithProducts.length === 0) {
-    let categoryProducts = await db.select()
-      .from(products)
-      .where(
-        sql`LOWER(${products.category}) = ${slug.toLowerCase()} 
-            OR LOWER(${products.category}) = ${decodedSlug.toLowerCase()}
-            OR (${categoryItem ? sql`LOWER(${products.category}) = ${categoryItem.name.toLowerCase()}` : sql`1 = 0`})`
-      );
+  // Filter out empty sections to prevent empty headings / New arrivals coming soon blocks
+  sectionsWithProducts = sectionsWithProducts.filter(s => s.products && s.products.length > 0);
 
-    // If no direct category match, check if the slug is a brand or has special match conditions (like anchor or polycab)
-    if (categoryProducts.length === 0) {
-      const lowerSlug = decodedSlug.toLowerCase();
-      if (lowerSlug.includes("anchor")) {
-        categoryProducts = await db.select()
-          .from(products)
-          .where(sql`LOWER(${products.tags}) LIKE '%anchor%' OR LOWER(${products.name}) LIKE '%anchor%'`);
-      } else if (lowerSlug.includes("polycab")) {
-        categoryProducts = await db.select()
-          .from(products)
-          .where(sql`LOWER(${products.tags}) LIKE '%polycab%' OR LOWER(${products.name}) LIKE '%polycab%'`);
-      } else {
-        // General fallback for tags and names matching the slug
-        categoryProducts = await db.select()
-          .from(products)
-          .where(sql`LOWER(${products.tags}) LIKE ${'%' + lowerSlug + '%'} OR LOWER(${products.name}) LIKE ${'%' + lowerSlug + '%'}`);
-      }
-    }
+  // Retrieve all products belonging to this category from the database
+  let allCategoryProducts = await db.select()
+    .from(products)
+    .where(
+      sql`LOWER(${products.category}) = ${slug.toLowerCase()} 
+          OR LOWER(${products.category}) = ${decodedSlug.toLowerCase()}
+          OR (${categoryItem ? sql`LOWER(${products.category}) = ${categoryItem.name.toLowerCase()}` : sql`1 = 0`})`
+    );
 
-    if (categoryProducts.length > 0) {
-      sectionsWithProducts = [{
-        id: 0,
-        title: "All Products",
-        products: categoryProducts
-      }];
+  // If no direct category match, check if the slug is a brand or has special match conditions (like anchor or polycab)
+  if (allCategoryProducts.length === 0) {
+    const lowerSlug = decodedSlug.toLowerCase();
+    if (lowerSlug.includes("anchor")) {
+      allCategoryProducts = await db.select()
+        .from(products)
+        .where(sql`LOWER(${products.tags}) LIKE '%anchor%' OR LOWER(${products.name}) LIKE '%anchor%'`);
+    } else if (lowerSlug.includes("polycab")) {
+      allCategoryProducts = await db.select()
+        .from(products)
+        .where(sql`LOWER(${products.tags}) LIKE '%polycab%' OR LOWER(${products.name}) LIKE '%polycab%'`);
+    } else {
+      // General fallback for tags and names matching the slug
+      allCategoryProducts = await db.select()
+        .from(products)
+        .where(sql`LOWER(${products.tags}) LIKE ${'%' + lowerSlug + '%'} OR LOWER(${products.name}) LIKE ${'%' + lowerSlug + '%'}`);
     }
+  }
+
+  // Find products that are NOT already shown in custom sections
+  const displayedProductIds = new Set(
+    sectionsWithProducts.flatMap(s => s.products.map((p: any) => p.id))
+  );
+  const remainingProducts = allCategoryProducts.filter(p => !displayedProductIds.has(p.id));
+
+  // If there are category products not displayed in any custom section, show them
+  if (remainingProducts.length > 0) {
+    sectionsWithProducts.push({
+      id: "all-products-fallback",
+      title: sectionsWithProducts.length > 0 ? "More Products" : "All Products",
+      products: remainingProducts
+    });
   }
 
   // 5. Final check - if absolutely nothing found
