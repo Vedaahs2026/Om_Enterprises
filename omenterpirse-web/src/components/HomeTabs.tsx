@@ -35,10 +35,10 @@ export default function HomeTabs({ tabs }: Props) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="flex flex-col h-[400px] overflow-hidden rounded-2xl border border-gray-100 shadow-md bg-white hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 group cursor-pointer"
+                className="flex flex-col h-[300px] overflow-hidden rounded-2xl border border-gray-100 shadow-md bg-white hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 group cursor-pointer"
               >
                 {/* Top Image Section (Cover) */}
-                <div className="relative w-full h-[320px] overflow-hidden bg-gray-50">
+                <div className="relative w-full h-[220px] overflow-hidden bg-gray-50">
                   {tab.imageUrl ? (
                     <img
                       src={tab.imageUrl}
