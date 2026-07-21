@@ -849,14 +849,35 @@ export default function AdminOrders() {
                                   })();
                                   const imageUrl = parsedImages.length > 0 ? parsedImages[0] : null;
 
+                                  const cust = typeof item.customizations === 'string' 
+                                    ? (item.customizations ? JSON.parse(item.customizations) : null) 
+                                    : item.customizations;
+
+                                  const brandName = cust?.brandName || "";
+                                  const modelName = cust?.modelName || "";
+                                  const lengthInMeters = cust?.lengthInMeters || "";
+                                  
+                                  let displayTitle = item.productName || "";
+                                  if (brandName || modelName) {
+                                    displayTitle = `${brandName} ${modelName}`.trim();
+                                    if (lengthInMeters) {
+                                      displayTitle += ` (${lengthInMeters} MTR)`;
+                                    }
+                                  } else if (!displayTitle) {
+                                    displayTitle = "Electrical Product";
+                                  }
+
+                                  const thicknessVal = item.size || cust?.thickness || "";
+                                  const colorVal = item.color || cust?.color || "";
+
                                   return (
                                     <div key={item.id} className="flex items-center justify-between p-4 bg-white rounded-2xl border border-brand/5 shadow-sm">
                                       <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 bg-brand/5 rounded-xl flex items-center justify-center text-brand/30 overflow-hidden border border-brand/5">
+                                        <div className="w-10 h-10 bg-brand/5 rounded-xl flex items-center justify-center text-brand/30 overflow-hidden border border-brand/5 shrink-0">
                                           {imageUrl ? (
                                             <img
                                               src={imageUrl}
-                                              alt={item.productName}
+                                              alt={displayTitle}
                                               className="w-full h-full object-cover"
                                             />
                                           ) : (
@@ -864,13 +885,25 @@ export default function AdminOrders() {
                                           )}
                                         </div>
                                         <div>
-                                          <p className="text-xs font-bold text-brand">{item.productName}</p>
-                                          <p className="text-[9px] font-bold text-brand/40 uppercase tracking-widest mt-0.5">
-                                            {item.size} — Qty: {item.quantity}
-                                          </p>
+                                          <p className="text-xs font-bold text-brand">{displayTitle}</p>
+                                          <div className="flex flex-wrap items-center gap-2 mt-1">
+                                            {thicknessVal && (
+                                              <span className="text-[10px] font-bold text-brand/70 bg-brand/5 px-2 py-0.5 rounded border border-brand/5 uppercase">
+                                                {thicknessVal}
+                                              </span>
+                                            )}
+                                            {colorVal && (
+                                              <span className="text-[10px] font-black text-white bg-[#0D47A1] px-2 py-0.5 rounded shadow-xs uppercase tracking-wider">
+                                                Color: {colorVal}
+                                              </span>
+                                            )}
+                                            <span className="text-[10px] font-bold text-gray-500">
+                                              Qty: {item.quantity}
+                                            </span>
+                                          </div>
                                         </div>
                                       </div>
-                                      <p className="text-xs font-black text-brand">₹{(item.price * item.quantity).toLocaleString()}</p>
+                                      <p className="text-xs font-black text-brand ml-4">₹{(item.price * item.quantity).toLocaleString()}</p>
                                     </div>
                                   );
                                 })}

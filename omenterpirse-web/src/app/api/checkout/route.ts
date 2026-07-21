@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
-import { orders, orderItems, users, productVariations } from "@/db/schema";
+import { orders, orderItems, users, productVariations, brandVariations, products } from "@/db/schema";
 import { cookies } from "next/headers";
 import { eq, and } from "drizzle-orm";
 import crypto from "crypto";
@@ -81,43 +81,57 @@ export async function POST(req: Request) {
     // --------------------------------------------------------
     try {
       const orderId = await db.transaction(async (tx) => {
-        // 1. Strict Stock Validation
+        // 1. Stock Validation
         for (const item of items) {
-          // Find base stock for this product variation
-          const variationRows = await tx.select().from(productVariations)
-            .where(and(eq(productVariations.productId, item.productId), eq(productVariations.size, item.size)));
-            
-          const v = item.color 
-            ? variationRows.find(row => row.color === item.color)
-            : variationRows[0];
+          let stockAvailable = 100;
+          let matchedStockFound = false;
 
-          if (!v) {
-            throw new OutOfStockError(`Product variation not found for product ID ${item.productId} size ${item.size} color ${item.color || 'none'}`);
+          // Try legacy productVariations first
+          if (item.productId) {
+            const variationRows = await tx.select().from(productVariations)
+              .where(and(eq(productVariations.productId, item.productId), eq(productVariations.size, item.size)));
+
+            const v = item.color 
+              ? variationRows.find(row => row.color === item.color)
+              : variationRows[0];
+
+            if (v) {
+              matchedStockFound = true;
+              const pastOrderItems = await tx.select({
+                quantity: orderItems.quantity,
+                status: orders.status,
+                color: orderItems.color
+              }).from(orderItems)
+                .leftJoin(orders, eq(orderItems.orderId, orders.id))
+                .where(and(
+                  eq(orderItems.productId, item.productId),
+                  eq(orderItems.size, item.size)
+                ));
+
+              const totalConsumed = pastOrderItems
+                .filter(oi => {
+                  const matchesColor = item.color ? oi.color === item.color : !oi.color;
+                  return matchesColor && oi.status && ["order placed", "processing", "shipped", "in transit", "out for delivery", "delivered"].includes(oi.status.toLowerCase());
+                })
+                .reduce((sum, oi) => sum + (oi.quantity || 0), 0);
+
+              stockAvailable = Math.max(0, v.stock - totalConsumed);
+            }
           }
-          
-          // Calculate consumed stock from past orders
-          const pastOrderItems = await tx.select({
-            quantity: orderItems.quantity,
-            status: orders.status,
-            color: orderItems.color
-          }).from(orderItems)
-            .leftJoin(orders, eq(orderItems.orderId, orders.id))
-            .where(and(
-              eq(orderItems.productId, item.productId),
-              eq(orderItems.size, item.size)
-            ));
-            
-          const totalConsumed = pastOrderItems
-            .filter(oi => {
-              const matchesColor = item.color ? oi.color === item.color : !oi.color;
-              return matchesColor && oi.status && ["order placed", "processing", "shipped", "in transit", "out for delivery", "delivered"].includes(oi.status.toLowerCase());
-            })
-            .reduce((sum, oi) => sum + (oi.quantity || 0), 0);
-            
-          const remaining = Math.max(0, v.stock - totalConsumed);
-          
-          if (remaining < item.quantity) {
-            throw new OutOfStockError(`Insufficient stock. Only ${remaining} left for this item.`);
+
+          // Try brandVariations if not matched in productVariations
+          if (!matchedStockFound && item.productId) {
+            const bvRows = await tx.select().from(brandVariations)
+              .where(eq(brandVariations.id, item.productId));
+
+            if (bvRows.length > 0) {
+              matchedStockFound = true;
+              stockAvailable = bvRows[0].stock || 100;
+            }
+          }
+
+          if (matchedStockFound && stockAvailable < item.quantity) {
+            throw new OutOfStockError(`Insufficient stock. Only ${stockAvailable} left for ${item.name} (${item.size || ''}).`);
           }
         }
 
@@ -132,7 +146,7 @@ export async function POST(req: Request) {
           shippingDetails: shippingDetails,
           paymentId: razorpay_payment_id,
           razorpayOrderId: razorpay_order_id,
-          paymentMode: paymentMethod === "quote" ? "Quote Request" : (isPrepaid ? "Prepaid" : null),
+          paymentMode: paymentMethod === "quote" ? "Quote Request" : (paymentMethod === "whatsapp_order" ? "WhatsApp Order" : (isPrepaid ? "Prepaid" : "WhatsApp Order")),
           paymentStatus: isPrepaid ? "PAID" : null,
           amountPaid: isPrepaid ? totalAmount : null,
           razorpayPaymentId: isPrepaid ? razorpay_payment_id : null,
@@ -141,20 +155,34 @@ export async function POST(req: Request) {
 
         // 3. Create Order Items
         for (const item of items) {
-          const vRows = await tx.select().from(productVariations)
-            .where(and(eq(productVariations.productId, item.productId), eq(productVariations.size, item.size)));
-            
-          const matchedV = item.color 
-            ? vRows.find(row => row.color === item.color)
-            : vRows[0];
+          let variationIdVal: number | null = null;
+          let validProductIdVal: number | null = null;
+
+          if (item.productId && typeof item.productId === "number") {
+            const pCheck = await tx.select({ id: products.id }).from(products).where(eq(products.id, item.productId)).limit(1);
+            if (pCheck.length > 0) {
+              validProductIdVal = item.productId;
+            }
+
+            const vRows = await tx.select().from(productVariations)
+              .where(and(eq(productVariations.productId, item.productId), eq(productVariations.size, item.size)));
+
+            const matchedV = item.color 
+              ? vRows.find(row => row.color === item.color)
+              : vRows[0];
+
+            if (matchedV) {
+              variationIdVal = matchedV.id;
+            }
+          }
 
           await tx.insert(orderItems).values({
             orderId: newOrder.id,
-            productId: item.productId,
-            variationId: matchedV?.id || null,
+            productId: validProductIdVal,
+            variationId: variationIdVal,
             quantity: item.quantity,
             price: item.price,
-            size: item.size,
+            size: item.size || null,
             color: item.color || null,
             customizations: item.customizations ? JSON.stringify(item.customizations) : null,
           });

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
-import { cartItems, users } from "@/db/schema";
+import { cartItems, users, products } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { cookies } from "next/headers";
 
@@ -27,15 +27,28 @@ export async function POST(request: Request) {
     await db.delete(cartItems).where(eq(cartItems.userId, user.id));
 
     if (items && items.length > 0) {
-      const dbItems = items.map((item: any) => ({
-        userId: user.id,
-        productId: item.productId,
-        variationId: item.variationId || null,
-        quantity: item.quantity || 1,
-        price: item.price || 0,
-      }));
+      const dbItems = [];
+      for (const item of items) {
+        let validProductId: number | null = null;
+        if (item.productId && typeof item.productId === "number") {
+          const pRow = await db.select({ id: products.id }).from(products).where(eq(products.id, item.productId)).limit(1);
+          if (pRow.length > 0) {
+            validProductId = item.productId;
+          }
+        }
 
-      await db.insert(cartItems).values(dbItems);
+        dbItems.push({
+          userId: user.id,
+          productId: validProductId,
+          variationId: item.variationId || null,
+          quantity: item.quantity || 1,
+          price: item.price || 0,
+        });
+      }
+
+      if (dbItems.length > 0) {
+        await db.insert(cartItems).values(dbItems);
+      }
     }
 
     return NextResponse.json({ success: true, message: "Cart synced successfully" });

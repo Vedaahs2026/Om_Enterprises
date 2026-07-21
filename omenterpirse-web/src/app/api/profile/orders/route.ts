@@ -24,6 +24,7 @@ export async function GET() {
       id: orders.id,
       totalAmount: orders.totalAmount,
       status: orders.status,
+      orderStatus: orders.orderStatus,
       shippingAddress: orders.shippingAddress,
       createdAt: orders.createdAt,
       paymentId: orders.paymentId,
@@ -36,8 +37,16 @@ export async function GET() {
     .where(eq(orders.userId, user.id))
     .orderBy(desc(orders.createdAt));
 
-    // For each order, fetch items
-    const ordersWithItems = await Promise.all(userOrders.map(async (order) => {
+    // Only include orders after Admin has confirmed them
+    const confirmedOrders = userOrders.filter((order) => {
+      const s = (order.status || "").toLowerCase().trim();
+      const os = (order.orderStatus || "").toUpperCase().trim();
+      const isUnconfirmed = s === "order placed" || s === "pending" || os === "0_PLACED";
+      return !isUnconfirmed;
+    });
+
+    // For each confirmed order, fetch items
+    const ordersWithItems = await Promise.all(confirmedOrders.map(async (order) => {
       const items = await db.select({
         id: orderItems.id,
         productId: orderItems.productId,
@@ -46,6 +55,7 @@ export async function GET() {
         quantity: orderItems.quantity,
         price: orderItems.price,
         size: orderItems.size,
+        color: orderItems.color,
         customizations: orderItems.customizations,
       })
       .from(orderItems)

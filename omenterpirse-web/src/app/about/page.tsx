@@ -65,7 +65,7 @@ export default function AboutUs() {
         </div>
 
         {/* Contact & Location Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-stretch border-t border-brand/5 pt-16">
+        <div id="contact" className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-stretch border-t border-brand/5 pt-16 scroll-mt-24">
           
           {/* Left Column: Get In Touch & Address (Col Span 7) */}
           <div className="lg:col-span-7 space-y-10">

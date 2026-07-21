@@ -80,7 +80,7 @@ function SearchResults() {
       {loading ? (
         <div className="flex flex-col items-center justify-center py-32">
           <Loader2 className="animate-spin text-[#FF9800] mb-4" size={48} strokeWidth={1.5} />
-          <p className="text-[#0D47A1]/40 font-black uppercase tracking-[0.3em] text-[10px]">Scouring our harvest...</p>
+          <p className="text-[#0D47A1]/40 font-black uppercase tracking-[0.3em] text-[10px]">Searching electrical catalog...</p>
         </div>
       ) : products.length === 0 ? (
         <div className="py-32 text-center bg-[#FDFBF7] rounded-[3rem] border border-[#0D47A1]/5">

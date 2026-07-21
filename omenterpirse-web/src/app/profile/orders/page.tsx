@@ -97,7 +97,7 @@ export default function MyOrdersPage() {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center">
         <Loader2 className="w-8 h-8 text-[#FF9800] animate-spin mb-4" />
-        <p className="text-[10px] font-black text-brand/40 uppercase tracking-[0.2em]">Preparing your harvest details...</p>
+        <p className="text-[10px] font-black text-brand/40 uppercase tracking-[0.2em]">Loading your order details...</p>
       </div>
     );
   }
@@ -310,41 +310,57 @@ export default function MyOrdersPage() {
                   <div>
                     <h4 className="text-[10px] font-black text-brand/30 uppercase tracking-[0.2em] mb-4">Items Purchased</h4>
                     <div className="space-y-4">
-                      {order.items.map((item) => (
-                        <div key={item.id} className="flex flex-col sm:flex-row gap-4 items-start p-4 bg-gray-50/50 rounded-2xl border border-brand/5 shadow-sm">
-                          <div className="w-16 h-16 sm:w-20 sm:h-20 bg-[#F9F6EE] rounded-xl overflow-hidden flex-shrink-0 relative group/img">
-                            {item.productImage ? (
-                              <img 
-                                src={item.productImage} 
-                                alt={item.productName} 
-                                className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-500"
-                                onError={(e) => {
-                                  (e.target as HTMLImageElement).src = "";
-                                }}
-                              />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center text-gray-300">
-                                <ImageIcon size={20} />
+                      {order.items.map((item) => {
+                        const cust = typeof item.customizations === 'string'
+                          ? (item.customizations ? JSON.parse(item.customizations) : null)
+                          : item.customizations;
+
+                        const brandName = cust?.brandName || "";
+                        const modelName = cust?.modelName || "";
+                        const lengthInMeters = cust?.lengthInMeters || "";
+
+                        let displayTitle = item.productName || "";
+                        if (brandName || modelName) {
+                          displayTitle = `${brandName} ${modelName}`.trim();
+                          if (lengthInMeters) {
+                            displayTitle += ` (${lengthInMeters} MTR)`;
+                          }
+                        } else if (!displayTitle) {
+                          displayTitle = "Electrical Product";
+                        }
+
+                        const thicknessVal = item.size || cust?.thickness || "";
+                        const colorVal = (item as any).color || cust?.color || "";
+
+                        return (
+                          <div key={item.id} className="flex items-center justify-between p-4 bg-gray-50/50 rounded-2xl border border-brand/5 shadow-sm">
+                            <div className="flex items-center gap-3.5">
+                              <div className="w-10 h-10 bg-brand/5 rounded-xl flex items-center justify-center shrink-0">
+                                <Package size={18} className="text-brand/40" />
                               </div>
-                            )}
-                            <div className="absolute inset-0 flex items-center justify-center text-gray-200 -z-10 bg-gray-50">
-                              <ImageIcon size={20} />
+                              <div>
+                                <h5 className="text-sm font-bold text-gray-900 leading-snug">{displayTitle}</h5>
+                                <div className="flex flex-wrap items-center gap-2 mt-1">
+                                  {thicknessVal && (
+                                    <span className="text-[10px] font-bold text-brand/70 bg-brand/5 px-2 py-0.5 rounded border border-brand/5 uppercase">
+                                      {thicknessVal}
+                                    </span>
+                                  )}
+                                  {colorVal && (
+                                    <span className="text-[10px] font-black text-white bg-[#0D47A1] px-2 py-0.5 rounded shadow-xs uppercase tracking-wider">
+                                      Color: {colorVal}
+                                    </span>
+                                  )}
+                                  <span className="text-[10px] font-bold text-gray-500">
+                                    Qty: {item.quantity}
+                                  </span>
+                                </div>
+                              </div>
                             </div>
+                            <span className="text-sm font-black text-brand tracking-widest shrink-0 ml-4">₹{(item.price * item.quantity).toLocaleString()}</span>
                           </div>
-                          
-                          <div className="flex-1 min-w-0 w-full flex flex-col justify-between h-full">
-                            <div>
-                              <h5 className="text-[14px] font-bold text-gray-900 leading-snug">{item.productName}</h5>
-                              <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mt-1">
-                                Qty: {item.quantity} • {item.size}
-                              </p>
-                            </div>
-                            <div className="text-left mt-2">
-                              <span className="text-sm font-black text-brand tracking-widest">₹{(item.price * item.quantity).toLocaleString()}</span>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
 

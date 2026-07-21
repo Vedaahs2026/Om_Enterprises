@@ -78,7 +78,7 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
           <input
             ref={inputRef}
             type="text"
-            placeholder="Search for nuts, dry fruits, seeds or harvest..."
+            placeholder="Search for wires, cables, switches, modular supplies..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="w-full bg-transparent text-brand-dark border-none focus:outline-none focus:ring-0 text-lg md:text-2xl placeholder-brand-dark/40 pl-14 py-4 font-inter tracking-wide"

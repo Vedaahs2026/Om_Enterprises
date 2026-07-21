@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useCartStore } from "@/store/useCartStore";
-import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, Loader2, CreditCard, ShieldCheck, CheckCircle2, Scissors, Sparkles, MapPin, AlertTriangle, Truck, Star, Pencil, ClipboardList, QrCode, Building, Lock, X, Wallet } from "lucide-react";
+import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, Loader2, CreditCard, ShieldCheck, CheckCircle2, Scissors, Sparkles, MapPin, AlertTriangle, Truck, Star, Pencil, ClipboardList, QrCode, Building, Lock, X, Wallet, MessageCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import PincodeEstimatorModal from "@/components/PincodeEstimatorModal";
 
@@ -378,6 +378,84 @@ export default function CartPage() {
       }
     } catch (error: any) {
       console.error("Quote submission error:", error);
+      alert(error.message || "Something went wrong. Please try again.");
+      setPaymentStep("address");
+      setIsProcessingPayment(false);
+    }
+  };
+
+  const handleWhatsAppOrder = async () => {
+    setIsProcessingPayment(true);
+    setPaymentStep("processing");
+
+    try {
+      const shippingAddressStr = showNewAddressForm
+        ? `Name: ${address.fullName}, Street: ${address.street}${address.apartment ? `, Apt: ${address.apartment}` : ""}${address.landmark ? `, Landmark: ${address.landmark}` : ""}, City: ${address.city}, State: ${address.state}, Pincode: ${address.pincode}, Contact: ${address.phone}`
+        : savedAddresses[selectedAddressIndex || 0];
+
+      const checkoutRes = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items,
+          totalAmount: total,
+          paymentMethod: "whatsapp_order",
+          shippingAddress: shippingAddressStr,
+        })
+      });
+
+      const checkoutData = await checkoutRes.json();
+      if (!checkoutData.success) {
+        throw new Error(checkoutData.error || "Order creation failed");
+      }
+
+      const createdOrderId = checkoutData.orderId;
+
+      if (showNewAddressForm) {
+        try {
+          await fetch("/api/profile/address", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ address: shippingAddressStr })
+          });
+        } catch (e) {
+          console.error("Failed to auto-save address:", e);
+        }
+      }
+
+      const itemsListText = items.map((item, idx) => {
+        const specs = [
+          item.size ? `Size: ${item.size}` : null,
+          item.color ? `Color: ${item.color}` : null,
+          item.customizations?.lengthInMeters ? `Length: ${item.customizations.lengthInMeters} MTR` : null
+        ].filter(Boolean).join(" | ");
+
+        return `${idx + 1}. *${item.name}*\n   • ${specs}\n   • Qty: ${item.quantity} Coils @ ₹${item.price.toLocaleString()} = ₹${(item.quantity * item.price).toLocaleString()}`;
+      }).join("\n\n");
+
+      const waText = `🛒 *NEW ORDER ON OM ENTERPRISES*
+*Order ID:* #${createdOrderId}
+
+📦 *ITEMS ORDERED:*
+${itemsListText}
+
+💰 *TOTAL AMOUNT:* ₹${total.toLocaleString()}
+
+📍 *DELIVERY ADDRESS:*
+${shippingAddressStr}
+
+Please confirm my order. Thank you!`;
+
+      const encodedMsg = encodeURIComponent(waText);
+      const whatsappUrl = `https://wa.me/919849845555?text=${encodedMsg}`;
+
+      window.open(whatsappUrl, "_blank");
+
+      clearCart();
+      setIsCheckoutModalOpen(false);
+      router.push("/profile/orders");
+    } catch (error: any) {
+      console.error("WhatsApp Order Error:", error);
       alert(error.message || "Something went wrong. Please try again.");
       setPaymentStep("address");
       setIsProcessingPayment(false);
@@ -773,12 +851,13 @@ export default function CartPage() {
                       disabled={isLoadingRates}
                       onClick={() => {
                         if (validateAddressForm()) {
-                          setPaymentStep("payment_options");
+                          handleWhatsAppOrder();
                         }
                       }}
-                      className="flex-[2] py-4 bg-brand text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-brand-hover shadow-lg transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex-[2] py-4 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
-                      Proceed
+                      <MessageCircle size={16} />
+                      <span>Proceed via WhatsApp</span>
                     </button>
                   </div>
                 </div>

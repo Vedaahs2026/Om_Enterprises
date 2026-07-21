@@ -323,66 +323,7 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Desktop Sub-Navbar (Second Row for Active Categories & Collections Dropdown) */}
-        {!isLoading && navItems.length > 0 && (
-          <div className="hidden lg:block border-t border-white/5 bg-[#0a367c]/30 py-2">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center space-x-6">
-              {navItems.map((item) => {
-                const isActive = pathname === item.href;
-                return (
-                  <Link
-                    key={item.id}
-                    href={item.href}
-                    className={`text-[10px] xl:text-[11.5px] font-bold tracking-widest uppercase transition-all duration-300 relative group py-1 whitespace-nowrap ${isActive ? "text-[#FF9800]" : "text-white/80 hover:text-white"
-                      }`}
-                  >
-                    {item.label}
-                    <span className={`absolute -bottom-0.5 left-0 h-0.5 bg-[#FF9800] transition-all duration-300 ${isActive ? "w-full" : "w-0 group-hover:w-full"
-                      }`}></span>
-                  </Link>
-                );
-              })}
 
-              {/* Collections Dropdown (Lists All Categories: Active & Inactive) */}
-              {allCategories.length > 0 && (
-                <div 
-                  className="relative"
-                  onMouseEnter={() => setIsDropdownOpen(true)}
-                  onMouseLeave={() => setIsDropdownOpen(false)}
-                >
-                  <button
-                    className="flex items-center space-x-1 text-[10px] xl:text-[11.5px] font-bold tracking-widest uppercase text-white/80 hover:text-white transition-all py-1 focus:outline-none"
-                  >
-                    <span>Collections</span>
-                    <ChevronDown className={`h-3 w-3 transform transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : "rotate-0"}`} />
-                  </button>
-
-                  {isDropdownOpen && (
-                    <div className="absolute left-0 mt-2 w-56 bg-brand border border-white/10 rounded-xl shadow-2xl py-2 z-50 text-white animate-in fade-in slide-in-from-top-2 duration-150">
-                      <div className="divide-y divide-white/5">
-                        {allCategories.map((cat) => (
-                          <Link
-                            key={cat.id}
-                            href={`/category/${cat.slug}`}
-                            onClick={() => setIsDropdownOpen(false)}
-                            className="block px-4 py-2.5 text-xs font-bold tracking-wider hover:bg-white/5 hover:text-[#FF9800] transition-colors flex items-center justify-between"
-                          >
-                            <span>{cat.name}</span>
-                            {!cat.isActive && (
-                              <span className="text-[8px] bg-red-500/20 text-red-400 font-bold uppercase tracking-wider px-1.5 py-0.5 rounded flex-shrink-0">
-                                Inactive
-                              </span>
-                            )}
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
 
         {/* Mobile Search Bar Dropdown */}
         {isMobileSearchOpen && (

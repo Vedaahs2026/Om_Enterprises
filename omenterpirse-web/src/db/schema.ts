@@ -147,3 +147,43 @@ export const categories = sqliteTable("categories", {
   isActive: integer("is_active", { mode: "boolean" }).notNull().default(true),
   tagline: text("tagline"),
 });
+
+export const brands = sqliteTable("brands", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  name: text("name").notNull(),
+  imageUrl: text("image_url"),
+  category: text("category").notNull(),
+  displayOrder: integer("display_order").notNull().default(0),
+  isActive: integer("is_active", { mode: "boolean" }).notNull().default(true),
+  createdAt: text("created_at").$defaultFn(() => new Date().toISOString()),
+});
+
+export const brandLengths = sqliteTable("brand_lengths", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  brandId: integer("brand_id").notNull().references(() => brands.id, { onDelete: "cascade" }),
+  lengthInMeters: real("length_in_meters").notNull(),
+  isActive: integer("is_active", { mode: "boolean" }).notNull().default(true),
+  createdAt: text("created_at").$defaultFn(() => new Date().toISOString()),
+});
+
+export const brandModels = sqliteTable("brand_models", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  brandLengthId: integer("brand_length_id").notNull().references(() => brandLengths.id, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  description: text("description"),
+  isActive: integer("is_active", { mode: "boolean" }).notNull().default(true),
+  createdAt: text("created_at").$defaultFn(() => new Date().toISOString()),
+});
+
+export const brandVariations = sqliteTable("brand_variations", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  modelId: integer("model_id").notNull().references(() => brandModels.id, { onDelete: "cascade" }),
+  thickness: text("thickness").notNull(),
+  colors: text("colors"),
+  price: real("price").notNull(),
+  salePrice: real("sale_price"),
+  stock: integer("stock").notNull().default(100),
+  isActive: integer("is_active", { mode: "boolean" }).notNull().default(true),
+  createdAt: text("created_at").$defaultFn(() => new Date().toISOString()),
+});
+

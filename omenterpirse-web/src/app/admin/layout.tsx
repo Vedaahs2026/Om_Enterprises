@@ -16,14 +16,14 @@ import {
   BarChart3,
   AlertTriangle,
   X,
-  Grid
+  Grid,
+  Award,
+  Ruler,
+  Layers
 } from "lucide-react";
 
 const sidebarLinks = [
-  { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
-  { name: "Reports", href: "/admin/reports", icon: BarChart3 },
-  { name: "Inventory", href: "/admin/inventory", icon: Box },
-  { name: "Products", href: "/admin/products", icon: Zap },
+  { name: "Master Catalog", href: "/admin/catalog", icon: Layers },
   { name: "Categories", href: "/admin/categories", icon: Grid },
   { name: "Navbar Settings", href: "/admin/navigation", icon: Map },
   { name: "Orders", href: "/admin/orders", icon: Package },

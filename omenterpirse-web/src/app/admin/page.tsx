@@ -25,27 +25,8 @@ export default function AdminDashboard() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const res = await fetch("/api/admin/stats");
-        
-        if (res.status === 401) {
-          router.push("/admin/login");
-          return;
-        }
-
-        const data = await res.json();
-        if (data.success) {
-          setStats(data.stats);
-        }
-      } catch (err) {
-        console.error("Failed to fetch dashboard stats");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchStats();
-  }, []);
+    router.replace("/admin/catalog");
+  }, [router]);
 
   if (isLoading) {
     return (

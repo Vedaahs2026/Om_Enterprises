@@ -173,36 +173,7 @@ export default async function Home() {
           </div>
         )}
 
-        {/* Featured Collections (Static Featured Section) */}
-        {featuredProducts.length > 0 && (
-          <div id="featured-harvest" className="scroll-mt-28">
-            <ProductGrid title="Featured Collections" initialProducts={featuredProducts as any} />
-          </div>
-        )}
 
-        {/* Our Collections Section -> Categories with Products */}
-        {categoriesWithProducts.length > 0 && (
-          <div id="our-collections" className="scroll-mt-28 space-y-10">
-            {categoriesWithProducts.map((cat) => (
-              <div key={cat.id} id={`category-${cat.slug}`} className="scroll-mt-28 border-b border-brand/5 pb-6 last:border-0 last:pb-0">
-                <ProductGrid 
-                  title={cat.name} 
-                  tagline={cat.tagline || undefined} 
-                  initialProducts={cat.products as any} 
-                />
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Dynamic Sections (Grids) */}
-        {homeSections.map((section) => (
-          section.products.length > 0 && (
-            <div key={section.id} id={section.title.toLowerCase().replace(/\s+/g, '-')} className="scroll-mt-28">
-              <ProductGrid title={section.title} initialProducts={section.products as any} />
-            </div>
-          )
-        ))}
 
         {/* Trusted Brands Section */}
         <section className="py-6 border-t border-b border-gray-100 overflow-hidden">
@@ -338,7 +309,7 @@ export default async function Home() {
         </section>
 
         {/* Contact CTA */}
-        <section className="p-8 md:p-12 bg-gray-50 rounded-3xl border border-gray-100 flex flex-col md:flex-row justify-between items-center gap-8 shadow-sm">
+        <section id="contact" className="p-8 md:p-12 bg-gray-50 rounded-3xl border border-gray-100 flex flex-col md:flex-row justify-between items-center gap-8 shadow-sm">
           <div className="space-y-3 max-w-xl">
             <span className="text-[10px] font-black text-brand uppercase tracking-[0.3em]">Quick Inquiry</span>
             <h3 className="text-2xl font-bold text-brand-dark">Ready to Power Your Next Project?</h3>

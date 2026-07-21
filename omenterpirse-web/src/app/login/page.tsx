@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, ShieldCheck, User, Phone, Loader2 } from "lucide-react";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { auth, isFirebaseConfigured } from "@/lib/firebase";
 import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult } from "firebase/auth";
@@ -20,6 +20,9 @@ declare global {
 
 export default function Login() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
+
   const [mounted, setMounted] = useState(false);
   const [step, setStep] = useState<"phone" | "otp" | "profile">("phone");
   const [phone, setPhone] = useState("");
@@ -183,7 +186,7 @@ export default function Login() {
           if (data.isNewUser) {
             setStep("profile");
           } else {
-            router.push("/");
+            router.push(callbackUrl);
             router.refresh();
           }
         } else {
@@ -223,7 +226,7 @@ export default function Login() {
         if (data.isNewUser) {
           setStep("profile");
         } else {
-          router.push("/");
+          router.push(callbackUrl);
           router.refresh();
         }
       } else {
@@ -256,7 +259,7 @@ export default function Login() {
       const data = await res.json();
       
       if (data.success) {
-        router.push("/");
+        router.push(callbackUrl);
         router.refresh();
       } else {
         setError(data.error || "Failed to save profile");

@@ -247,22 +247,57 @@ export default function OrderDetailClient({
           <div>
             <h4 className="text-[9px] font-black text-brand/30 uppercase tracking-[0.2em] mb-4">Items Purchased</h4>
             <div className="space-y-3">
-              {items.map((item) => (
-                <div key={item.id} className="flex items-center justify-between p-4 bg-white rounded-2xl border border-brand/5 shadow-xs">
-                  <div className="flex items-center gap-3.5">
-                    <div className="w-10 h-10 bg-brand/5 rounded-xl flex items-center justify-center">
-                      <Package size={16} className="text-brand/30" />
+              {items.map((item) => {
+                const cust = typeof item.customizations === 'string' 
+                  ? (item.customizations ? JSON.parse(item.customizations) : null) 
+                  : item.customizations;
+
+                const brandName = cust?.brandName || "";
+                const modelName = cust?.modelName || "";
+                const lengthInMeters = cust?.lengthInMeters || "";
+                
+                let displayTitle = item.productName || "";
+                if (brandName || modelName) {
+                  displayTitle = `${brandName} ${modelName}`.trim();
+                  if (lengthInMeters) {
+                    displayTitle += ` (${lengthInMeters} MTR)`;
+                  }
+                } else if (!displayTitle) {
+                  displayTitle = "Electrical Product";
+                }
+
+                const thicknessVal = item.size || cust?.thickness || "";
+                const colorVal = item.color || cust?.color || "";
+
+                return (
+                  <div key={item.id} className="flex items-center justify-between p-4 bg-white rounded-2xl border border-brand/5 shadow-xs">
+                    <div className="flex items-center gap-3.5">
+                      <div className="w-10 h-10 bg-brand/5 rounded-xl flex items-center justify-center shrink-0">
+                        <Package size={16} className="text-brand/30" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-brand">{displayTitle}</p>
+                        <div className="flex flex-wrap items-center gap-2 mt-1">
+                          {thicknessVal && (
+                            <span className="text-[10px] font-bold text-brand/70 bg-brand/5 px-2 py-0.5 rounded border border-brand/5 uppercase">
+                              {thicknessVal}
+                            </span>
+                          )}
+                          {colorVal && (
+                            <span className="text-[10px] font-black text-white bg-[#0D47A1] px-2 py-0.5 rounded shadow-xs uppercase tracking-wider">
+                              Color: {colorVal}
+                            </span>
+                          )}
+                          <span className="text-[10px] font-bold text-gray-500">
+                            Qty: {item.quantity}
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-xs font-bold text-brand">{item.productName || "Om Enterprises fit product"}</p>
-                      <p className="text-[9px] font-bold text-brand/40 uppercase tracking-widest mt-0.5">
-                        Qty: {item.quantity} • {item.size}
-                      </p>
-                    </div>
+                    <p className="text-xs font-bold text-brand font-sans shrink-0 ml-4">₹{(item.price * item.quantity).toLocaleString()}</p>
                   </div>
-                  <p className="text-xs font-bold text-brand font-sans">₹{item.price * item.quantity}</p>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
