@@ -14,6 +14,25 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/store/useCartStore";
 
+function getColorStyles(colorName: string) {
+  const name = (colorName || "").toLowerCase().trim();
+  const colorMap: Record<string, { bg: string; text: string; border: string }> = {
+    red: { bg: "#EF4444", text: "#FFFFFF", border: "#DC2626" },
+    yellow: { bg: "#FBBF24", text: "#000000", border: "#D97706" },
+    blue: { bg: "#2563EB", text: "#FFFFFF", border: "#1D4ED8" },
+    green: { bg: "#10B981", text: "#FFFFFF", border: "#059669" },
+    black: { bg: "#1F2937", text: "#FFFFFF", border: "#111827" },
+    white: { bg: "#FFFFFF", text: "#1F2937", border: "#E5E7EB" },
+    grey: { bg: "#9CA3AF", text: "#FFFFFF", border: "#7B808A" },
+    gray: { bg: "#9CA3AF", text: "#FFFFFF", border: "#7B808A" },
+    orange: { bg: "#F97316", text: "#FFFFFF", border: "#EA580C" },
+    pink: { bg: "#EC4899", text: "#FFFFFF", border: "#DB2777" },
+    purple: { bg: "#8B5CF6", text: "#FFFFFF", border: "#7C3AED" },
+    brown: { bg: "#78350F", text: "#FFFFFF", border: "#451A03" },
+  };
+  return colorMap[name] || { bg: "#E5E7EB", text: "#374151", border: "#D1D5DB" };
+}
+
 type Variation = {
   id: number;
   modelId: number;
@@ -274,11 +293,19 @@ export default function DedicatedMatrixOrderPage({ params }: PageProps) {
               <tr className="bg-gray-50 border-b border-gray-200 text-[10px] font-black text-gray-500 uppercase tracking-wider">
                 <th className="py-3 px-4 border-r border-gray-200 w-36">Size / Gauge</th>
                 <th className="py-3 px-3 border-r border-gray-200 text-center w-24">Price (₹)</th>
-                {displayColors.map((color) => (
-                  <th key={color} className="py-3 px-2 border-r border-gray-200 text-center uppercase min-w-[70px]">
-                    {color}
-                  </th>
-                ))}
+                {displayColors.map((color) => {
+                  const style = getColorStyles(color);
+                  return (
+                    <th key={color} className="py-3 px-2 border-r border-gray-200 text-center min-w-[80px]">
+                      <span 
+                        style={{ backgroundColor: style.bg, color: style.text, borderColor: style.border }} 
+                        className="inline-block px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider border shadow-xs"
+                      >
+                        {color}
+                      </span>
+                    </th>
+                  );
+                })}
                 <th className="py-3 px-3 border-r border-gray-200 text-center w-28">Coils / Qty</th>
                 <th className="py-3 px-4 text-right w-32">Amount (₹)</th>
               </tr>

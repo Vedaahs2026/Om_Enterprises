@@ -35,6 +35,25 @@ function parseWeightToKg(sizeStr: string): number {
   return numeric >= 10 ? numeric / 1000 : numeric;
 }
 
+function getColorStyles(colorName: string) {
+  const name = (colorName || "").toLowerCase().trim();
+  const colorMap: Record<string, { bg: string; text: string; border: string }> = {
+    red: { bg: "#EF4444", text: "#FFFFFF", border: "#DC2626" },
+    yellow: { bg: "#FBBF24", text: "#000000", border: "#D97706" },
+    blue: { bg: "#2563EB", text: "#FFFFFF", border: "#1D4ED8" },
+    green: { bg: "#10B981", text: "#FFFFFF", border: "#059669" },
+    black: { bg: "#1F2937", text: "#FFFFFF", border: "#111827" },
+    white: { bg: "#FFFFFF", text: "#1F2937", border: "#E5E7EB" },
+    grey: { bg: "#9CA3AF", text: "#FFFFFF", border: "#7B808A" },
+    gray: { bg: "#9CA3AF", text: "#FFFFFF", border: "#7B808A" },
+    orange: { bg: "#F97316", text: "#FFFFFF", border: "#EA580C" },
+    pink: { bg: "#EC4899", text: "#FFFFFF", border: "#DB2777" },
+    purple: { bg: "#8B5CF6", text: "#FFFFFF", border: "#7C3AED" },
+    brown: { bg: "#78350F", text: "#FFFFFF", border: "#451A03" },
+  };
+  return colorMap[name] || { bg: "#E5E7EB", text: "#374151", border: "#D1D5DB" };
+}
+
 function calculateTotalWeight(items: any[]): number {
   if (!items || !Array.isArray(items) || items.length === 0) return 0.5;
   let total = 0;
@@ -512,7 +531,14 @@ Please confirm my order. Thank you!`;
                         Specification: {item.size}
                       </span>
                       {item.color && (
-                        <span className="text-[9px] font-bold text-brand/40 uppercase tracking-widest bg-brand/5 px-2 py-0.5 rounded-full">
+                        <span 
+                          style={{ 
+                            backgroundColor: getColorStyles(item.color).bg, 
+                            color: getColorStyles(item.color).text, 
+                            borderColor: getColorStyles(item.color).border 
+                          }} 
+                          className="text-[9px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border shadow-2xs"
+                        >
                           Color: {item.color}
                         </span>
                       )}

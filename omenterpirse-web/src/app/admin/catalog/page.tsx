@@ -19,6 +19,25 @@ import {
   Grid
 } from "lucide-react";
 
+function getColorStyles(colorName: string) {
+  const name = (colorName || "").toLowerCase().trim();
+  const colorMap: Record<string, { bg: string; text: string; border: string }> = {
+    red: { bg: "#EF4444", text: "#FFFFFF", border: "#DC2626" },
+    yellow: { bg: "#FBBF24", text: "#000000", border: "#D97706" },
+    blue: { bg: "#2563EB", text: "#FFFFFF", border: "#1D4ED8" },
+    green: { bg: "#10B981", text: "#FFFFFF", border: "#059669" },
+    black: { bg: "#1F2937", text: "#FFFFFF", border: "#111827" },
+    white: { bg: "#FFFFFF", text: "#1F2937", border: "#E5E7EB" },
+    grey: { bg: "#9CA3AF", text: "#FFFFFF", border: "#7B808A" },
+    gray: { bg: "#9CA3AF", text: "#FFFFFF", border: "#7B808A" },
+    orange: { bg: "#F97316", text: "#FFFFFF", border: "#EA580C" },
+    pink: { bg: "#EC4899", text: "#FFFFFF", border: "#DB2777" },
+    purple: { bg: "#8B5CF6", text: "#FFFFFF", border: "#7C3AED" },
+    brown: { bg: "#78350F", text: "#FFFFFF", border: "#451A03" },
+  };
+  return colorMap[name] || { bg: "#E5E7EB", text: "#374151", border: "#D1D5DB" };
+}
+
 type Category = {
   id: number;
   name: string;
@@ -545,11 +564,18 @@ export default function MasterCatalogPage() {
 
                     {parsedColors.length > 0 && (
                       <div className="flex flex-wrap gap-1 pt-1">
-                        {parsedColors.map((col, idx) => (
-                          <span key={idx} className="bg-white border border-gray-200 text-gray-600 text-[9px] px-1.5 py-0.5 rounded font-medium">
-                            {col}
-                          </span>
-                        ))}
+                        {parsedColors.map((col, idx) => {
+                          const style = getColorStyles(col);
+                          return (
+                            <span 
+                              key={idx} 
+                              style={{ backgroundColor: style.bg, color: style.text, borderColor: style.border }} 
+                              className="text-[9px] px-1.5 py-0.5 rounded font-bold uppercase border shadow-2xs"
+                            >
+                              {col}
+                            </span>
+                          );
+                        })}
                       </div>
                     )}
                   </div>
@@ -675,12 +701,19 @@ export default function MasterCatalogPage() {
                 <button type="button" onClick={handleAddColorTag} className="px-3 bg-gray-200 hover:bg-gray-300 text-xs font-bold rounded-xl">+</button>
               </div>
               <div className="flex flex-wrap gap-1.5">
-                {varColors.map((c, idx) => (
-                  <span key={idx} className="bg-gray-100 text-[#0D47A1] text-xs px-2.5 py-1 rounded-full font-bold flex items-center gap-1">
-                    {c}
-                    <button type="button" onClick={() => handleRemoveColorTag(c)} className="text-gray-400 hover:text-red-500">×</button>
-                  </span>
-                ))}
+                {varColors.map((c, idx) => {
+                  const style = getColorStyles(c);
+                  return (
+                    <span 
+                      key={idx} 
+                      style={{ backgroundColor: style.bg, color: style.text, borderColor: style.border }} 
+                      className="text-xs px-2.5 py-1 rounded-full font-bold flex items-center gap-1.5 border shadow-xs"
+                    >
+                      {c}
+                      <button type="button" onClick={() => handleRemoveColorTag(c)} style={{ color: style.text }} className="opacity-70 hover:opacity-100 font-bold">×</button>
+                    </span>
+                  );
+                })}
               </div>
             </div>
 
