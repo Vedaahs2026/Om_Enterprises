@@ -4,56 +4,69 @@ import React from "react";
 
 const BRAND_LOGOS: Record<string, React.ReactNode> = {
   Polycab: (
-    <svg className="h-11 w-auto" viewBox="0 0 160 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g transform="translate(5, 5)">
-        <circle cx="15" cy="15" r="14" fill="#E53935" />
-        <path d="M 11.2,8.8 A 7.5,7.5 0 1,0 18.8,8.8" stroke="white" strokeWidth="2.8" strokeLinecap="round" fill="none" />
-        <line x1="15" y1="4" x2="15" y2="14" stroke="white" strokeWidth="2.8" strokeLinecap="round" />
-      </g>
-      <text x="45" y="26" fontFamily="'Inter', sans-serif" fontWeight="900" fontSize="18" fill="#E53935" letterSpacing="0.5">POLYCAB</text>
+    <svg className="h-10 w-auto" viewBox="0 0 160 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="polyO" x1="1" y1="0" x2="0.2" y2="0.8">
+          <stop offset="0%" stopColor="#9C27B0" />
+          <stop offset="50%" stopColor="#00AEEF" />
+          <stop offset="100%" stopColor="#E31B23" />
+        </linearGradient>
+      </defs>
+      <text x="5" y="29.5" fontFamily="'Inter', sans-serif" fontWeight="900" fontSize="27" fill="#E31B23" letterSpacing="-0.5">P</text>
+      <path d="M 45.8 13.4 A 9.5 9.5 0 1 0 45.8 25.6" stroke="url(#polyO)" strokeWidth="4.8" strokeLinecap="round" fill="none" />
+      <text x="55" y="29.5" fontFamily="'Inter', sans-serif" fontWeight="900" fontSize="27" fill="#E31B23" letterSpacing="-0.5">LYCAB</text>
     </svg>
   ),
   Finolex: (
-    <svg className="h-9 w-auto" viewBox="0 0 140 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <text x="5" y="26" fontFamily="'Playfair Display', 'Georgia', serif" fontWeight="800" fontStyle="italic" fontSize="22" fill="#2E7D32">Finolex</text>
-      <path d="M5 32 Q 40 28, 95 31" stroke="#E65100" strokeWidth="3" strokeLinecap="round" fill="none" />
+    <svg className="h-9 w-auto" viewBox="0 0 140 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <text x="5" y="21" fontFamily="'Inter', sans-serif" fontWeight="800" fontSize="22" fill="#0096D6" letterSpacing="-0.5">Finolex</text>
+      <line x1="5" y1="26" x2="135" y2="26" stroke="#4B4B4B" strokeWidth="1" />
+      <text x="5" y="37" fontFamily="'Inter', sans-serif" fontWeight="700" fontSize="10" fill="#333333" letterSpacing="0.2">Cables Limited</text>
     </svg>
   ),
   KEI: (
-    <svg className="h-9 w-auto" viewBox="0 0 140 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <text x="5" y="26" fontFamily="'Inter', sans-serif" fontWeight="900" fontSize="24" fill="#0D47A1" letterSpacing="1">KEI</text>
-      <path d="M5 30 H 45" stroke="#D32F2F" strokeWidth="3" strokeLinecap="round" />
-      <text x="52" y="24" fontFamily="'Inter', sans-serif" fontWeight="500" fontSize="9" fill="#D32F2F">WIRES &amp; CABLES</text>
-    </svg>
-  ),
-  "RR Kabel": (
-    <svg className="h-11 w-auto" viewBox="0 0 150 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="5" y="5" width="30" height="30" rx="4" fill="#D32F2F" />
-      <text x="10" y="27" fontFamily="'Inter', sans-serif" fontWeight="900" fontSize="20" fill="white">R</text>
-      <text x="21" y="27" fontFamily="'Inter', sans-serif" fontWeight="900" fontSize="20" fill="white">R</text>
-      <text x="45" y="26" fontFamily="'Inter', sans-serif" fontWeight="800" fontSize="16" fill="#1A1A1A" letterSpacing="2">KABEL</text>
+    <svg className="h-10 w-auto" viewBox="0 0 140 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="keiGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#0A5B9C" />
+          <stop offset="50%" stopColor="#43C1F2" />
+          <stop offset="100%" stopColor="#003366" />
+        </linearGradient>
+      </defs>
+      <g transform="translate(14, 0)">
+        <text x="0" y="24" fontFamily="'Inter', sans-serif" fontWeight="950" fontStyle="italic" fontSize="26" fill="url(#keiGrad)" stroke="#001830" strokeWidth="0.8" transform="skewX(-15)" letterSpacing="-0.5">KEI</text>
+      </g>
+      <text x="6" y="38" fontFamily="'Inter', sans-serif" fontWeight="800" fontSize="12" fill="#1E1E1E" letterSpacing="0.2">Wires &amp; Cables</text>
     </svg>
   ),
   Legrand: (
-    <svg className="h-9 w-auto" viewBox="0 0 140 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g transform="translate(5, 8)">
-        <rect x="0" y="0" width="8" height="24" fill="#E53935" />
-        <rect x="12" y="0" width="8" height="24" fill="#E53935" />
-        <rect x="0" y="8" width="20" height="8" fill="#E53935" />
+    <svg className="h-9 w-auto" viewBox="0 0 140 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(5, 4)">
+        {/* Top-right L-bracket */}
+        <path d="M 12 0 H 24 V 12 H 19.5 V 4.5 H 12 Z" fill="#000000" />
+        {/* Bottom-left L-bracket */}
+        <path d="M 0 12 H 4.5 V 19.5 H 12 V 24 H 0 Z" fill="#000000" />
+        {/* Two vertical lines */}
+        <rect x="8" y="-2" width="2" height="20" fill="#000000" />
+        <rect x="14" y="6" width="2" height="20" fill="#000000" />
       </g>
-      <text x="35" y="27" fontFamily="'Inter', sans-serif" fontWeight="700" fontSize="21" fill="#1A1A1A" letterSpacing="-0.5">legrand</text>
+      {/* legrand text */}
+      <text x="35" y="24" fontFamily="'Inter', sans-serif" fontWeight="800" fontSize="22" fill="#E21A22" letterSpacing="-1">legrand</text>
     </svg>
   ),
   Anchor: (
-    <svg className="h-11 w-auto" viewBox="0 0 140 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g transform="translate(5, 5)" stroke="#D32F2F" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="15" cy="8" r="4" />
-        <line x1="15" y1="12" x2="15" y2="28" />
-        <line x1="9" y1="17" x2="21" y2="17" />
-        <path d="M7 22 C 7 28, 23 28, 23 22" />
-        <path d="M5 21 L8 23 M25 21 L22 23" />
+    <svg className="h-10 w-auto" viewBox="0 0 150 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g transform="translate(5, 2)">
+        {/* Red background square */}
+        <rect x="0" y="0" width="28" height="28" rx="2" fill="#E21A22" />
+        {/* White Anchor */}
+        <circle cx="14" cy="6.5" r="2.2" stroke="white" strokeWidth="1.8" fill="none" />
+        <rect x="13" y="8.5" width="2" height="12" fill="white" />
+        <rect x="9" y="11.5" width="10" height="2" fill="white" />
+        <path d="M 6.5 15.5 C 6.5 22.5, 21.5 22.5, 21.5 15.5 C 20.3 18, 17.5 19.2, 14 19.2 C 10.5 19.2, 7.7 18, 6.5 15.5 Z" fill="white" />
       </g>
-      <text x="42" y="26" fontFamily="'Inter', sans-serif" fontWeight="900" fontSize="16" fill="#D32F2F" letterSpacing="1.5">ANCHOR</text>
+      {/* ANCHOR text */}
+      <text x="40" y="26.5" fontFamily="'Inter', sans-serif" fontWeight="950" fontSize="25" fill="#E21A22" letterSpacing="-0.5">ANCHOR</text>
     </svg>
   ),
   Havells: (
@@ -64,22 +77,6 @@ const BRAND_LOGOS: Record<string, React.ReactNode> = {
         <path d="M0 10 L 15 20 H 0 Z" fill="#D32F2F" />
       </g>
       <text x="42" y="27" fontFamily="'Inter', sans-serif" fontWeight="900" fontSize="18" fill="#1A1A1A" letterSpacing="0.5">HAVELLS</text>
-    </svg>
-  ),
-  "Schneider Electric": (
-    <svg className="h-11 w-auto" viewBox="0 0 180 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g transform="translate(5, 8)">
-        <path d="M5 10 C 10 5, 20 5, 20 12 C 20 20, 10 20, 5 22 Z" fill="#4CAF50" />
-        <line x1="5" y1="5" x2="20" y2="20" stroke="white" strokeWidth="2.5" />
-      </g>
-      <text x="32" y="21" fontFamily="'Inter', sans-serif" fontWeight="800" fontSize="13" fill="#3E2723">Schneider</text>
-      <text x="32" y="32" fontFamily="'Inter', sans-serif" fontWeight="400" fontSize="11" fill="#4CAF50">Electric</text>
-    </svg>
-  ),
-  ABB: (
-    <svg className="h-12 w-auto" viewBox="0 0 90 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <text x="5" y="28" fontFamily="'Inter', sans-serif" fontWeight="900" fontSize="30" fill="#FF0000" letterSpacing="-1.5">ABB</text>
-      <rect x="6" y="4" width="68" height="3" fill="#FF0000" />
     </svg>
   ),
   Siemens: (
@@ -115,8 +112,20 @@ const BRAND_LOGOS: Record<string, React.ReactNode> = {
     </svg>
   ),
   Usha: (
-    <svg className="h-9 w-auto" viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <text x="5" y="27" fontFamily="'Inter', sans-serif" fontWeight="900" fontSize="22" fill="#D32F2F" letterSpacing="2">USHA</text>
+    <svg className="h-9 w-auto" viewBox="0 0 128 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="1" width="28" height="28" rx="5" fill="#E11B22" />
+      <text x="14" y="21.5" fontFamily="'Inter', sans-serif" fontWeight="900" fontSize="19" fill="white" textAnchor="middle">U</text>
+      
+      <rect x="31" y="1" width="28" height="28" rx="5" fill="#E11B22" />
+      <text x="45" y="21.5" fontFamily="'Inter', sans-serif" fontWeight="900" fontSize="19" fill="white" textAnchor="middle">S</text>
+      
+      <rect x="62" y="1" width="28" height="28" rx="5" fill="#E11B22" />
+      <text x="76" y="21.5" fontFamily="'Inter', sans-serif" fontWeight="900" fontSize="19" fill="white" textAnchor="middle">H</text>
+      
+      <rect x="93" y="1" width="28" height="28" rx="5" fill="#E11B22" />
+      <text x="107" y="21.5" fontFamily="'Inter', sans-serif" fontWeight="900" fontSize="19" fill="white" textAnchor="middle">A</text>
+      
+      <text x="122" y="7" fontFamily="'Inter', sans-serif" fontWeight="700" fontSize="6" fill="#777777">®</text>
     </svg>
   ),
 };

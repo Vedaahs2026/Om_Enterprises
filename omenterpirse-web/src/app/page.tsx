@@ -156,7 +156,7 @@ export default async function Home() {
       {/* Home Page Banner */}
       <div className="w-full">
         <img 
-          src="/images/Home_banner.jpeg" 
+          src="/images/Home_banner.png" 
           alt="OM Enterprises Banner" 
           className="w-full h-auto"
         />
