@@ -273,8 +273,8 @@ export default function Navbar() {
               </Link>
 
               <Link href={user ? "/cart" : "/login"} aria-label="Cart" className="hover:text-[#FF9800] transition-colors relative p-1.5">
-                <ShoppingCart className="h-4 w-4" />
-                <span className="absolute top-0.5 right-0.5 bg-[#FF9800] text-white text-[7.5px] font-black h-3.5 w-3.5 rounded-full flex items-center justify-center border-2 border-brand">
+                <ShoppingCart className="h-6 w-6" />
+                <span className="absolute -top-0.5 -right-0.5 bg-[#FF9800] text-white text-[9px] font-black h-4.5 w-4.5 rounded-full flex items-center justify-center border border-brand">
                   {cartCount}
                 </span>
               </Link>
@@ -304,8 +304,8 @@ export default function Navbar() {
                 <BookOpen className="h-5 w-5" />
               </Link>
               <Link href={user ? "/cart" : "/login"} aria-label="Cart" className="text-white relative p-2">
-                <ShoppingCart className="h-5 w-5" />
-                <span className="absolute top-0 right-0 bg-[#FF9800] text-white text-[9px] font-black h-4 w-4 rounded-full flex items-center justify-center border-2 border-brand">
+                <ShoppingCart className="h-6 w-6" />
+                <span className="absolute -top-0.5 -right-0.5 bg-[#FF9800] text-white text-[10px] font-black h-5 w-5 rounded-full flex items-center justify-center border border-brand">
                   {cartCount}
                 </span>
               </Link>
