@@ -53,7 +53,7 @@ export default function BrandGrid({ brands, categoryTitle }: BrandGridProps) {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="flex flex-wrap items-center justify-center gap-8 md:gap-10"
+        className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 justify-items-center"
       >
         {brands.map((brand) => (
           <motion.div
@@ -61,7 +61,7 @@ export default function BrandGrid({ brands, categoryTitle }: BrandGridProps) {
             variants={itemVariants}
             whileHover={{ y: -4, scale: 1.02 }}
             transition={{ duration: 0.2 }}
-            className="w-full sm:w-[240px] md:w-[260px] lg:w-[280px]"
+            className="w-full max-w-[320px]"
           >
             <Link
               href={`/brand/${brand.id}`}
