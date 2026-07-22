@@ -27,13 +27,13 @@ export default function AboutUs() {
       <section className="max-w-7xl mx-auto px-6 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-20">
           <div className="space-y-6">
-            <span className="text-[10px] font-black text-brand uppercase tracking-[0.3em]">Who We Are</span>
+            <span className="text-[10px] font-black text-brand uppercase tracking-[0.3em]">Visit Us</span>
             <h2 className="text-3xl md:text-4xl font-bold text-brand font-playfair">Delivering Excellence in Electrical Supplies</h2>
             <p className="text-brand-dark/70 leading-relaxed text-base">
-              OM Enterprises was founded with a clear vision: to provide genuine, factory-certified electrical products to our community. Over more than two decades, we have partnered with industry giants like Polycab, Finolex, Legrand, and Anchor to bring premium quality cables, switches, and panels to your projects.
+              Visit our store to get to know more details and fulfill your requirement for premium electrical wires, cables, switches, and distribution boards. We display a wide collection of authentic, certified products to meet all your project needs.
             </p>
             <p className="text-brand-dark/70 leading-relaxed text-base">
-              Whether you are a homeowner seeking safety-assured wiring or a contractor looking for heavy industrial switchgears, our Hyderabad showroom showcases solutions crafted for every scale.
+              Whether you are looking for safety-assured domestic house wires or heavy industrial power cables, our Hyderabad showroom showcases solutions crafted for every scale.
             </p>
             <div className="grid grid-cols-2 gap-4 pt-4">
               <div className="flex items-center gap-2">
@@ -57,8 +57,8 @@ export default function AboutUs() {
           
           <div className="relative h-[380px] w-full rounded-[2rem] overflow-hidden shadow-xl border border-brand/10">
             <img 
-              src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&q=80" 
-              alt="Experience Center" 
+              src="https://images.unsplash.com/photo-1601597111158-2fceff292cdc?w=800&q=80" 
+              alt="Electrical Wires & Supplies Showcase" 
               className="object-cover w-full h-full"
             />
           </div>
