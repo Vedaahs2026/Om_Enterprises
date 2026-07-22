@@ -61,15 +61,15 @@ export default async function CategoryPage({ params }: PageProps) {
             Service Not Provided for These Items
           </h2>
           <p className="text-brand/60 max-w-xs mx-auto text-xs leading-relaxed mb-5">
-            We currently do not offer brand services for <span className="font-bold text-brand">{categoryName}</span>. Contact our admin team for inquiries.
+            For <span className="font-bold text-brand">{categoryName}</span> inquiry please contact admin: <a href="tel:9849845555" className="font-black text-brand hover:text-[#FF9800] transition-colors">9849845555</a>
           </p>
-          <Link
-            href="/about#contact"
+          <a
+            href="tel:9849845555"
             className="inline-flex items-center gap-2 bg-[#FF9800] hover:bg-[#F57C00] text-white font-bold text-xs uppercase tracking-widest px-6 py-2.5 rounded-xl shadow-md transition-all duration-300 transform hover:-translate-y-0.5"
           >
             <PhoneCall size={14} />
             <span>Contact Admin</span>
-          </Link>
+          </a>
         </section>
       )}
     </div>
