@@ -344,20 +344,8 @@ export default function CartPage() {
   }
 
   const subtotal = getTotalPrice();
-  
-  const totalWeightKg = calculateTotalWeight(items);
-  let computedPorterCharge = 0;
-  if (items.length > 0) {
-    if (totalWeightKg <= 20) {
-      computedPorterCharge = 150 + Math.ceil(totalWeightKg) * 8;
-    } else if (totalWeightKg <= 300) {
-      computedPorterCharge = 450 + Math.ceil(totalWeightKg - 20) * 5;
-    } else {
-      computedPorterCharge = 950 + Math.ceil(totalWeightKg - 300) * 3;
-    }
-  }
-  const shipping = shippingCost !== 0 && shippingCost !== null ? shippingCost : Math.round(computedPorterCharge);
-  const total = subtotal + shipping;
+  const shipping = 0;
+  const total = subtotal;
 
   const handleCheckout = async () => {
     setIsCheckoutModalOpen(true);
@@ -643,7 +631,7 @@ Please confirm my order. Thank you!`;
               </div>
               <div className="flex justify-between items-center text-brand/60 pb-4 border-b border-gray-100">
                 <span className="text-xs font-bold tracking-widest uppercase">Est. Shipping</span>
-                <span className="text-brand font-bold text-sm">₹{shipping.toLocaleString()}</span>
+                <span className="text-brand font-bold text-xs uppercase tracking-wide">Based on Porter charges</span>
               </div>
               <div className="flex justify-between items-center pt-2">
                 <span className="text-sm font-black tracking-widest uppercase text-brand">Total Estimate</span>
@@ -955,7 +943,7 @@ Please confirm my order. Thank you!`;
                       </div>
                       <div className="flex justify-between items-center text-xs font-bold text-brand/60">
                         <span>Est. Shipping</span>
-                        <span>₹{shippingCost.toLocaleString()}</span>
+                        <span className="text-[10px] uppercase font-black tracking-wide text-brand">Based on Porter charges</span>
                       </div>
                       <div className="border-t border-brand/10 pt-2 flex justify-between items-center text-sm font-black text-brand">
                         <span>Total Estimate</span>
@@ -1272,9 +1260,9 @@ Please confirm my order. Thank you!`;
                           <span>Subtotal</span>
                           <span>₹{subtotal.toLocaleString()}</span>
                         </div>
-                        <div className="flex justify-between items-center text-xs font-bold text-gray-500">
+                         <div className="flex justify-between items-center text-xs font-bold text-gray-500">
                           <span>Shipping</span>
-                          <span>Free</span>
+                          <span className="text-[10px] font-black uppercase tracking-wider text-brand">Based on Porter charges</span>
                         </div>
                         <div className="border-t border-gray-200 pt-2 flex justify-between items-center text-sm font-black text-brand">
                           <span>Total Amount</span>
