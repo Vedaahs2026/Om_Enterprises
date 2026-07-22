@@ -505,11 +505,11 @@ Please confirm my order. Thank you!`;
                 }`}
               >
               {/* Product Image */}
-              <div className="w-24 h-24 sm:w-28 sm:h-28 bg-brand-light rounded-2xl overflow-hidden flex-shrink-0 relative">
+              <div className="w-24 h-24 sm:w-28 sm:h-28 bg-white border border-gray-100 rounded-2xl overflow-hidden flex-shrink-0 relative p-2 flex items-center justify-center">
                 <img 
                   src={item.image} 
                   alt={item.name} 
-                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700 ease-out"
+                  className="max-w-full max-h-full object-contain transform group-hover:scale-105 transition-transform duration-700 ease-out"
                 />
               </div>
 
