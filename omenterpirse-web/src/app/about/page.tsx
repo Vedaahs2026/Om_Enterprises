@@ -30,7 +30,7 @@ export default function AboutUs() {
             <span className="text-[10px] font-black text-brand uppercase tracking-[0.3em]">Visit Us</span>
             <h2 className="text-3xl md:text-4xl font-bold text-brand font-playfair">Delivering Excellence in Electrical Supplies</h2>
             <p className="text-brand-dark/70 leading-relaxed text-base">
-              Visit our store to get to know more details and fulfill your requirement for premium electrical wires, cables, switches, and distribution boards. We display a wide collection of authentic, certified products to meet all your project needs.
+              Visit our store to get to know more details and fulfill your requirement. We display a wide collection of authentic, certified wires and cables to meet all your project needs.
             </p>
             <p className="text-brand-dark/70 leading-relaxed text-base">
               Whether you are looking for safety-assured domestic house wires or heavy industrial power cables, our Hyderabad showroom showcases solutions crafted for every scale.
@@ -57,8 +57,8 @@ export default function AboutUs() {
           
           <div className="relative h-[380px] w-full rounded-[2rem] overflow-hidden shadow-xl border border-brand/10">
             <img 
-              src="https://images.unsplash.com/photo-1601597111158-2fceff292cdc?w=800&q=80" 
-              alt="Electrical Wires & Supplies Showcase" 
+              src="https://images.unsplash.com/photo-1563770660941-20978e870e26?w=800&q=80" 
+              alt="Electrical Wires Showcase" 
               className="object-cover w-full h-full"
             />
           </div>
