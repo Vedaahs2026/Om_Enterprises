@@ -106,22 +106,23 @@ interface FulfillmentActionsPanelProps {
   setActiveCancelShipmentAwb: (awb: string | null) => void;
 }
 
-const statusHierarchy = ['0_PLACED', '1_CONFIRMED', '2_PROCESSING', '3_AWB_GENERATED', '4_PICKUP_REQUESTED', 'DELIVERED', 'CANCELLED'];
+const statusHierarchy = ['0_PLACED', '1_CONFIRMED', '3_AWB_GENERATED', 'CANCELLED'];
 
 const getCurrentStatusKey = (o: Order): string => {
   if (o.orderStatus === "CANCELLED" || (o.status || "").toLowerCase() === "cancelled") {
     return "CANCELLED";
   }
-  if (o.shippingStatus === "DELIVERED" || (o.status || "").toLowerCase() === "delivered") {
-    return "DELIVERED";
-  }
-  if (o.shippingStatus === "4_PICKUP_REQUESTED" || (o.shippingStatus || "").startsWith("4_")) {
-    return "4_PICKUP_REQUESTED";
-  }
-  if (o.shippingStatus === "3_AWB_GENERATED" || (o.shippingStatus || "").startsWith("3_") || o.awbNumber) {
+  if (
+    o.shippingStatus === "DELIVERED" || (o.status || "").toLowerCase() === "delivered" ||
+    o.shippingStatus === "4_PICKUP_REQUESTED" || (o.shippingStatus || "").startsWith("4_") ||
+    o.shippingStatus === "3_AWB_GENERATED" || (o.shippingStatus || "").startsWith("3_") || o.awbNumber
+  ) {
     return "3_AWB_GENERATED";
   }
-  return o.orderStatus || "0_PLACED";
+  if (o.orderStatus === "1_CONFIRMED" || o.orderStatus === "2_PROCESSING") {
+    return "1_CONFIRMED";
+  }
+  return "0_PLACED";
 };
 
 function FulfillmentActionsPanel({
@@ -140,38 +141,23 @@ function FulfillmentActionsPanel({
   const availableActions: ActionOption[] = [
     {
       id: "0_PLACED",
-      label: "0_PLACED (Order Placed)",
-      tooltipText: "Reset status to initial placed state."
+      label: "Pending",
+      tooltipText: "Set order status to Pending."
     },
     {
       id: "1_CONFIRMED",
-      label: "1_CONFIRMED (Confirmed)",
-      tooltipText: "Mark order as confirmed and ready for packaging."
-    },
-    {
-      id: "2_PROCESSING",
-      label: "2_PROCESSING (Processing)",
-      tooltipText: "Move order to package preparation stage."
+      label: "Confirmed",
+      tooltipText: "Confirm order and allocate stock."
     },
     {
       id: "3_AWB_GENERATED",
-      label: "3_AWB_GENERATED (AWB Generated)",
-      tooltipText: "Book shipping consignment and generate courier Airway Bill (AWB)."
-    },
-    {
-      id: "4_PICKUP_REQUESTED",
-      label: "4_PICKUP_REQUESTED (Request Pickup)",
-      tooltipText: "Schedule shipping consignment pickup from the warehouse."
-    },
-    {
-      id: "DELIVERED",
-      label: "DELIVERED (Delivered)",
-      tooltipText: "Mark order and shipping delivery as completed."
+      label: "Shipped",
+      tooltipText: "Generate airway bill (AWB) and dispatch package."
     },
     {
       id: "CANCELLED",
-      label: "CANCELLED (Cancelled)",
-      tooltipText: "Cancel order fulfillment and release reserved stock."
+      label: "Cancelled",
+      tooltipText: "Cancel order and release reserved stock."
     }
   ];
 
@@ -595,22 +581,13 @@ export default function AdminOrders() {
                             await handleStatusTransition(order.id, { orderStatus: "0_PLACED", shippingStatus: "PENDING" });
                           } else if (val === "1_CONFIRMED") {
                             await handleStatusTransition(order.id, { orderStatus: "1_CONFIRMED", shippingStatus: "PENDING" });
-                          } else if (val === "2_PROCESSING") {
-                            await handleStatusTransition(order.id, { orderStatus: "2_PROCESSING", shippingStatus: "PENDING" });
-                          } else if (val === "4_PICKUP_REQUESTED") {
-                            await handleStatusTransition(order.id, { shippingStatus: "4_PICKUP_REQUESTED" });
-                          } else if (val === "DELIVERED") {
-                            await handleStatusTransition(order.id, { shippingStatus: "DELIVERED" });
                           }
                         }}
                         className={`px-3 py-1 border text-[9px] font-black uppercase tracking-widest rounded-full cursor-pointer focus:outline-none appearance-none transition-colors pr-6 bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22currentColor%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:8px] bg-[right_6px_center] bg-no-repeat ${getStatusBadgeStyle(order.status)}`}
                       >
                         <option value="0_PLACED">Pending</option>
                         <option value="1_CONFIRMED">Confirmed</option>
-                        <option value="2_PROCESSING">Processing</option>
                         <option value="3_AWB_GENERATED">Shipped</option>
-                        <option value="4_PICKUP_REQUESTED">On the Way</option>
-                        <option value="DELIVERED">Delivered</option>
                         <option value="CANCELLED">Cancelled</option>
                       </select>
                       {(() => {

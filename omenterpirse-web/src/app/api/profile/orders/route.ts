@@ -37,16 +37,8 @@ export async function GET() {
     .where(eq(orders.userId, user.id))
     .orderBy(desc(orders.createdAt));
 
-    // Only include orders after Admin has confirmed them
-    const confirmedOrders = userOrders.filter((order) => {
-      const s = (order.status || "").toLowerCase().trim();
-      const os = (order.orderStatus || "").toUpperCase().trim();
-      const isUnconfirmed = s === "order placed" || s === "pending" || os === "0_PLACED";
-      return !isUnconfirmed;
-    });
-
-    // For each confirmed order, fetch items
-    const ordersWithItems = await Promise.all(confirmedOrders.map(async (order) => {
+    // For each order, fetch items
+    const ordersWithItems = await Promise.all(userOrders.map(async (order) => {
       const items = await db.select({
         id: orderItems.id,
         productId: orderItems.productId,

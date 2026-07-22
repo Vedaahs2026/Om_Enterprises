@@ -52,13 +52,18 @@ interface Order {
 }
 
 const MILESTONES = [
-  "Order Placed",
-  "Processing",
-  "Shipped",
-  "In Transit",
-  "Out for Delivery",
-  "Delivered"
+  "Pending",
+  "Confirmed",
+  "Shipped"
 ];
+
+const mapStatusToMilestone = (status: string | null): string => {
+  const s = (status || "").toLowerCase().trim();
+  if (s === "pending" || s === "order placed") return "Pending";
+  if (s === "confirmed" || s === "processing") return "Confirmed";
+  if (s === "shipped" || s === "in transit" || s === "out for delivery" || s === "delivered") return "Shipped";
+  return "Pending";
+};
 
 export default function MyOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -227,23 +232,20 @@ export default function MyOrdersPage() {
                     <div 
                       className="absolute top-1/2 left-0 h-[3px] bg-green-500 -translate-y-1/2 rounded-full transition-all duration-1000 ease-out" 
                       style={{ 
-                        width: `${(Math.max(0, MILESTONES.findIndex(m => m.toLowerCase() === order.status?.toLowerCase()))) / (MILESTONES.length - 1) * 100}%` 
+                        width: `${(Math.max(0, MILESTONES.indexOf(mapStatusToMilestone(order.status)))) / (MILESTONES.length - 1) * 100}%` 
                       }} 
                     />
 
                     {/* Milestone Dots */}
                     <div className="relative flex justify-between">
                       {MILESTONES.map((m, idx) => {
-                        const currentIdx = MILESTONES.findIndex(milestone => milestone.toLowerCase() === order.status?.toLowerCase());
+                        const currentIdx = MILESTONES.indexOf(mapStatusToMilestone(order.status));
                         const isCompleted = currentIdx >= idx;
-                        const isCurrent = order.status?.toLowerCase() === m.toLowerCase();
+                        const isCurrent = mapStatusToMilestone(order.status) === m;
                         
                         let Icon = Package;
-                        if (m === "Processing") Icon = Cog;
+                        if (m === "Confirmed") Icon = Cog;
                         if (m === "Shipped") Icon = Truck;
-                        if (m === "In Transit") Icon = Plane;
-                        if (m === "Out for Delivery") Icon = Bike;
-                        if (m === "Delivered") Icon = CheckSquare;
 
                         return (
                           <div key={m} className="flex flex-col items-center">

@@ -12,13 +12,13 @@ export default function AboutUs() {
         <div className="absolute inset-0 bg-brand-dark/75 z-10"></div>
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-60"
-          style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=1200&q=80")' }}
+          style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?w=1200&q=80")' }}
         ></div>
         <div className="relative z-20 text-center px-4 max-w-4xl mx-auto">
           <span className="text-[#FF9800] font-black uppercase tracking-[0.4em] text-xs mb-4 block">Since 1998</span>
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 font-playfair">Our Story</h1>
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 font-playfair">Our Store</h1>
           <p className="text-white/80 text-lg md:text-xl font-medium max-w-2xl mx-auto">
-            A journey built on trust, quality, and certified reliability in premium electrical solutions.
+            Visit our store for premium electrical wires, cables, and solutions.
           </p>
         </div>
       </section>

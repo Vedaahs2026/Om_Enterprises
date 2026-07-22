@@ -344,7 +344,19 @@ export default function CartPage() {
   }
 
   const subtotal = getTotalPrice();
-  const shipping = shippingCost ?? 0; 
+  
+  const totalWeightKg = calculateTotalWeight(items);
+  let computedPorterCharge = 0;
+  if (items.length > 0) {
+    if (totalWeightKg <= 20) {
+      computedPorterCharge = 150 + Math.ceil(totalWeightKg) * 8;
+    } else if (totalWeightKg <= 300) {
+      computedPorterCharge = 450 + Math.ceil(totalWeightKg - 20) * 5;
+    } else {
+      computedPorterCharge = 950 + Math.ceil(totalWeightKg - 300) * 3;
+    }
+  }
+  const shipping = shippingCost !== 0 && shippingCost !== null ? shippingCost : Math.round(computedPorterCharge);
   const total = subtotal + shipping;
 
   const handleCheckout = async () => {
@@ -631,7 +643,7 @@ Please confirm my order. Thank you!`;
               </div>
               <div className="flex justify-between items-center text-brand/60 pb-4 border-b border-gray-100">
                 <span className="text-xs font-bold tracking-widest uppercase">Est. Shipping</span>
-                <span className="text-brand font-bold text-sm">Free</span>
+                <span className="text-brand font-bold text-sm">₹{shipping.toLocaleString()}</span>
               </div>
               <div className="flex justify-between items-center pt-2">
                 <span className="text-sm font-black tracking-widest uppercase text-brand">Total Estimate</span>

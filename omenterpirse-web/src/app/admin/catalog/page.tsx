@@ -285,6 +285,18 @@ export default function MasterCatalogPage() {
     setVarColors(varColors.filter((col) => col !== c));
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-[80vh] flex flex-col items-center justify-center space-y-4">
+        <div className="relative w-16 h-16">
+          <div className="absolute inset-0 rounded-full border-4 border-[#0D47A1]/10"></div>
+          <div className="absolute inset-0 rounded-full border-4 border-t-[#FF9800] border-r-transparent border-b-transparent border-l-transparent animate-spin"></div>
+        </div>
+        <p className="text-xs font-black uppercase tracking-widest text-[#0D47A1]">Loading Master Catalog...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 md:p-10 max-w-7xl mx-auto space-y-8">
       {/* Top Banner */}
