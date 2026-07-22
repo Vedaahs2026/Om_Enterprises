@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useCartStore } from "@/store/useCartStore";
-import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, Loader2, CreditCard, ShieldCheck, CheckCircle2, Scissors, Sparkles, MapPin, AlertTriangle, Truck, Star, Pencil, ClipboardList, QrCode, Building, Lock, X, Wallet, MessageCircle } from "lucide-react";
+import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, Loader2, CreditCard, ShieldCheck, CheckCircle2, Scissors, Sparkles, MapPin, AlertTriangle, Truck, Star, Pencil, ClipboardList, QrCode, Building, Lock, X, Wallet, MessageCircle, Award, XCircle, PhoneCall, Box } from "lucide-react";
 import { useRouter } from "next/navigation";
 import PincodeEstimatorModal from "@/components/PincodeEstimatorModal";
 
@@ -173,9 +173,39 @@ export default function CartPage() {
   };
 
   const fetchAndCalculateShipping = async (pincode: string) => {
-    setShippingCost(0);
-    setShippingRates([]);
+    setIsLoadingRates(true);
     setShippingError(null);
+    try {
+      const totalWeightKg = calculateTotalWeight(items);
+      let charge = 0;
+      let serviceName = "Porter Local Delivery";
+      
+      if (totalWeightKg <= 20) {
+        charge = 150 + Math.ceil(totalWeightKg) * 8;
+        serviceName = "Porter (2 Wheeler)";
+      } else if (totalWeightKg <= 300) {
+        charge = 450 + Math.ceil(totalWeightKg - 20) * 5;
+        serviceName = "Porter (3 Wheeler)";
+      } else {
+        charge = 950 + Math.ceil(totalWeightKg - 300) * 3;
+        serviceName = "Porter (Tata Ace/Pickup)";
+      }
+      
+      const porterRate = {
+        id: "porter_local",
+        name: serviceName,
+        charge: Math.round(charge),
+      };
+
+      setShippingRates([porterRate]);
+      setSelectedRateId("porter_local");
+      setShippingCost(porterRate.charge);
+    } catch (err) {
+      console.error(err);
+      setShippingError("Failed to calculate Porter delivery charges.");
+    } finally {
+      setIsLoadingRates(false);
+    }
   };
 
   // Handle hydration and load Razorpay script
@@ -458,7 +488,9 @@ export default function CartPage() {
 📦 *ITEMS ORDERED:*
 ${itemsListText}
 
-💰 *TOTAL AMOUNT:* ₹${total.toLocaleString()}
+💰 *SUBTOTAL:* ₹${subtotal.toLocaleString()}
+🚚 *PORTER CHARGES:* ₹${shipping.toLocaleString()}
+⭐ *TOTAL AMOUNT:* ₹${total.toLocaleString()}
 
 📍 *DELIVERY ADDRESS:*
 ${shippingAddressStr}
@@ -619,6 +651,62 @@ Please confirm my order. Thank you!`;
               <div className="text-[8px] text-brand uppercase tracking-[0.3em] font-black">No Online Payment</div>
               <div className="h-1 w-1 rounded-full bg-brand"></div>
               <div className="text-[8px] text-brand uppercase tracking-[0.3em] font-black">Order Review</div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-y-6 gap-x-2 mt-8 pt-6 border-t border-gray-150">
+              <div className="flex flex-col items-center text-center space-y-1.5 group">
+                <div className="w-10 h-10 rounded-full bg-[#0D47A1]/5 text-[#0D47A1] flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:bg-[#0D47A1]/10">
+                  <Truck size={18} className="stroke-[2.5]" />
+                </div>
+                <span className="text-[10px] font-black text-[#0D47A1] uppercase tracking-wide leading-tight">
+                  IBO<br/>Delivered
+                </span>
+              </div>
+
+              <div className="flex flex-col items-center text-center space-y-1.5 group">
+                <div className="w-10 h-10 rounded-full bg-[#0D47A1]/5 text-[#0D47A1] flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:bg-[#0D47A1]/10">
+                  <ShieldCheck size={18} className="stroke-[2.5]" />
+                </div>
+                <span className="text-[10px] font-black text-[#0D47A1] uppercase tracking-wide leading-tight">
+                  Secure<br/>payments
+                </span>
+              </div>
+
+              <div className="flex flex-col items-center text-center space-y-1.5 group">
+                <div className="w-10 h-10 rounded-full bg-[#0D47A1]/5 text-[#0D47A1] flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:bg-[#0D47A1]/10">
+                  <Award size={18} className="stroke-[2.5]" />
+                </div>
+                <span className="text-[10px] font-black text-[#0D47A1] uppercase tracking-wide leading-tight">
+                  Genuine<br/>products
+                </span>
+              </div>
+
+              <div className="flex flex-col items-center text-center space-y-1.5 group">
+                <div className="w-10 h-10 rounded-full bg-[#0D47A1]/5 text-[#0D47A1] flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:bg-[#0D47A1]/10">
+                  <XCircle size={18} className="stroke-[2.5]" />
+                </div>
+                <span className="text-[10px] font-black text-[#0D47A1] uppercase tracking-wide leading-tight">
+                  Non<br/>returnable
+                </span>
+              </div>
+
+              <div className="flex flex-col items-center text-center space-y-1.5 group">
+                <div className="w-10 h-10 rounded-full bg-[#0D47A1]/5 text-[#0D47A1] flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:bg-[#0D47A1]/10">
+                  <PhoneCall size={18} className="stroke-[2.5]" />
+                </div>
+                <span className="text-[10px] font-black text-[#0D47A1] uppercase tracking-wide leading-tight">
+                  Call<br/>support
+                </span>
+              </div>
+
+              <div className="flex flex-col items-center text-center space-y-1.5 group">
+                <div className="w-10 h-10 rounded-full bg-[#0D47A1]/5 text-[#0D47A1] flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:bg-[#0D47A1]/10">
+                  <Box size={18} className="stroke-[2.5]" />
+                </div>
+                <span className="text-[10px] font-black text-[#0D47A1] uppercase tracking-wide leading-tight">
+                  Heavy<br/>& Bulky
+                </span>
+              </div>
             </div>
           </div>
         </div>
