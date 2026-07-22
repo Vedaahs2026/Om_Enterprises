@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, ShieldCheck, User, Phone, Loader2 } from "lucide-react";
@@ -18,7 +18,7 @@ declare global {
 }
 
 
-export default function Login() {
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
@@ -462,6 +462,18 @@ export default function Login() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function Login() {
+  return (
+    <Suspense fallback={
+      <div className="h-screen w-full bg-white flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-[#0D47A1]" />
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   );
 }
 

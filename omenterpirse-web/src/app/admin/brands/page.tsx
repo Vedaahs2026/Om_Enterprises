@@ -361,7 +361,7 @@ export default function AdminBrands() {
                       <Edit2 size={16} />
                     </button>
                     <button
-                      onClick={() => handleDelete(brand)}
+                      onClick={() => handleDelete(brand.id)}
                       className="p-2.5 bg-red-50 text-red-500 hover:bg-red-500 hover:text-white rounded-xl transition-all cursor-pointer"
                       title="Delete Brand"
                     >

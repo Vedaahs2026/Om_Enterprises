@@ -868,7 +868,7 @@ export default function AdminOrders() {
                                   }
 
                                   const thicknessVal = item.size || cust?.thickness || "";
-                                  const colorVal = item.color || cust?.color || "";
+                                  const colorVal = (item as any).color || cust?.color || "";
 
                                   return (
                                     <div key={item.id} className="flex items-center justify-between p-4 bg-white rounded-2xl border border-brand/5 shadow-sm">
