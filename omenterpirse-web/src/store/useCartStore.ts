@@ -36,7 +36,7 @@ export const useCartStore = create<CartStore>()(
         
         if (existingItem) {
           const newQuantity = existingItem.quantity + (newItem.quantity || 1);
-          const limitedQuantity = Math.min(newQuantity, existingItem.stock);
+          const limitedQuantity = Math.min(newQuantity, existingItem.stock, 50);
           set({
             items: currentItems.map((item) =>
               item.id === newItem.id
@@ -45,7 +45,7 @@ export const useCartStore = create<CartStore>()(
             ),
           });
         } else {
-          const initialQuantity = Math.min(newItem.quantity || 1, newItem.stock);
+          const initialQuantity = Math.min(newItem.quantity || 1, newItem.stock, 50);
           set({ items: [...currentItems, { ...newItem, quantity: initialQuantity }] });
         }
       },
@@ -60,7 +60,7 @@ export const useCartStore = create<CartStore>()(
           items: currentItems.map((item) => {
             if (item.id === id) {
               const newQuantity = item.quantity + delta;
-              const limitedQuantity = Math.min(Math.max(0, newQuantity), item.stock);
+              const limitedQuantity = Math.min(Math.max(0, newQuantity), item.stock, 50);
               return { ...item, quantity: limitedQuantity };
             }
             return item;

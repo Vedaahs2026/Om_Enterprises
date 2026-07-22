@@ -170,7 +170,10 @@ export default function DedicatedMatrixOrderPage({ params }: PageProps) {
 
   // Quantity Change Handler
   const handleQuantityChange = (variationId: number, color: string, value: string) => {
-    const num = Math.max(0, parseInt(value, 10) || 0);
+    let num = Math.max(0, parseInt(value, 10) || 0);
+    if (num > 50) {
+      num = 50;
+    }
     const key = `${variationId}_${color}`;
     setQuantities((prev) => ({
       ...prev,
@@ -343,6 +346,7 @@ export default function DedicatedMatrixOrderPage({ params }: PageProps) {
                             <input
                               type="number"
                               min="0"
+                              max="50"
                               placeholder="0"
                               value={currentVal}
                               onChange={(e) => handleQuantityChange(v.id, color, e.target.value)}

@@ -1,18 +1,7 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import "./globals.css";
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
-
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-playfair",
-});
 
 export const metadata: Metadata = {
   title: "OM Enterprises | Premium Electrical & Industrial Solutions",
@@ -22,7 +11,6 @@ export const metadata: Metadata = {
   },
 };
 
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -31,7 +19,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${playfair.variable} antialiased`}
+      className="antialiased"
     >
       <body className="min-h-screen bg-brand-light font-inter text-brand-dark flex flex-col">
         <Navbar />
