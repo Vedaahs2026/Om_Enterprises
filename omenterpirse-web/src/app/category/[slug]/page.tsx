@@ -57,9 +57,7 @@ export default async function CategoryPage({ params }: PageProps) {
           <div className="w-12 h-12 bg-amber-50 text-[#FF9800] rounded-full flex items-center justify-center mx-auto mb-3 shadow-xs">
             <AlertCircle size={24} />
           </div>
-          <h2 className="text-xl md:text-2xl font-playfair font-bold text-brand mb-3">
-            Service Not Provided for These Items
-          </h2>
+
           <p className="text-brand/70 max-w-md mx-auto text-sm md:text-base leading-relaxed mb-6">
             For <span className="font-bold text-[#0D47A1]">{categoryName}</span> inquiry please contact admin:
             <a href="tel:9849845555" className="font-black text-[#FF9800] hover:underline transition-all text-lg md:text-2xl block mt-2">
