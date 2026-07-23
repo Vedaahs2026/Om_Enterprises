@@ -450,12 +450,7 @@ export default function MyOrdersPage() {
                         </div>
                       )}
                       
-                      <div className="mt-4 p-4 bg-brand/5 rounded-xl border border-brand/5">
-                        <p className="text-[10px] font-bold text-brand/60 leading-relaxed">
-                          <span className="text-brand font-black uppercase tracking-widest">NOTE: </span> 
-                          Once shipping started you can't cancel the order. NO COD and No Return.
-                        </p>
-                      </div>
+
                     </div>
                   </div>
                 </div>
