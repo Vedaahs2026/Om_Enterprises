@@ -57,7 +57,7 @@ export default function AboutUs() {
           
           <div className="relative h-[380px] w-full rounded-[2rem] overflow-hidden shadow-xl border border-brand/10">
             <img 
-              src="https://images.unsplash.com/photo-1563770660941-20978e870e26?w=800&q=80" 
+              src="/images/about_wires.png" 
               alt="Electrical Wires Showcase" 
               className="object-cover w-full h-full"
             />
