@@ -404,14 +404,10 @@ export default function MyOrdersPage() {
                           <p className="text-xs text-brand font-medium leading-relaxed italic">
                             "{order.shippingAddress || "No address provided"}"
                           </p>
-                          <div className="mt-4 pt-4 border-t border-brand/5 grid grid-cols-2 gap-4">
+                          <div className="mt-4 pt-4 border-t border-brand/5 grid grid-cols-1 gap-4">
                             <div>
                               <p className="text-[9px] font-black text-brand/30 uppercase tracking-widest mb-1">Customer Phone</p>
                               <p className="text-xs text-brand font-bold">{order.customerPhone || "N/A"}</p>
-                            </div>
-                            <div>
-                              <p className="text-[9px] font-black text-brand/30 uppercase tracking-widest mb-1">Mode of Payment</p>
-                              <p className="text-xs text-brand font-bold">{order.paymentId ? "Online Payment" : "Prepaid"}</p>
                             </div>
                           </div>
                         </div>
