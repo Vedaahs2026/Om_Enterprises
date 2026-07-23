@@ -24,7 +24,6 @@ export default function Navbar() {
   const [navItems, setNavItems] = useState<NavItem[]>([]);
 
   const [isLoading, setIsLoading] = useState(true);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [user, setUser] = useState<{ fullName: string | null; phoneNumber: string } | null>(null);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -309,16 +308,20 @@ export default function Navbar() {
                   {cartCount}
                 </span>
               </Link>
-              <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="text-white hover:text-[#FF9800] focus:outline-none p-2"
-              >
-                {isMobileMenuOpen ? (
-                  <X className="h-6 w-6" />
-                ) : (
-                  <Menu className="h-6 w-6" />
-                )}
-              </button>
+              {user ? (
+                <ProfileDropdown
+                  user={user}
+                  onLogout={() => setIsLogoutModalOpen(true)}
+                />
+              ) : (
+                <button
+                  onClick={() => window.location.href = "/login"}
+                  className="flex items-center justify-center bg-[#FF9800] text-white w-9 h-9 rounded-full hover:bg-[#F57C00] transition-all shadow-md cursor-pointer relative z-10"
+                  aria-label="Login"
+                >
+                  <User className="h-4.5 w-4.5" />
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -387,95 +390,6 @@ export default function Navbar() {
           </div>
         )}
 
-        {/* Mobile Menu Panel */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden bg-brand border-t border-white/10 animate-in slide-in-from-top duration-300">
-            <div className="px-6 pt-8 pb-12 space-y-4">
-              {isLoading ? (
-                Array.from({ length: 3 }).map((_, i) => (
-                  <div key={i} className="block h-12 bg-white/5 rounded-xl animate-pulse"></div>
-                ))
-              ) : (
-                navItems.map((item) => {
-                  const isActive = pathname === item.href;
-                  return (
-                    <Link
-                      key={item.id}
-                      href={item.href}
-                      className={`block px-6 py-4 rounded-2xl text-sm font-bold tracking-wider transition-all ${isActive
-                        ? "bg-[#FF9800] text-white shadow-lg shadow-[#FF9800]/20 translate-x-2"
-                        : "text-white/60 hover:text-white hover:bg-white/5"
-                        }`}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      {item.label}
-                    </Link>
-                  );
-                })
-              )}
-
-              {/* Mobile Collections */}
-              <div className="space-y-2">
-                <p className="px-6 text-[10px] font-black tracking-[0.15em] text-white/20 mb-2">Our Collections</p>
-                {allCategories.map((item) => (
-                  <Link
-                    key={item.id}
-                    href={`/category/${item.slug}`}
-                    className="block px-6 py-3 rounded-2xl text-[10px] font-bold uppercase tracking-widest text-white/60 hover:text-white hover:bg-white/5 transition-all flex items-center justify-between"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    <span>{item.name}</span>
-                    {!item.isActive && (
-                      <span className="text-[8px] bg-red-500/10 text-red-400 font-bold uppercase tracking-wider px-1.5 py-0.5 rounded">
-                        Inactive
-                      </span>
-                    )}
-                  </Link>
-                ))}
-              </div>
-
-              <div className="pt-8 border-t border-white/10">
-                {user ? (
-                  <div className="space-y-4">
-                    <Link
-                      href="/profile"
-                      className="flex items-center space-x-4 px-4 py-4 rounded-xl bg-white/5"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      <div className="w-10 h-10 rounded-full bg-[#FF9800] flex items-center justify-center text-white font-bold">
-                        {user.fullName?.charAt(0) || "U"}
-                      </div>
-                      <div>
-                        <div className="text-sm font-bold tracking-wider text-white">{user.fullName || "My Profile"}</div>
-                        <div className="text-[10px] text-white/40 tracking-wider">View Details</div>
-                      </div>
-                    </Link>
-                    <button
-                      onClick={() => {
-                        setIsMobileMenuOpen(false);
-                        setIsLogoutModalOpen(true);
-                      }}
-                      className="w-full flex items-center justify-center space-x-3 px-4 py-4 rounded-xl border-2 border-red-500/20 text-red-400 font-bold uppercase tracking-widest text-xs"
-                    >
-                      <LogOut size={16} />
-                      <span>Logout</span>
-                    </button>
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => {
-                      setIsMobileMenuOpen(false);
-                      window.location.href = "/login";
-                    }}
-                    className="block w-full px-4 py-5 rounded-xl text-center text-sm font-bold tracking-[0.15em] text-white bg-[#FF9800] hover:bg-[#F57C00] shadow-lg relative z-10"
-                  >
-                    Login / Sign Up
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
       </header>
 
       {/* Logout Confirmation Modal */}
