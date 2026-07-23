@@ -56,8 +56,8 @@ async function seed() {
     const navItems = await db.insert(navigationMenu).values([
       { label: "Electrical Wires", href: "/category/wires", order: 1, isActive: true },
       { label: "Electrical Cables", href: "/category/cables", order: 2, isActive: true },
-      { label: "Switches & Modular", href: "/category/switches", order: 3, isActive: true },
-      { label: "MCBs & DBs", href: "/category/mcb-db", order: 4, isActive: true },
+      { label: "Switches & Modular", href: "/category/switches", order: 3, isActive: false },
+      { label: "MCBs & DBs", href: "/category/mcb-db", order: 4, isActive: false },
       { label: "LED Lighting", href: "/category/lighting", order: 5, isActive: false },
       { label: "Fans", href: "/category/fans", order: 6, isActive: false },
       { label: "Conduits & Pipes", href: "/category/conduits", order: 7, isActive: false },
@@ -71,8 +71,8 @@ async function seed() {
     await db.insert(categories).values([
       { name: "Electrical Wires", slug: "wires", imageUrl: "/images/wires_category.png", displayOrder: 1, isActive: true },
       { name: "Electrical Cables", slug: "cables", imageUrl: "/images/cables_category.png", displayOrder: 2, isActive: true },
-      { name: "Switches & Modular", slug: "switches", imageUrl: "/images/switches_category.png", displayOrder: 3, isActive: true },
-      { name: "MCBs & DBs", slug: "mcb-db", imageUrl: "/images/mcb_db_category.png", displayOrder: 4, isActive: true },
+      { name: "Switches & Modular", slug: "switches", imageUrl: "/images/switches_category.png", displayOrder: 3, isActive: false },
+      { name: "MCBs & DBs", slug: "mcb-db", imageUrl: "/images/mcb_db_category.png", displayOrder: 4, isActive: false },
       { name: "LED Lighting", slug: "lighting", imageUrl: "https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?w=800&q=80", displayOrder: 5, isActive: true },
       { name: "Fans", slug: "fans", imageUrl: "https://images.unsplash.com/photo-1618944913480-b67ee16d7b77?w=800&q=80", displayOrder: 6, isActive: true },
       { name: "Conduits & Pipes", slug: "conduits", imageUrl: "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=800&q=80", displayOrder: 7, isActive: true },
@@ -443,8 +443,8 @@ async function seed() {
     await db.insert(homeTabs).values([
       { title: "Electrical Wires", linkHref: "/category/wires", imageUrl: "https://img.icons8.com/color/96/wiring.png", displayOrder: 1, isActive: true },
       { title: "Electrical Cables", linkHref: "/category/cables", imageUrl: "https://img.icons8.com/color/96/cable.png", displayOrder: 2, isActive: true },
-      { title: "Switches & Modular", linkHref: "/category/switches", imageUrl: "https://img.icons8.com/color/96/toggle-switch.png", displayOrder: 3, isActive: true },
-      { title: "MCBs & DBs", linkHref: "/category/mcb-db", imageUrl: "https://img.icons8.com/color/96/fuse-box.png", displayOrder: 4, isActive: true },
+      { title: "Switches & Modular", linkHref: "/category/switches", imageUrl: "https://img.icons8.com/color/96/toggle-switch.png", displayOrder: 3, isActive: false },
+      { title: "MCBs & DBs", linkHref: "/category/mcb-db", imageUrl: "https://img.icons8.com/color/96/fuse-box.png", displayOrder: 4, isActive: false },
       { title: "LED Lighting", linkHref: "/category/lighting", imageUrl: "https://img.icons8.com/color/96/led-diode.png", displayOrder: 5, isActive: true },
       { title: "Fans", linkHref: "/category/fans", imageUrl: "https://img.icons8.com/color/96/ceiling-fan.png", displayOrder: 6, isActive: true },
       { title: "Conduits & Pipes", linkHref: "/category/conduits", imageUrl: "https://img.icons8.com/color/96/pipe.png", displayOrder: 7, isActive: true },
