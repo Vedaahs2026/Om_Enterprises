@@ -32,6 +32,7 @@ const sidebarLinks = [
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   // Don't show sidebar on login/denied pages
   if (pathname === "/admin/login" || pathname === "/admin/denied") {
@@ -46,8 +47,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="flex h-screen bg-brand-light font-inter overflow-hidden">
       {/* Sidebar */}
-      <aside className="w-60 bg-[#0D47A1] text-white flex flex-col shadow-2xl fixed inset-y-0 z-50">
-        <div className="p-6 border-b border-white/5">
+      <aside className={`w-60 bg-[#0D47A1] text-white flex flex-col shadow-2xl fixed inset-y-0 z-50 transition-all duration-300 ${
+        isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+      }`}>
+        <div className="p-6 border-b border-white/5 flex items-center justify-between">
           <Link href="/" className="flex items-center space-x-3 group">
             <div className="relative w-10 h-10 overflow-hidden rounded-full border border-white/10 shadow-lg flex-shrink-0">
               <Image
@@ -64,6 +67,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <p className="text-[8px] uppercase tracking-[0.2em] text-[#FF9800] font-black mt-1">Admin Panel</p>
             </div>
           </Link>
+          <button 
+            onClick={() => setIsSidebarOpen(false)}
+            className="p-1.5 rounded-lg text-white/50 hover:text-white hover:bg-white/5 transition-all ml-2 cursor-pointer"
+            title="Hide Sidebar"
+          >
+            <LayoutDashboard size={18} />
+          </button>
         </div>
 
         <nav className="flex-1 p-4 space-y-1 mt-4 overflow-y-auto min-h-0 sidebar-scrollbar">
@@ -104,7 +114,34 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
 
       {/* Main Content */}
-      <main className="flex-1 ml-60 min-w-0 h-full overflow-hidden flex flex-col">
+      <main className={`flex-1 min-w-0 h-full overflow-hidden flex flex-col relative transition-all duration-300 ${
+        isSidebarOpen ? "ml-60" : "ml-0"
+      }`}>
+        {/* Floating circular logo toggle button when sidebar is closed */}
+        {!isSidebarOpen && (
+          <button
+            onClick={() => setIsSidebarOpen(true)}
+            className="fixed top-6 left-6 z-50 group flex items-center justify-center w-12 h-12 rounded-full border border-brand/10 shadow-lg bg-white overflow-hidden transition-all duration-300 cursor-pointer hover:scale-105 active:scale-95"
+            title="Show Sidebar"
+          >
+            {/* Logo default state */}
+            <div className="absolute inset-0 transition-opacity duration-300 opacity-100 group-hover:opacity-0 flex items-center justify-center">
+              <div className="relative w-8 h-8 rounded-full overflow-hidden">
+                <Image
+                  src="/images/temp_logo.png"
+                  alt="Om Enterprises Logo"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+            </div>
+            {/* Dashboard Icon hover state */}
+            <div className="absolute inset-0 transition-opacity duration-300 opacity-0 group-hover:opacity-100 flex items-center justify-center text-[#0D47A1]">
+              <LayoutDashboard size={22} />
+            </div>
+          </button>
+        )}
+
         {/* Header decoration */}
         <div className="h-1 bg-gradient-to-r from-transparent via-[#FF9800]/20 to-transparent flex-shrink-0"></div>
         <div id="admin-scroll-container" className="flex-1 overflow-y-auto custom-scrollbar">
