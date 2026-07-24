@@ -144,7 +144,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
         {/* Header decoration */}
         <div className="h-1 bg-gradient-to-r from-transparent via-[#FF9800]/20 to-transparent flex-shrink-0"></div>
-        <div id="admin-scroll-container" className="flex-1 overflow-y-auto custom-scrollbar">
+        <div 
+          id="admin-scroll-container" 
+          className={`flex-1 overflow-y-auto custom-scrollbar transition-all duration-300 ${
+            !isSidebarOpen ? "pt-20" : ""
+          }`}
+        >
           {children}
         </div>
       </main>
