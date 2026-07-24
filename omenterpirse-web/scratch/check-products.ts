@@ -1,5 +1,11 @@
-import Database from "better-sqlite3";
-const sqlite = new Database("sqlite.db");
+import { db } from "../src/db";
+import { products } from "../src/db/schema";
+import { eq } from "drizzle-orm";
 
-const products = sqlite.prepare("SELECT id, name, images FROM products").all();
-console.log("Raw Products:", JSON.stringify(products, null, 2));
+async function main() {
+  const allProducts = await db.select({ id: products.id, name: products.name }).from(products);
+  console.log("=== ALL PRODUCTS IN TURSO ===");
+  console.log(JSON.stringify(allProducts, null, 2));
+}
+
+main().catch(console.error);
