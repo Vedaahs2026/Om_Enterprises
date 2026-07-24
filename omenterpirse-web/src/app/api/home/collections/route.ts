@@ -3,6 +3,8 @@ import { db } from "@/db";
 import { eq, asc } from "drizzle-orm";
 import { navigationMenu, pageSections } from "@/db/schema";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     // 1. Fetch main categories from navigationMenu
