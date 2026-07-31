@@ -54,7 +54,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Link href="/" className="flex items-center space-x-3 group">
             <div className="relative w-10 h-10 overflow-hidden rounded-full border border-white/10 shadow-lg flex-shrink-0">
               <Image
-                src="/images/temp_logo.png"
+                src="/images/logo.png"
                 alt="Om Enterprises Logo"
                 fill
                 className="object-cover"
@@ -128,7 +128,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <div className="absolute inset-0 transition-opacity duration-300 opacity-100 group-hover:opacity-0 flex items-center justify-center">
               <div className="relative w-8 h-8 rounded-full overflow-hidden">
                 <Image
-                  src="/images/temp_logo.png"
+                  src="/images/logo.png"
                   alt="Om Enterprises Logo"
                   fill
                   className="object-cover"
