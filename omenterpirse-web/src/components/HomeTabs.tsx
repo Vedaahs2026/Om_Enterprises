@@ -29,7 +29,7 @@ export default function HomeTabs({ tabs }: Props) {
             <Link 
               key={tab.id}
               href={tab.linkHref || "#"}
-              className={`block w-full ${isFew ? "sm:w-[380px] md:w-[440px]" : "sm:w-[280px] md:w-[320px]"}`}
+              className={`block w-full ${isFew ? "sm:w-[340px] md:w-[380px]" : "sm:w-[240px] md:w-[280px]"}`}
             >
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -37,7 +37,7 @@ export default function HomeTabs({ tabs }: Props) {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
                 className={`flex flex-col overflow-hidden rounded-3xl border border-gray-100 shadow-lg bg-white hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 group cursor-pointer ${
-                  isFew ? "h-[420px]" : "h-[340px]"
+                  isFew ? "h-[360px]" : "h-[300px]"
                 }`}
               >
                 {/* Top Image Section (Cover) */}
@@ -56,9 +56,9 @@ export default function HomeTabs({ tabs }: Props) {
                 </div>
 
                 {/* Bottom Banner Section */}
-                <div className={`bg-[#0D47A1] flex items-center justify-center shrink-0 ${isFew ? "h-[90px] px-6" : "h-[75px] px-4"}`}>
+                <div className={`bg-[#0D47A1] flex items-center justify-center shrink-0 ${isFew ? "h-[80px] px-6" : "h-[65px] px-4"}`}>
                   <h3 className={`font-black text-white tracking-wider uppercase text-center transform transition-transform duration-500 group-hover:scale-105 ${
-                    isFew ? "text-base md:text-xl" : "text-sm md:text-base font-bold"
+                    isFew ? "text-base md:text-lg" : "text-xs md:text-sm font-bold"
                   }`}>
                     {tab.title}
                   </h3>
