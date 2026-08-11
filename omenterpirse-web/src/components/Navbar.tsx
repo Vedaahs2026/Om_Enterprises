@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ShoppingCart, User, Menu, X, LogOut, AlertCircle, BookOpen, Briefcase, Zap, Loader2, ChevronDown } from "lucide-react";
+import { Home, ShoppingCart, User, Menu, X, LogOut, AlertCircle, BookOpen, Briefcase, Zap, Loader2, ChevronDown } from "lucide-react";
 import ProfileDropdown from "./ProfileDropdown";
 import Image from "next/image";
 import { useCartStore } from "@/store/useCartStore";
@@ -166,6 +166,11 @@ export default function Navbar() {
             {/* Desktop Navigation removed from main Navbar row */}
 
             <div className="hidden md:flex items-center space-x-1.5 lg:space-x-2 xl:space-x-3.5 ml-auto text-white">
+              <Link href="/" aria-label="Home" className="hover:text-[#FF9800] transition-colors p-1.5 flex items-center gap-1 group whitespace-nowrap">
+                <Home className="h-4 w-4" />
+                <span className="text-[11px] xl:text-[12px] font-bold tracking-wide hidden lg:block">Home</span>
+              </Link>
+
               <Link href="/about" aria-label="Our Store" className="hover:text-[#FF9800] transition-colors p-1.5 flex items-center gap-1 group whitespace-nowrap">
                 <BookOpen className="h-4 w-4" />
                 <span className="text-[11px] xl:text-[12px] font-bold tracking-wide hidden lg:block">Our Store</span>
@@ -196,6 +201,9 @@ export default function Navbar() {
 
             {/* Mobile menu button */}
             <div className="flex md:hidden items-center space-x-4">
+              <Link href="/" aria-label="Home" className="text-white p-2">
+                <Home className="h-5 w-5" />
+              </Link>
               <Link href="/about" aria-label="Our Store" className="text-white p-2">
                 <BookOpen className="h-5 w-5" />
               </Link>
