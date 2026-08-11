@@ -167,7 +167,7 @@ export default async function Home() {
         {tabs.length > 0 && (
           <div className="space-y-6">
             <div className="text-center">
-              <h2 className="text-3xl md:text-4xl font-playfair font-bold text-brand">Categories</h2>
+              <h2 className="text-3xl md:text-4xl font-playfair font-bold text-brand">Shop by Categories</h2>
             </div>
             <HomeTabs tabs={tabs as any} />
           </div>
