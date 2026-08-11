@@ -13,7 +13,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
 
-    const userResult = await db.select().from(users).where(eq(users.phoneNumber, phone)).limit(1);
+    const userResult = await db.select().from(users).where(eq(users.email, phone)).limit(1);
     const user = userResult[0];
 
     if (!user) {
@@ -67,7 +67,7 @@ export async function GET() {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
 
-    const userResult = await db.select().from(users).where(eq(users.phoneNumber, phone)).limit(1);
+    const userResult = await db.select().from(users).where(eq(users.email, phone)).limit(1);
     const user = userResult[0];
 
     if (!user) {

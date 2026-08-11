@@ -15,7 +15,7 @@ export async function GET() {
 
     const userResult = await db.select()
       .from(users)
-      .where(eq(users.phoneNumber, session))
+      .where(eq(users.email, session))
       .limit(1);
 
     const user = userResult[0];
@@ -29,8 +29,9 @@ export async function GET() {
     return NextResponse.json({ 
       authenticated: true, 
       user: {
-        phoneNumber: user.phoneNumber,
+        email: user.email,
         fullName: user.fullName,
+        phoneNumber: user.phoneNumber,
       } 
     });
   } catch (error) {

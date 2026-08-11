@@ -10,7 +10,7 @@ async function getUserFromCookie() {
   const phoneNumber = cookieStore.get("auth_session")?.value;
   if (!phoneNumber) return { user: null, phoneNumber: null };
 
-  const rows = await db.select().from(users).where(eq(users.phoneNumber, phoneNumber)).limit(1);
+  const rows = await db.select().from(users).where(eq(users.email, phoneNumber)).limit(1);
   return { user: rows[0] ?? null, phoneNumber };
 }
 
@@ -56,7 +56,7 @@ export async function POST(req: Request) {
 
     await db.update(users)
       .set({ address: JSON.stringify(addresses) })
-      .where(eq(users.phoneNumber, phoneNumber));
+      .where(eq(users.email, phoneNumber));
 
     return NextResponse.json({ success: true, addresses });
   } catch (error) {
@@ -78,7 +78,7 @@ export async function DELETE(req: Request) {
 
     await db.update(users)
       .set({ address: addresses.length > 0 ? JSON.stringify(addresses) : null })
-      .where(eq(users.phoneNumber, phoneNumber));
+      .where(eq(users.email, phoneNumber));
 
     return NextResponse.json({ success: true, addresses });
   } catch (error) {

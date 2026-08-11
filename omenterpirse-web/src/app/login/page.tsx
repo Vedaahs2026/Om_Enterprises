@@ -1,22 +1,10 @@
 "use client";
 
-import { useState, useEffect, useRef, Suspense } from "react";
-import Link from "next/link";
+import { useState, useEffect, Suspense } from "react";
 import Image from "next/image";
-import { ArrowLeft, ShieldCheck, User, Phone, Loader2 } from "lucide-react";
-
+import { ArrowLeft, ShieldCheck, User, Mail, Loader2 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { auth, isFirebaseConfigured } from "@/lib/firebase";
-import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult } from "firebase/auth";
-
-declare global {
-  interface Window {
-    recaptchaVerifier: RecaptchaVerifier;
-    confirmationResult: ConfirmationResult;
-  }
-}
-
 
 function LoginForm() {
   const router = useRouter();
@@ -24,38 +12,16 @@ function LoginForm() {
   const callbackUrl = searchParams.get("callbackUrl") || "/";
 
   const [mounted, setMounted] = useState(false);
-  const [step, setStep] = useState<"phone" | "otp" | "profile">("phone");
-  const [phone, setPhone] = useState("");
+  const [step, setStep] = useState<"email" | "otp" | "profile">("email");
+  const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [timer, setTimer] = useState(0);
-  const recaptchaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
-    // Clean up on mount to prevent any stale verifiers from other pages
-    if (window.recaptchaVerifier) {
-      try {
-        window.recaptchaVerifier.clear();
-      } catch (e) {
-        console.error("Error clearing recaptcha on mount:", e);
-      }
-      (window as any).recaptchaVerifier = null;
-    }
-
-    return () => {
-      // Clean up on unmount
-      if (window.recaptchaVerifier) {
-        try {
-          window.recaptchaVerifier.clear();
-        } catch (e) {
-          console.error("Error clearing recaptcha on unmount:", e);
-        }
-        (window as any).recaptchaVerifier = null;
-      }
-    };
   }, []);
 
   useEffect(() => {
@@ -66,14 +32,11 @@ function LoginForm() {
     return () => clearInterval(interval);
   }, [timer, step]);
 
-  // Step 1: Handle Phone Input (Numeric only, max 10)
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, "").slice(0, 10);
-    setPhone(value);
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
     if (error) setError("");
   };
 
-  // Step 2: Handle OTP Input (Numeric only, max 6)
   const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, "").slice(0, 6);
     setOtp(value);
@@ -82,74 +45,30 @@ function LoginForm() {
 
   const handleSendOTP = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (phone.length !== 10) return;
+    if (!email.trim() || !email.includes("@")) {
+      setError("Please enter a valid email address.");
+      return;
+    }
     
     setLoading(true);
     setError("");
     
     try {
-      if (!isFirebaseConfigured) {
-        // Fallback to local API flow when Firebase is not configured
-        const res = await fetch("/api/auth/otp", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "send", phone, portal: "user" }),
-        });
-        const data = await res.json();
-        if (data.success) {
-          setStep("otp");
-          setTimer(60);
-          setLoading(false);
-          return;
-        } else {
-          throw new Error(data.error || "Failed to request local OTP.");
-        }
-      }
-      // Clean up any stale verifier (e.g. from admin login page)
-      if (window.recaptchaVerifier) {
-        try {
-          window.recaptchaVerifier.clear();
-        } catch (e) {
-          console.error("Error clearing stale recaptcha verifier:", e);
-        }
-        (window as any).recaptchaVerifier = null;
-      }
-
-      if (!recaptchaRef.current) {
-        throw new Error("reCAPTCHA container element not found.");
-      }
-
-      // 1. Initialize reCAPTCHA
-      window.recaptchaVerifier = new RecaptchaVerifier(auth, recaptchaRef.current, {
-        'size': 'invisible',
-        'callback': () => {
-          // reCAPTCHA solved - will proceed with submit
-        }
+      const res = await fetch("/api/auth/otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "send", email: email.trim(), portal: "user" }),
       });
-
-      const phoneNumber = `+91${phone}`;
-      const appVerifier = window.recaptchaVerifier;
-
-      // 2. Request OTP from Firebase
-      const confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
-      window.confirmationResult = confirmationResult;
-      
-      setStep("otp");
-      setTimer(60);
-    } catch (err: any) {
-      console.error("Firebase OTP Error:", err);
-      if (err.code === "auth/invalid-phone-number") {
-        setError("Invalid phone number format.");
-      } else if (err.code === "auth/too-many-requests") {
-        setError("Too many attempts. Please try again later.");
+      const data = await res.json();
+      if (data.success) {
+        setStep("otp");
+        setTimer(60);
       } else {
-        setError("Failed to send OTP. Please check your connection.");
+        throw new Error(data.error || "Failed to send verification code.");
       }
-      // Reset recaptcha on error
-      if (window.recaptchaVerifier) {
-        window.recaptchaVerifier.clear();
-        (window as any).recaptchaVerifier = null;
-      }
+    } catch (err: any) {
+      console.error("OTP Send Error:", err);
+      setError(err.message || "Failed to send code. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -163,62 +82,15 @@ function LoginForm() {
     setError("");
     
     try {
-      if (!isFirebaseConfigured) {
-        // Fallback to local API verification when Firebase is not configured
-        const res = await fetch("/api/auth/otp", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ 
-            action: "verify", 
-            phone, 
-            otp
-          }),
-        });
-        
-        if (!res.ok) {
-          const errorText = await res.text();
-          throw new Error(`API Error: ${res.status} - ${errorText.substring(0, 50)}`);
-        }
-        
-        const data = await res.json();
-        
-        if (data.success) {
-          if (data.isNewUser) {
-            setStep("profile");
-          } else {
-            router.push(callbackUrl);
-            router.refresh();
-          }
-        } else {
-          setError(data.error || "Login failed. Please try again.");
-        }
-        setLoading(false);
-        return;
-      }
-      if (!window.confirmationResult) {
-        throw new Error("No confirmation result found. Please resend OTP.");
-      }
-
-      // 1. Verify OTP with Firebase
-      const result = await window.confirmationResult.confirm(otp);
-      const user = result.user;
-      const idToken = await user.getIdToken();
-      
-      // 2. Check user status in our backend
       const res = await fetch("/api/auth/otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           action: "verify", 
-          phone, 
-          idToken
+          email: email.trim(), 
+          otp
         }),
       });
-      
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(`API Error: ${res.status} - ${errorText.substring(0, 50)}`);
-      }
       
       const data = await res.json();
       
@@ -234,11 +106,7 @@ function LoginForm() {
       }
     } catch (err: any) {
       console.error("Verification error:", err);
-      if (err.code === "auth/invalid-verification-code") {
-        setError("Incorrect OTP. Please try again.");
-      } else {
-        setError(err.message || "Failed to verify OTP. Please try again.");
-      }
+      setError(err.message || "Failed to verify. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -252,9 +120,10 @@ function LoginForm() {
     setError("");
     
     try {
-      const res = await fetch("/api/auth/profile", {
+      const res = await fetch("/api/auth/sync", {
         method: "POST",
-        body: JSON.stringify({ phone, fullName }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim(), fullName: fullName.trim() }),
       });
       const data = await res.json();
       
@@ -262,10 +131,10 @@ function LoginForm() {
         router.push(callbackUrl);
         router.refresh();
       } else {
-        setError(data.error || "Failed to save profile");
+        setError(data.error || "Failed to complete profile.");
       }
     } catch (err) {
-      setError("Failed to complete profile.");
+      setError("Failed to complete profile registration.");
     } finally {
       setLoading(false);
     }
@@ -313,7 +182,7 @@ function LoginForm() {
             <div className="mb-8 flex justify-center">
               <div className="relative w-24 h-24 overflow-hidden rounded-full border-2 border-brand/10 shadow-lg flex-shrink-0">
                 <Image
-                  src="/images/temp_logo.png"
+                  src="/images/logo.png"
                   alt="Om Enterprises Logo"
                   fill
                   className="object-cover"
@@ -325,15 +194,12 @@ function LoginForm() {
             </h2>
             <div className="px-6">
               <p className="text-brand/50 text-sm leading-relaxed font-medium">
-                {step === "phone" && "Enter your mobile number to access your account."}
-                {step === "otp" && `We've sent a 6-digit verification code to +91 ${phone}`}
+                {step === "email" && "Enter your email address to access your account."}
+                {step === "otp" && `We've sent a 6-digit verification code to ${email}`}
                 {step === "profile" && "One last step! Tell us your name to personalize your experience."}
               </p>
             </div>
           </div>
-
-          {/* Invisible reCAPTCHA container */}
-          <div ref={recaptchaRef}></div>
 
           {error && (
             <div className="mb-8 p-5 bg-red-50 border border-red-100 text-red-500 text-xs font-bold rounded-2xl text-center flex items-center justify-center space-x-3 shadow-sm animate-in zoom-in-95">
@@ -342,29 +208,28 @@ function LoginForm() {
             </div>
           )}
 
-          {/* STEP 1: Phone Number */}
-          {step === "phone" && (
+          {/* STEP 1: Email Address */}
+          {step === "email" && (
             <form onSubmit={handleSendOTP} className="space-y-8">
               <div className="space-y-3">
-                <label className="block text-[10px] font-black text-brand/30 uppercase tracking-[0.3em] ml-2">Mobile Number</label>
+                <label className="block text-[10px] font-black text-brand/30 uppercase tracking-[0.3em] ml-2">Email ID</label>
                 <div className="relative group">
                   <div className="absolute left-5 top-1/2 -translate-y-1/2 flex items-center space-x-3 border-r border-brand/10 pr-4">
-                    <Phone size={16} className="text-[#FF9800]" />
-                    <span className="text-brand font-bold text-base">+91</span>
+                    <Mail size={16} className="text-[#FF9800]" />
                   </div>
                   <input 
-                    type="tel" 
-                    value={phone}
-                    onChange={handlePhoneChange}
-                    placeholder="9999999999" 
-                    className="w-full bg-brand/5 border-2 border-transparent focus:border-[#FF9800]/30 focus:bg-white focus:shadow-[0_0_40px_rgba(197,160,89,0.1)] rounded-2xl py-5 pl-24 pr-6 text-brand font-bold text-lg tracking-[0.2em] placeholder:text-brand/10 placeholder:tracking-normal transition-all outline-none"
+                    type="email" 
+                    value={email}
+                    onChange={handleEmailChange}
+                    placeholder="name@example.com" 
+                    className="w-full bg-brand/5 border-2 border-transparent focus:border-[#FF9800]/30 focus:bg-white focus:shadow-[0_0_40px_rgba(197,160,89,0.1)] rounded-2xl py-5 pl-16 pr-6 text-brand font-bold text-lg placeholder:text-brand/10 transition-all outline-none"
                     required
                   />
                 </div>
               </div>
               <button 
                 type="submit" 
-                disabled={loading || phone.length !== 10} 
+                disabled={loading || !email.trim() || !email.includes("@")} 
                 className="w-full bg-[#0D47A1] text-[#FF9800] font-black uppercase tracking-[0.2em] text-xs py-5 rounded-2xl shadow-xl hover:bg-[#FF9800] hover:text-white hover:shadow-[0_20px_40px_rgba(255,152,0,0.15)] disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-[0.98] flex justify-center items-center space-x-3"
               >
                 {loading ? (
@@ -396,7 +261,7 @@ function LoginForm() {
                   />
                 </div>
                 <div className="flex justify-between mt-6 px-2">
-                  <button type="button" onClick={() => setStep("phone")} className="text-[10px] text-brand/40 hover:text-[#FF9800] font-black uppercase tracking-widest transition-all">Change Number</button>
+                  <button type="button" onClick={() => setStep("email")} className="text-[10px] text-brand/40 hover:text-[#FF9800] font-black uppercase tracking-widest transition-all">Change Email</button>
                   <button 
                     type="button" 
                     onClick={handleSendOTP}
@@ -448,24 +313,19 @@ function LoginForm() {
                 {loading ? (
                   <Loader2 className="w-5 h-5 animate-spin" />
                 ) : (
-                  <span>Complete Setup</span>
+                  <span>Complete Registration</span>
                 )}
               </button>
             </form>
           )}
-        </div>
 
-        <div className="mt-16 text-center">
-          <p className="text-[10px] text-brand/30 max-w-xs leading-relaxed uppercase tracking-[0.2em] font-black">
-            Secure login powered by Om Enterprises. By continuing, you agree to our <a href="#" className="text-brand/60 hover:text-brand underline decoration-[#FF9800]/30 underline-offset-4 transition-all">Terms</a> & <a href="#" className="text-brand/60 hover:text-brand underline decoration-[#FF9800]/30 underline-offset-4 transition-all">Privacy</a>.
-          </p>
         </div>
       </div>
     </div>
   );
 }
 
-export default function Login() {
+export default function LoginPage() {
   return (
     <Suspense fallback={
       <div className="h-screen w-full bg-white flex items-center justify-center">
@@ -476,5 +336,3 @@ export default function Login() {
     </Suspense>
   );
 }
-
-

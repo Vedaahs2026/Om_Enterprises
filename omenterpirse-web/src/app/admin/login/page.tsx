@@ -1,195 +1,33 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import Link from "next/link";
-import { ArrowLeft, ShieldCheck, Lock, Phone, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { Lock, Mail, Loader2, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { auth, isFirebaseConfigured } from "@/lib/firebase";
-import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult } from "firebase/auth";
-
-declare global {
-  interface Window {
-    recaptchaVerifier: RecaptchaVerifier;
-    confirmationResult: ConfirmationResult;
-  }
-}
+import Image from "next/image";
 
 export default function AdminLogin() {
   const router = useRouter();
-  const [step, setStep] = useState<"phone" | "otp">("phone");
-  const [phone, setPhone] = useState("");
-  const [otp, setOtp] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const recaptchaRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    // Clean up on mount to prevent any stale verifiers from other pages
-    if (window.recaptchaVerifier) {
-      try {
-        window.recaptchaVerifier.clear();
-      } catch (e) {
-        console.error("Error clearing recaptcha on mount:", e);
-      }
-      (window as any).recaptchaVerifier = null;
-    }
-
-    return () => {
-      // Clean up on unmount
-      if (window.recaptchaVerifier) {
-        try {
-          window.recaptchaVerifier.clear();
-        } catch (e) {
-          console.error("Error clearing recaptcha on unmount:", e);
-        }
-        (window as any).recaptchaVerifier = null;
-      }
-    };
-  }, []);
-
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, "").slice(0, 10);
-    setPhone(value);
-    if (error) setError("");
-  };
-
-  const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, "").slice(0, 6);
-    setOtp(value);
-    if (error) setError("");
-  };
-
-  const handleSendOTP = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (phone.length !== 10) return;
+    if (!email.trim() || !password) return;
 
     setLoading(true);
     setError("");
 
     try {
-      // 1. Pre-verify that the number is authorized in the server backend
       const res = await fetch("/api/auth/otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "send", phone, portal: "admin", checkOnly: true }),
-      });
-      const data = await res.json();
-      
-      if (!data.success) {
-        setError(data.error || "Unauthorized phone number.");
-        setLoading(false);
-        return;
-      }
-
-      if (!isFirebaseConfigured) {
-        // Trigger mock OTP generation in backend
-        const devOtpRes = await fetch("/api/auth/otp", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "send", phone, portal: "admin" }),
-        });
-        const devOtpData = await devOtpRes.json();
-        if (devOtpData.success) {
-          setStep("otp");
-          setLoading(false);
-          return;
-        } else {
-          throw new Error(devOtpData.error || "Failed to request local admin OTP.");
-        }
-      }
-
-      // Clean up any stale verifier (e.g. from user login page)
-      if (window.recaptchaVerifier) {
-        try {
-          window.recaptchaVerifier.clear();
-        } catch (e) {
-          console.error("Error clearing stale recaptcha verifier:", e);
-        }
-        (window as any).recaptchaVerifier = null;
-      }
-
-      if (!recaptchaRef.current) {
-        throw new Error("reCAPTCHA container element not found.");
-      }
-
-      // 2. Initialize Firebase reCAPTCHA verifier
-      window.recaptchaVerifier = new RecaptchaVerifier(auth, recaptchaRef.current, {
-        size: "invisible",
-        callback: () => {
-          // reCAPTCHA solved
-        },
-      });
-
-      const phoneNumber = `+91${phone}`;
-      const appVerifier = window.recaptchaVerifier;
-
-      // 3. Request OTP from Firebase
-      const confirmationResult = await signInWithPhoneNumber(auth, phoneNumber, appVerifier);
-      window.confirmationResult = confirmationResult;
-
-      setStep("otp");
-    } catch (err: any) {
-      console.error("Firebase OTP Error:", err);
-      if (err.code === "auth/invalid-phone-number") {
-        setError("Invalid phone number format.");
-      } else if (err.code === "auth/too-many-requests") {
-        setError("Too many attempts. Please try again later.");
-      } else {
-        setError(err.message || "Failed to send OTP. Please check your connection.");
-      }
-      // Reset recaptcha on error
-      if (window.recaptchaVerifier) {
-        try {
-          window.recaptchaVerifier.clear();
-        } catch (e) {
-          console.error("Error clearing recaptcha on send error:", e);
-        }
-        (window as any).recaptchaVerifier = null;
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleVerifyOTP = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (otp.length !== 6) return;
-
-    setLoading(true);
-    setError("");
-
-    try {
-      if (!isFirebaseConfigured) {
-        const res = await fetch("/api/auth/otp", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "verify", phone, otp, portal: "admin" }),
-        });
-        const data = await res.json();
-
-        if (data.success) {
-          router.push("/admin/navigation");
-          router.refresh();
-        } else {
-          setError(data.error || "Invalid OTP");
-        }
-        setLoading(false);
-        return;
-      }
-      if (!window.confirmationResult) {
-        throw new Error("No confirmation result found. Please resend OTP.");
-      }
-
-      // 1. Verify OTP with Firebase to get ID token
-      const result = await window.confirmationResult.confirm(otp);
-      const firebaseUser = result.user;
-      const idToken = await firebaseUser.getIdToken();
-
-      // 2. Authenticate the session on the backend
-      const res = await fetch("/api/auth/otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "verify", phone, idToken, portal: "admin" }),
+        body: JSON.stringify({ 
+          action: "admin_login", 
+          email: email.trim(), 
+          password 
+        }),
       });
       const data = await res.json();
 
@@ -197,15 +35,11 @@ export default function AdminLogin() {
         router.push("/admin/navigation");
         router.refresh();
       } else {
-        setError(data.error || "Invalid OTP");
+        setError(data.error || "Invalid admin credentials");
       }
     } catch (err: any) {
-      console.error("Verification failed:", err);
-      if (err.code === "auth/invalid-verification-code") {
-        setError("Incorrect OTP. Please try again.");
-      } else {
-        setError(err.message || "Verification failed. Please try again.");
-      }
+      console.error("Admin Login Error:", err);
+      setError("An error occurred. Please check your network and try again.");
     } finally {
       setLoading(false);
     }
@@ -216,9 +50,6 @@ export default function AdminLogin() {
       <div className="w-full max-w-md bg-white rounded-3xl p-10 shadow-2xl border border-brand/5 border-t-[12px] border-t-brand-accent relative overflow-hidden">
         {/* Subtle background decoration */}
         <div className="absolute -top-10 -right-10 w-32 h-32 bg-brand-accent/5 rounded-full blur-3xl"></div>
-
-        {/* Invisible reCAPTCHA container */}
-        <div ref={recaptchaRef}></div>
 
         <div className="text-center mb-10">
           <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-brand flex items-center justify-center shadow-lg relative">
@@ -231,91 +62,64 @@ export default function AdminLogin() {
             Admin Portal
           </h2>
           <p className="text-brand-dark/60 text-sm font-medium uppercase tracking-widest">
-            {step === "phone" ? "Authorization Required" : "Security Verification"}
+            Authorization Required
           </p>
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 text-[10px] font-black uppercase tracking-widest rounded-xl text-center">
+          <div className="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 text-xs font-bold rounded-xl text-center">
             {error}
           </div>
         )}
 
-        {/* STEP 1: Phone Number */}
-        {step === "phone" && (
-          <form onSubmit={handleSendOTP} className="space-y-6">
-            <div>
-              <label className="block text-[10px] font-black text-brand-dark/40 uppercase mb-2 tracking-[0.2em] ml-1">Admin Phone</label>
-              <div className="relative group">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center space-x-2 border-r border-brand/10 pr-3">
-                  <Phone size={14} className="text-brand-accent" />
-                  <span className="text-brand-dark font-bold text-sm">+91</span>
-                </div>
-                <input
-                  type="tel"
-                  value={phone}
-                  onChange={handlePhoneChange}
-                  placeholder="9999999999"
-                  className="w-full bg-brand-dark/5 border-2 border-transparent focus:border-brand-accent/30 focus:bg-white rounded-xl py-4 pl-20 pr-4 text-brand-dark font-bold tracking-widest transition-all outline-none"
-                  required
-                />
+        <form onSubmit={handleLogin} className="space-y-6">
+          <div className="space-y-2">
+            <label className="block text-[10px] font-black text-brand-dark/40 uppercase tracking-[0.2em] ml-1">Admin Email</label>
+            <div className="relative group">
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-accent flex-shrink-0">
+                <Mail size={16} />
               </div>
+              <input 
+                type="email" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="admin@example.com" 
+                className="w-full bg-brand/5 border-2 border-transparent focus:border-[#FF9800]/30 focus:bg-white focus:shadow-sm rounded-xl py-3.5 pl-12 pr-4 text-brand font-bold text-sm outline-none transition-all"
+                required
+              />
             </div>
-            <button
-              type="submit"
-              disabled={loading || phone.length !== 10}
-              className="w-full bg-brand text-white font-bold py-5 rounded-2xl shadow-xl hover:bg-brand-hover disabled:opacity-50 transition-all active:scale-95 flex justify-center items-center space-x-2 group"
-            >
-              {loading ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
-              ) : (
-                <>
-                  <span className="uppercase tracking-[0.2em] text-xs">Request Access</span>
-                </>
-              )}
-            </button>
-          </form>
-        )}
+          </div>
 
-        {/* STEP 2: OTP Verification */}
-        {step === "otp" && (
-          <form onSubmit={handleVerifyOTP} className="space-y-6">
-            <div>
-              <label className="block text-[10px] font-black text-brand-dark/40 uppercase mb-2 tracking-[0.2em] ml-1">Security Code</label>
-              <div className="relative">
-                <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-accent" size={18} />
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  value={otp}
-                  onChange={handleOtpChange}
-                  placeholder="123456"
-                  className="w-full bg-brand-dark/5 border-2 border-transparent focus:border-brand-accent/30 focus:bg-white rounded-xl py-4 px-12 text-brand-dark font-mono font-bold text-center text-2xl tracking-[0.5em] transition-all outline-none"
-                  required
-                />
+          <div className="space-y-2">
+            <label className="block text-[10px] font-black text-brand-dark/40 uppercase tracking-[0.2em] ml-1">Password</label>
+            <div className="relative group">
+              <div className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-accent flex-shrink-0">
+                <Lock size={16} />
               </div>
-              <div className="flex justify-center mt-4">
-                <button type="button" onClick={() => setStep("phone")} className="text-[10px] text-brand-dark/40 hover:text-brand font-black uppercase tracking-widest transition-colors">Use different account</button>
-              </div>
+              <input 
+                type="password" 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••" 
+                className="w-full bg-brand/5 border-2 border-transparent focus:border-[#FF9800]/30 focus:bg-white focus:shadow-sm rounded-xl py-3.5 pl-12 pr-4 text-brand font-bold text-sm outline-none transition-all"
+                required
+              />
             </div>
-            <button
-              type="submit"
-              disabled={loading || otp.length !== 6}
-              className="w-full bg-brand-accent text-white font-bold py-5 rounded-2xl shadow-xl hover:bg-brand-accent/90 disabled:opacity-50 transition-all active:scale-95 flex justify-center items-center space-x-2"
-            >
-              {loading ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
-              ) : (
-                <span className="uppercase tracking-[0.2em] text-xs">Authorize Entry</span>
-              )}
-            </button>
-          </form>
-        )}
+          </div>
+
+          <button 
+            type="submit" 
+            disabled={loading} 
+            className="w-full bg-[#0D47A1] text-[#FF9800] font-black uppercase tracking-[0.2em] text-xs py-4.5 rounded-xl shadow-lg hover:bg-[#FF9800] hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center space-x-2"
+          >
+            {loading ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <span>Sign In</span>
+            )}
+          </button>
+        </form>
       </div>
-
-      <p className="mt-10 text-center text-[10px] text-brand-dark/30 max-w-xs leading-relaxed uppercase tracking-[0.3em] font-bold">
-        Om Enterprises Management Infrastructure
-      </p>
     </div>
   );
 }

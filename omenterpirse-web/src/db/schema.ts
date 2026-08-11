@@ -2,7 +2,8 @@ import { sqliteTable, text, integer, blob, real, index } from "drizzle-orm/sqlit
 
 export const users = sqliteTable("users", {
   id: integer("id").primaryKey({ autoIncrement: true }),
-  phoneNumber: text("phone_number").notNull().unique(),
+  email: text("email").notNull().unique(),
+  phoneNumber: text("phone_number"),
   fullName: text("full_name"),
   role: text("role").default("user"), // user, admin
   address: text("address"), // Default shipping address
@@ -12,7 +13,7 @@ export const users = sqliteTable("users", {
 
 export const otpVerifications = sqliteTable("otp_verifications", {
   id: integer("id").primaryKey({ autoIncrement: true }),
-  phoneNumber: text("phone_number").notNull(),
+  email: text("email").notNull(),
   otp: text("otp").notNull(),
   expiresAt: text("expires_at").notNull(),
   createdAt: text("created_at").$defaultFn(() => new Date().toISOString()),

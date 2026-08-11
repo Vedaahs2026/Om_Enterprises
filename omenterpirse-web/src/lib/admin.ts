@@ -4,28 +4,9 @@ import { cookies } from "next/headers";
  * Retrieves the list of authorized admin numbers from the ADMIN_PHONES / ADMIN_PHONE / ADMIN_NUMBERS env variables.
  * Fallback is "9999999999". Numbers are normalized by stripping non-digits and keeping the last 10 digits.
  */
-export function getAdminNumbers(): string[] {
-  const adminNumbersEnv =
-    process.env.ADMIN_PHONES ||
-    process.env.ADMIN_PHONE ||
-    process.env.ADMIN_NUMBERS ||
-    "9999999999";
-  return adminNumbersEnv
-    .split(",")
-    .map((n) => n.trim().replace(/\D/g, "").slice(-10))
-    .filter(Boolean);
-}
-
-/**
- * Checks if the given phone number is one of the authorized admin numbers.
- * The check compares the last 10 digits of the normalized numbers.
- */
-export function isAdminNumber(phone: string): boolean {
-  if (!phone) return false;
-  const cleanPhone = phone.replace(/\D/g, "");
-  const p10 = cleanPhone.slice(-10);
-  const adminNumbers = getAdminNumbers();
-  return adminNumbers.includes(p10);
+export function isAdminNumber(email: string): boolean {
+  if (!email) return false;
+  return email.trim().toLowerCase() === "om5555enterprises@gmail.com";
 }
 
 /**

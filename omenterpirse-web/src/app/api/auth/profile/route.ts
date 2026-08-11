@@ -7,14 +7,14 @@ import { cookies } from "next/headers";
 export async function POST(request: Request) {
   try {
     const cookieStore = await cookies();
-    const phone = cookieStore.get("auth_session")?.value;
+    const email = cookieStore.get("auth_session")?.value;
 
-    if (!phone) {
+    if (!email) {
       return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
     }
 
     const body = await request.json();
-    const { fullName } = body;
+    const { fullName, phoneNumber } = body;
 
     if (!fullName) {
       return NextResponse.json({ success: false, error: "Name is required" }, { status: 400 });
@@ -22,8 +22,11 @@ export async function POST(request: Request) {
 
     // Update user profile in DB
     await db.update(users)
-      .set({ fullName })
-      .where(eq(users.phoneNumber, phone));
+      .set({ 
+        fullName,
+        ...(phoneNumber ? { phoneNumber } : {})
+      })
+      .where(eq(users.email, email));
 
     return NextResponse.json({ success: true, message: "Profile updated successfully" });
   } catch (error: any) {
@@ -31,4 +34,3 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: false, error: "Failed to update profile" }, { status: 500 });
   }
 }
-

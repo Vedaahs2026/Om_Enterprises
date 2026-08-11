@@ -21,7 +21,7 @@ export async function PATCH(
     const userRows = await db
       .select()
       .from(users)
-      .where(eq(users.phoneNumber, phoneNumber))
+      .where(eq(users.email, phoneNumber))
       .limit(1);
 
     if (!userRows.length) {

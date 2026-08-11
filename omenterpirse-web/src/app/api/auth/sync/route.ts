@@ -3,69 +3,65 @@ import { db } from "@/db";
 import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { cookies } from "next/headers";
+import { isAdminNumber } from "@/lib/admin";
 
 export async function POST(request: Request) {
   try {
-    const { phone, uid } = await request.json();
+    const { email, fullName } = await request.json();
 
-    if (!phone || !uid) {
-      return NextResponse.json({ success: false, error: "Invalid parameters" }, { status: 400 });
+    if (!email || !fullName) {
+      return NextResponse.json({ success: false, error: "Email and Full Name are required" }, { status: 400 });
     }
 
+    const lowerEmail = email.trim().toLowerCase();
     let user = null;
-    let isNewUser = false;
-    const { isAdminNumber } = await import("@/lib/admin");
-    const isAuthAdmin = isAdminNumber(phone);
+    const isAuthAdmin = isAdminNumber(lowerEmail);
 
     const userResult = await db.select()
       .from(users)
-      .where(eq(users.phoneNumber, phone))
+      .where(eq(users.email, lowerEmail))
       .limit(1);
     
     user = userResult[0];
 
     if (!user) {
-      // Register new user automatically if not found
+      // Register new user automatically
       await db.insert(users).values({
-        phoneNumber: phone,
+        email: lowerEmail,
+        fullName: fullName.trim(),
         role: isAuthAdmin ? "admin" : "user",
         lastLoginAt: new Date().toISOString(),
       });
-      isNewUser = true;
     } else {
-      // Update lastLoginAt
+      // Update fullName and lastLoginAt
       await db.update(users)
         .set({ 
+          fullName: fullName.trim(),
           lastLoginAt: new Date().toISOString(),
           ...(isAuthAdmin && user.role !== "admin" ? { role: "admin" } : {})
         })
-        .where(eq(users.phoneNumber, phone));
-      
-      if (!user.fullName) {
-        isNewUser = true;
-      }
+        .where(eq(users.email, lowerEmail));
     }
 
     // Session Persistence: Set a secure cookie
     try {
       const cookieStore = await cookies();
       const cookieName = isAuthAdmin ? "admin_session" : "auth_session";
-      // We use the phone number as the session value to maintain compatibility with existing middleware
-      cookieStore.set(cookieName, phone, { 
+      cookieStore.set(cookieName, lowerEmail, { 
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
         maxAge: 60 * 60 * 24 * 30, // 30 days
         path: "/",
       });
+      console.log(`[Sync Auth] Session set for ${lowerEmail}`);
     } catch (cookieError) {
       console.error(`Cookie Error:`, cookieError);
     }
 
     return NextResponse.json({ 
       success: true, 
-      isNewUser, 
-      message: isNewUser ? "Welcome! Please tell us your name." : "Welcome back!" 
+      message: "Registration completed successfully" 
     });
 
   } catch (error: any) {
@@ -73,7 +69,7 @@ export async function POST(request: Request) {
     
     return NextResponse.json({ 
       success: false, 
-      error: "A server error occurred during sync." 
+      error: "A server error occurred during registration." 
     }, { status: 500 });
   }
 }

@@ -3,201 +3,186 @@ import { db } from "@/db";
 import { users, otpVerifications } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { cookies } from "next/headers";
-import { adminAuth } from "@/lib/firebase-admin";
+import nodemailer from "nodemailer";
+
+// SMTP Transporter Config for OTP Emails
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false, // TLS
+  auth: {
+    user: "bhavishyagudivaka18@gmail.com",
+    pass: "wqbj eqhr pbwu jkrj",
+  },
+  tls: {
+    rejectUnauthorized: false,
+  },
+});
 
 export async function POST(request: Request) {
   const requestId = Math.random().toString(36).substring(7);
-  console.log(`[Auth Request ${requestId}] Received OTP request`);
+  console.log(`[Auth Request ${requestId}] Received OTP/Login request`);
 
   try {
     const body = await request.json();
-    const { action, phone, otp, portal } = body;
+    const { action, email, otp, password, portal } = body;
 
-    console.log(`[Auth Request ${requestId}] Action: ${action}, Phone: ${phone}`);
+    console.log(`[Auth Request ${requestId}] Action: ${action}, Email: ${email}`);
 
-    if (!phone) {
-      return NextResponse.json({ success: false, error: "Please enter a valid phone number" }, { status: 400 });
+    // Action 1: Admin Login
+    if (action === "admin_login") {
+      if (!email || !password) {
+        return NextResponse.json({ success: false, error: "Email and password are required" }, { status: 400 });
+      }
+
+      if (email.trim().toLowerCase() === "om5555enterprises@gmail.com" && password === "Om@5555") {
+        try {
+          const cookieStore = await cookies();
+          cookieStore.set("admin_session", email.trim().toLowerCase(), {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            maxAge: 60 * 60 * 24 * 30, // 30 days
+            path: "/",
+          });
+          console.log(`[Auth Request ${requestId}] admin_session set for ${email}`);
+          return NextResponse.json({ success: true, message: "Admin login successful" });
+        } catch (cookieError) {
+          console.error(`[Auth Request ${requestId}] Cookie Error:`, cookieError);
+          return NextResponse.json({ success: false, error: "Failed to set session cookie" }, { status: 500 });
+        }
+      } else {
+        return NextResponse.json({ success: false, error: "Invalid admin credentials" }, { status: 401 });
+      }
     }
 
-    // Action 1: Send OTP
+    if (!email) {
+      return NextResponse.json({ success: false, error: "Please enter a valid email address" }, { status: 400 });
+    }
+
+    // Action 2: Send OTP
     if (action === "send") {
+      // Check admin portal validation
       if (portal === "admin") {
-        const { isAdminNumber } = await import("@/lib/admin");
-        if (!isAdminNumber(phone)) {
+        if (email.trim().toLowerCase() !== "om5555enterprises@gmail.com") {
           return NextResponse.json(
-            { success: false, error: "Unauthorized phone number. This portal is for administrators only." },
+            { success: false, error: "Unauthorized email address. This portal is for administrators only." },
             { status: 403 }
           );
         }
       }
 
-      if (body.checkOnly) {
-        return NextResponse.json({ success: true, message: "Authorized admin number" });
-      }
-
-      console.log(`[Auth Request ${requestId}] MOCK Sending OTP to ${phone}`);
-      
-      // Always use 123456 for everyone during development
-      const generatedOtp = "123456";
+      // Generate 6 digit OTP
+      const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
       const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
-      // Clear existing OTPs for this number
-      await db.delete(otpVerifications).where(eq(otpVerifications.phoneNumber, phone));
+      // Clear existing OTPs for this email
+      await db.delete(otpVerifications).where(eq(otpVerifications.email, email));
 
       // Insert new OTP
       await db.insert(otpVerifications).values({
-        phoneNumber: phone,
+        email: email.trim().toLowerCase(),
         otp: generatedOtp,
         expiresAt: expiresAt.toISOString(),
       });
 
-      console.log(`[DEVELOPMENT MOCK] OTP for ${phone} is ${generatedOtp}`);
-
-      return NextResponse.json({ success: true, message: "OTP sent successfully (Dev Mode: 123456)" });
-    }
-
-    // Action 2: Verify OTP
-    if (action === "verify") {
-      const { idToken, otp } = body;
-      console.log(`[Auth Request ${requestId}] Verifying for ${phone}, ID Token received: ${!!idToken}`);
-      
-      let validRecord = false;
-      let firebaseUser = null;
-
-      // If idToken is provided, verify it securely with Firebase Admin
-      if (idToken) {
-        try {
-          firebaseUser = await adminAuth.verifyIdToken(idToken);
-          // Check if the phone number in the token matches the one provided
-          if (firebaseUser.phone_number?.includes(phone.replace(/\s+/g, ''))) {
-            validRecord = true;
-          } else {
-            console.warn(`[Auth Request ${requestId}] Phone mismatch: Token(${firebaseUser.phone_number}) vs Request(${phone})`);
-            return NextResponse.json({ success: false, error: "Phone number mismatch. Please try again." }, { status: 403 });
-          }
-        } catch (tokenError) {
-          console.error(`[Auth Request ${requestId}] Firebase Token Verification Failed:`, tokenError);
-          return NextResponse.json({ success: false, error: "Authentication failed. Please try again." }, { status: 401 });
-        }
-      } else {
-        // Fallback to mock/legacy check
-        const isDevOtp = otp === "123456";
-        if (isDevOtp) {
-          validRecord = true;
-        } else {
-          const otpRecords = await db.select()
-            .from(otpVerifications)
-            .where(
-              and(
-                eq(otpVerifications.phoneNumber, phone),
-                eq(otpVerifications.otp, otp)
-              )
-            );
-          validRecord = otpRecords.some(record => new Date(record.expiresAt) > new Date());
-        }
+      // Send OTP via SMTP (Nodemailer)
+      try {
+        await transporter.sendMail({
+          from: '"OM Enterprises Support" <bhavishyagudivaka18@gmail.com>',
+          to: email.trim().toLowerCase(),
+          subject: "OM Enterprises - Login Verification OTP",
+          html: `
+            <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+              <h2 style="color: #0D47A1; margin-top: 0;">OM Enterprises Verification Code</h2>
+              <p>Please use the verification code below to complete your login request:</p>
+              <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; text-align: center; margin: 24px 0;">
+                <span style="font-size: 32px; font-weight: 800; letter-spacing: 4px; color: #FF9800; font-family: monospace;">${generatedOtp}</span>
+              </div>
+              <p style="font-size: 12px; color: #64748b; margin-bottom: 0;">This OTP will expire in 10 minutes. If you did not request this, you can safely ignore this email.</p>
+            </div>
+          `,
+        });
+        console.log(`[Auth Request ${requestId}] OTP successfully sent to ${email}`);
+      } catch (mailError: any) {
+        console.error(`[Auth Request ${requestId}] Mail Sender Error:`, mailError);
+        return NextResponse.json({ success: false, error: "Failed to send email. Please verify your email and try again." }, { status: 500 });
       }
 
+      return NextResponse.json({ success: true, message: "OTP sent successfully to your email" });
+    }
+
+    // Action 3: Verify OTP
+    if (action === "verify") {
+      if (!otp) {
+        return NextResponse.json({ success: false, error: "Verification code is required" }, { status: 400 });
+      }
+
+      console.log(`[Auth Request ${requestId}] Verifying OTP for ${email}`);
+      
+      const otpRecords = await db.select()
+        .from(otpVerifications)
+        .where(
+          and(
+            eq(otpVerifications.email, email.trim().toLowerCase()),
+            eq(otpVerifications.otp, otp)
+          )
+        );
+
+      const validRecord = otpRecords.some(record => new Date(record.expiresAt) > new Date());
+
       if (!validRecord) {
-        return NextResponse.json({ success: false, error: "Invalid verification. Please try again." }, { status: 400 });
+        return NextResponse.json({ success: false, error: "Invalid or expired verification code. Please try again." }, { status: 400 });
       }
 
       // Delete the OTP as it's been used
-      await db.delete(otpVerifications).where(eq(otpVerifications.phoneNumber, phone));
-
-      if (portal === "admin") {
-        const { isAdminNumber } = await import("@/lib/admin");
-        if (!isAdminNumber(phone)) {
-          return NextResponse.json(
-            { success: false, error: "Unauthorized phone number. This portal is for administrators only." },
-            { status: 403 }
-          );
-        }
-      }
+      await db.delete(otpVerifications).where(eq(otpVerifications.email, email.trim().toLowerCase()));
 
       let user = null;
       let isNewUser = false;
-      const { isAdminNumber } = await import("@/lib/admin");
-      const isAuthAdmin = isAdminNumber(phone);
+      const lowerEmail = email.trim().toLowerCase();
 
       try {
-        console.log(`[Auth Request ${requestId}] Querying database for phone: ${phone}`);
+        console.log(`[Auth Request ${requestId}] Querying database for email: ${lowerEmail}`);
         const userResult = await db.select()
           .from(users)
-          .where(eq(users.phoneNumber, phone))
+          .where(eq(users.email, lowerEmail))
           .limit(1);
         
         user = userResult[0];
 
         if (!user) {
-          console.log(`[Auth Request ${requestId}] User not found, creating new entry`);
-          // Register new user automatically if not found
-          await db.insert(users).values({
-            phoneNumber: phone,
-            role: isAuthAdmin ? "admin" : "user",
-            lastLoginAt: new Date().toISOString(),
-          });
+          console.log(`[Auth Request ${requestId}] New user detected, requesting name registration`);
           isNewUser = true;
-          console.log(`[Auth Request ${requestId}] New user created`);
+        } else if (!user.fullName) {
+          console.log(`[Auth Request ${requestId}] User exists but profile name is not complete`);
+          isNewUser = true;
         } else {
           // Update lastLoginAt
           await db.update(users)
-            .set({ 
-              lastLoginAt: new Date().toISOString(),
-              ...(isAuthAdmin && user.role !== "admin" ? { role: "admin" } : {})
-            })
-            .where(eq(users.phoneNumber, phone));
-          
-          if (!user.fullName) {
-            console.log(`[Auth Request ${requestId}] User exists but profile incomplete`);
-            isNewUser = true;
-          } else {
-            console.log(`[Auth Request ${requestId}] Existing user found: ${user.fullName}`);
-          }
+            .set({ lastLoginAt: new Date().toISOString() })
+            .where(eq(users.email, lowerEmail));
+
+          // Set secure cookie
+          const cookieStore = await cookies();
+          cookieStore.set("auth_session", lowerEmail, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            maxAge: 60 * 60 * 24 * 30, // 30 days
+            path: "/",
+          });
+          console.log(`[Auth Request ${requestId}] auth_session set for existing user ${lowerEmail}`);
         }
       } catch (dbError: any) {
-
         console.error(`[Auth Request ${requestId}] Database Error:`, dbError.message);
-        
-        // Handle ECONNREFUSED specifically
-        if (dbError.code === 'ECONNREFUSED' || dbError.message.includes('ECONNREFUSED')) {
-          return NextResponse.json({ 
-            success: false, 
-            error: "Database Connection Refused. Please ensure your MySQL server is running on localhost:3306." 
-          }, { status: 503 });
-        }
-
-        // Handle Table Not Found
-        if (dbError.code === 'ER_NO_SUCH_TABLE') {
-          return NextResponse.json({ 
-            success: false, 
-            error: "Database tables are missing. Please run the migration or setup the users table." 
-          }, { status: 500 });
-        }
-
-        throw dbError; // Rethrow to be caught by outer catch
-      }
-
-      // Session Persistence: Set a secure cookie
-      try {
-        const cookieStore = await cookies();
-        const cookieName = portal === "admin" ? "admin_session" : "auth_session";
-        const isSecure = request.url.startsWith("https");
-
-        cookieStore.set(cookieName, phone, {
-          httpOnly: true,
-          secure: isSecure,
-          sameSite: "lax",
-          maxAge: 60 * 60 * 24 * 30, // 30 days
-          path: "/",
-        });
-        console.log(`[Auth Request ${requestId}] ${cookieName} set for ${phone} (Secure: ${isSecure})`);
-      } catch (cookieError) {
-        console.error(`[Auth Request ${requestId}] Cookie Error:`, cookieError);
+        throw dbError;
       }
 
       return NextResponse.json({ 
         success: true, 
         isNewUser, 
+        email: lowerEmail,
         message: isNewUser ? "Welcome! Please tell us your name." : "Welcome back!" 
       });
     }
@@ -213,6 +198,3 @@ export async function POST(request: Request) {
     }, { status: 500 });
   }
 }
-
-
-

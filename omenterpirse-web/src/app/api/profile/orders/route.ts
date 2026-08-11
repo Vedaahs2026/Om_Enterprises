@@ -14,7 +14,7 @@ export async function GET() {
     }
 
     // Find user
-    const userRows = await db.select().from(users).where(eq(users.phoneNumber, phoneNumber)).limit(1);
+    const userRows = await db.select().from(users).where(eq(users.email, phoneNumber)).limit(1);
     if (!userRows.length) {
       return NextResponse.json({ success: false, error: "User not found" }, { status: 404 });
     }
