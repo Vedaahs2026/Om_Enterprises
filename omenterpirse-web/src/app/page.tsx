@@ -177,6 +177,37 @@ export default async function Home() {
           </div>
         </div>
 
+        {/* We Also Deal With Section */}
+        <div className="space-y-6 text-center">
+          <div>
+            <span className="text-[10px] font-black text-brand uppercase tracking-[0.3em]">Other Brands</span>
+            <h2 className="text-3xl md:text-4xl font-playfair font-bold mt-2 text-brand">We also deal with</h2>
+          </div>
+          <div className="flex flex-row justify-center items-center gap-4 max-w-4xl mx-auto flex-wrap">
+            <div className="bg-white rounded-xl border border-gray-100 p-3.5 shadow-xs hover:shadow-sm transition-all w-36 sm:w-44 h-16 sm:h-20 flex items-center justify-center">
+              <img 
+                src="/images/legrand_logo.jpg" 
+                alt="Legrand" 
+                className="max-h-8 sm:max-h-12 w-auto object-contain"
+              />
+            </div>
+            <div className="bg-white rounded-xl border border-gray-100 p-3.5 shadow-xs hover:shadow-sm transition-all w-36 sm:w-44 h-16 sm:h-20 flex items-center justify-center">
+              <img 
+                src="/images/finecab_logo.jpg" 
+                alt="Finecab" 
+                className="max-h-8 sm:max-h-12 w-auto object-contain"
+              />
+            </div>
+            <div className="bg-white rounded-xl border border-gray-100 p-3.5 shadow-xs hover:shadow-sm transition-all w-36 sm:w-44 h-16 sm:h-20 flex items-center justify-center">
+              <img 
+                src="/images/lk_logo.jpg" 
+                alt="Lauritz Knudsen" 
+                className="max-h-8 sm:max-h-12 w-auto object-contain"
+              />
+            </div>
+          </div>
+        </div>
+
         {/* Home Tabs */}
         {tabs.length > 0 && (
           <div className="space-y-6">
