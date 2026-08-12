@@ -316,7 +316,11 @@ export default function UnifiedBrandDetailPage({ params }: PageProps) {
     } else if (selectedLength) {
       setSelectedLength(null);
     } else {
-      router.push("/");
+      if (typeof window !== "undefined" && window.history.length > 1) {
+        router.back();
+      } else {
+        router.push("/");
+      }
     }
   };
 
