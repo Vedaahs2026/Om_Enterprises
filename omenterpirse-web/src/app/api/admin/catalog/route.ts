@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { categories, brands, brandLengths, brandModels, brandVariations } from "@/db/schema";
-import { eq, desc, asc } from "drizzle-orm";
+import { eq, desc, asc, and } from "drizzle-orm";
 
 export async function GET(req: Request) {
   try {
@@ -124,13 +124,48 @@ export async function POST(req: Request) {
     }
 
     if (type === "variation") {
-      const { modelId, brandId, thickness, colors, price, salePrice, stock } = body;
+      let { modelId, brandId, brandLengthId, thickness, colors, price, salePrice, stock } = body;
       if (!modelId && !brandId) {
         return NextResponse.json({ error: "Model or Brand selection is required" }, { status: 400 });
       }
       if (price === undefined || isNaN(Number(price))) {
         return NextResponse.json({ error: "Price is required" }, { status: 400 });
       }
+
+      // If no modelId is provided but brandLengthId is, auto-resolve/create the "Default" model
+      if (!modelId && brandLengthId) {
+        const lengthIdNum = Number(brandLengthId);
+        const brandIdNum = Number(brandId);
+        
+        // Find existing "Default" model for this length
+        const existingModel = await db
+          .select()
+          .from(brandModels)
+          .where(
+            and(
+              eq(brandModels.brandLengthId, lengthIdNum),
+              eq(brandModels.name, "Default")
+            )
+          )
+          .limit(1);
+
+        if (existingModel.length > 0) {
+          modelId = existingModel[0].id;
+        } else {
+          // Create "Default" model
+          const [newModel] = await db
+            .insert(brandModels)
+            .values({
+              brandLengthId: lengthIdNum,
+              brandId: brandIdNum,
+              name: "Default",
+              description: "Default specifications for direct pricing",
+            })
+            .returning();
+          modelId = newModel.id;
+        }
+      }
+
       const [inserted] = await db
         .insert(brandVariations)
         .values({

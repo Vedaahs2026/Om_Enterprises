@@ -229,7 +229,9 @@ export default function DedicatedMatrixOrderPage({ params }: PageProps) {
           addItemToCart({
             id: cartItemId,
             productId: v.id,
-            name: `${brand.name} ${modelObj.name} (${lengthObj.lengthInMeters}m)`,
+            name: modelObj.name === "Default" 
+              ? `${brand.name} (${lengthObj.lengthInMeters}m)` 
+              : `${brand.name} ${modelObj.name} (${lengthObj.lengthInMeters}m)`,
             price: unitPrice,
             image: brand.imageUrl || "/images/temp_logo.png",
             quantity: qty,
@@ -238,7 +240,7 @@ export default function DedicatedMatrixOrderPage({ params }: PageProps) {
             customizations: {
               brandName: brand.name,
               lengthInMeters: lengthObj.lengthInMeters,
-              modelName: modelObj.name,
+              modelName: modelObj.name === "Default" ? null : modelObj.name,
               thickness: v.thickness || null,
               color: color,
             },
@@ -275,7 +277,7 @@ export default function DedicatedMatrixOrderPage({ params }: PageProps) {
           <div>
             <h1 className="text-lg font-black text-[#0D47A1] tracking-tight">{brand.name}</h1>
             <span className="text-[10px] font-bold text-[#FF9800] uppercase tracking-wider block">
-              {modelObj.name} • {lengthObj.lengthInMeters} MTR
+              {modelObj.name === "Default" ? "" : `${modelObj.name} • `}{lengthObj.lengthInMeters} MTR
             </span>
           </div>
         </div>
@@ -286,7 +288,7 @@ export default function DedicatedMatrixOrderPage({ params }: PageProps) {
         {/* Header Title */}
         <div className="bg-gray-100/80 px-6 py-3.5 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <h2 className="text-xs sm:text-sm font-black text-[#0D47A1] uppercase tracking-wide">
-            Grid For <span className="text-[#FF9800]">{modelObj.name}</span> - {lengthObj.lengthInMeters} MTR
+            Grid For <span className="text-[#FF9800]">{modelObj.name === "Default" ? `${brand.name}` : modelObj.name}</span> - {lengthObj.lengthInMeters} MTR
           </h2>
           <span className="text-[10px] font-bold text-gray-400 uppercase">Enter Quantities per Color</span>
         </div>

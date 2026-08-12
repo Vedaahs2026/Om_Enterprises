@@ -138,6 +138,21 @@ export default function UnifiedBrandDetailPage({ params }: PageProps) {
     fetchBrandDetails();
   }, [resolvedParams.id, router]);
 
+  // Auto-select "Default" model to bypass model selection if it's configured under the selected length
+  useEffect(() => {
+    if (selectedLength) {
+      const models = selectedLength.models || [];
+      const defaultModel = models.find((m) => m.name === "Default");
+      if (defaultModel) {
+        setSelectedModel(defaultModel);
+      } else {
+        setSelectedModel(null);
+      }
+    } else {
+      setSelectedModel(null);
+    }
+  }, [selectedLength]);
+
   if (loading) {
     return (
       <div className="min-h-[70vh] flex items-center justify-center p-6">
@@ -172,7 +187,9 @@ export default function UnifiedBrandDetailPage({ params }: PageProps) {
 
   if (selectedModel) {
     activeVariations = selectedModel.variations || [];
-    matrixTitle = selectedModel.name;
+    matrixTitle = selectedModel.name === "Default"
+      ? `${brand.name} ${selectedLength ? `(${selectedLength.lengthInMeters}m)` : ""}`
+      : selectedModel.name;
   } else if (selectedLength && !selectedModel) {
     // Should not render matrix if model is not selected yet
     activeVariations = [];
@@ -239,7 +256,7 @@ export default function UnifiedBrandDetailPage({ params }: PageProps) {
 
           const cartItemName = `${brand.name}` +
             (selectedLength ? ` (${selectedLength.lengthInMeters}m)` : "") +
-            (selectedModel ? ` ${selectedModel.name}` : "") +
+            (selectedModel && selectedModel.name !== "Default" ? ` ${selectedModel.name}` : "") +
             (v.thickness ? ` - ${v.thickness}` : "");
 
           addItemToCart({
@@ -254,7 +271,7 @@ export default function UnifiedBrandDetailPage({ params }: PageProps) {
             customizations: {
               brandName: brand.name,
               lengthInMeters: selectedLength ? selectedLength.lengthInMeters : null,
-              modelName: selectedModel ? selectedModel.name : null,
+              modelName: selectedModel && selectedModel.name !== "Default" ? selectedModel.name : null,
               thickness: v.thickness || null,
               color: color,
             },
@@ -309,7 +326,7 @@ export default function UnifiedBrandDetailPage({ params }: PageProps) {
                   <span className="text-[#FF9800]">{selectedLength.lengthInMeters} MTR</span>
                 </>
               )}
-              {selectedModel && (
+              {selectedModel && selectedModel.name !== "Default" && (
                 <>
                   <ChevronRight size={10} className="stroke-[3]" />
                   <span className="text-[#FF9800]">{selectedModel.name}</span>

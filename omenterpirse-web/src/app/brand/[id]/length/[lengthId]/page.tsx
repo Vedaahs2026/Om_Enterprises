@@ -65,6 +65,13 @@ export default function SelectModelPage({ params }: PageProps) {
 
         if (!foundLength) throw new Error("Length option not found");
         setLengthObj(foundLength);
+
+        // If there is exactly one model and its name is "Default", redirect immediately to the model detail page
+        const models = foundLength.models || [];
+        const defaultModel = models.find((m: BrandModel) => m.name === "Default");
+        if (defaultModel) {
+          router.replace(`/brand/${resolvedParams.id}/length/${resolvedParams.lengthId}/model/${defaultModel.id}`);
+        }
       } catch (err: any) {
         console.error(err);
         setError(err.message || "Failed to load models");

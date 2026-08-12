@@ -142,6 +142,20 @@ export default function MasterCatalogPage() {
     fetchCatalog();
   }, []);
 
+  // Auto-select the "Default" model if it is configured under the selected length
+  useEffect(() => {
+    if (selectedLength) {
+      const defaultModel = selectedLength.models?.find((m) => m.name === "Default");
+      if (defaultModel) {
+        setSelectedModelId(defaultModel.id);
+      } else {
+        setSelectedModelId(null);
+      }
+    } else {
+      setSelectedModelId(null);
+    }
+  }, [selectedLengthId, catalog]);
+
   // Filtered lists based on selections
   const filteredBrands = catalog.filter((b) => 
     !selectedCategory || b.category.toLowerCase() === selectedCategory.toLowerCase()
@@ -249,6 +263,7 @@ export default function MasterCatalogPage() {
           type: "variation",
           modelId: selectedModel ? selectedModel.id : null,
           brandId: selectedBrand.id,
+          brandLengthId: selectedLength ? selectedLength.id : null,
           thickness: varThickness.trim() || null,
           colors: varColors,
           price: Number(varPrice),
@@ -506,10 +521,10 @@ export default function MasterCatalogPage() {
           <div className="space-y-2 max-h-[480px] overflow-y-auto pr-1">
             {!selectedBrand ? (
               <p className="text-xs text-gray-400 py-6 text-center">Select a brand first.</p>
-            ) : availableModels.length === 0 ? (
+            ) : availableModels.filter(m => m.name !== "Default").length === 0 ? (
               <p className="text-xs text-gray-400 py-6 text-center">No models added. Click + to add.</p>
             ) : (
-              availableModels.map((m) => (
+              availableModels.filter(m => m.name !== "Default").map((m) => (
                 <div
                   key={m.id}
                   onClick={() => setSelectedModelId(m.id)}
