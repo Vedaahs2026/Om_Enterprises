@@ -81,7 +81,7 @@ export default function AboutUs() {
                   </div>
                   <div>
                     <p className="text-[9px] font-black uppercase tracking-widest text-brand-dark/40">Email Us</p>
-                    <p className="text-sm font-bold text-brand-dark">omenterprises@gmail.com</p>
+                    <p className="text-sm font-bold text-brand-dark">om5555enterprises@gmail.com</p>
                   </div>
                 </div>
                 
@@ -90,8 +90,8 @@ export default function AboutUs() {
                     <Phone size={18} className="text-brand group-hover:text-white" />
                   </div>
                   <div>
-                    <p className="text-[9px] font-black uppercase tracking-widest text-brand-dark/40">Call Us</p>
-                    <p className="text-sm font-bold text-brand-dark">+91 9849845555</p>
+                    <p className="text-[9px] font-black uppercase tracking-widest text-[#FF9800]">Call Us</p>
+                    <p className="text-xs font-bold text-brand-dark">+91 9849845555 / 9246999660</p>
                   </div>
                 </div>
                 
@@ -100,8 +100,8 @@ export default function AboutUs() {
                     <MessageCircle size={18} className="text-brand group-hover:text-white" />
                   </div>
                   <div>
-                    <p className="text-[9px] font-black uppercase tracking-widest text-brand-dark/40">WhatsApp Us</p>
-                    <p className="text-sm font-bold text-brand-dark">+91 9849845555</p>
+                    <p className="text-[9px] font-black uppercase tracking-widest text-[#25D366]">WhatsApp Us</p>
+                    <p className="text-xs font-bold text-brand-dark">+91 9849845555 / 9849033511</p>
                   </div>
                 </a>
               </div>
@@ -119,9 +119,9 @@ export default function AboutUs() {
                     <div>
                       <h4 className="font-bold text-brand mb-2 uppercase tracking-widest text-[10px]">Address</h4>
                       <p className="text-xs text-brand-dark/70 leading-relaxed mb-4">
-                        12-3, Main Road,<br/>
-                        Electronics Market,<br/>
-                        Hyderabad-500095, India
+                        # 1-8-288/1, Sindhi Colony,<br/>
+                        P.G. Road,<br/>
+                        Secunderabad - 500 003
                       </p>
                     </div>
                   </div>

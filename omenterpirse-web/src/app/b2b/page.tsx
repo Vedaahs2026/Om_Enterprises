@@ -125,19 +125,19 @@ export default function B2BPage() {
             <div className="bg-white/5 p-8 rounded-3xl border border-white/10 backdrop-blur-sm flex flex-col items-center">
               <Mail size={32} className="text-brand-accent mb-4" />
               <h4 className="text-sm font-bold uppercase tracking-widest mb-2 text-white/50">Email</h4>
-              <p className="font-medium">omenterprises@gmail.com</p>
+              <p className="font-medium">om5555enterprises@gmail.com</p>
             </div>
             
             <div className="bg-white/5 p-8 rounded-3xl border border-white/10 backdrop-blur-sm flex flex-col items-center">
               <Phone size={32} className="text-brand-accent mb-4" />
               <h4 className="text-sm font-bold uppercase tracking-widest mb-2 text-white/50">Call Us</h4>
-              <p className="font-medium">+91 9849845555</p>
+              <p className="font-medium">+91 9849845555 / 9246999660</p>
             </div>
  
             <a href="https://wa.me/919849845555" target="_blank" rel="noopener noreferrer" className="bg-white/5 hover:bg-[#25D366]/20 transition-colors p-8 rounded-3xl border border-white/10 backdrop-blur-sm flex flex-col items-center group">
               <MessageCircle size={32} className="text-brand-accent group-hover:text-[#25D366] transition-colors mb-4" />
               <h4 className="text-sm font-bold uppercase tracking-widest mb-2 text-white/50">WhatsApp</h4>
-              <p className="font-medium">+91 9849845555</p>
+              <p className="font-medium">+91 9849845555 / 9849033511</p>
             </a>
           </div>
         </div>

@@ -33,15 +33,15 @@ export default function Footer() {
           <ul className="space-y-4 text-xs text-white/90">
             <li className="flex items-start gap-2">
               <MapPin size={16} className="text-[#FF9800] flex-shrink-0" />
-              <span>Showroom: 12-3, Main Road, Electronics Market, Hyderabad, India</span>
+              <span>Showroom: # 1-8-288/1, Sindhi Colony, P.G. Road, Secunderabad - 500 003</span>
             </li>
             <li className="flex items-center gap-2">
               <Mail size={16} className="text-[#FF9800] flex-shrink-0" />
-              <span>omenterprises@gmail.com</span>
+              <span>om5555enterprises@gmail.com</span>
             </li>
             <li className="flex items-center gap-2">
               <PhoneCall size={16} className="text-[#FF9800] flex-shrink-0" />
-              <span>+91 9849845555</span>
+              <span>+91 9849845555 / 9246999660</span>
             </li>
           </ul>
         </div>
