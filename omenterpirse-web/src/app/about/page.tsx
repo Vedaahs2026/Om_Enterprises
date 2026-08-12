@@ -126,7 +126,7 @@ export default function AboutUs() {
                     </div>
                   </div>
                   <a 
-                    href="https://maps.google.com/?q=Electronics+Market+Hyderabad" 
+                    href="https://maps.google.com/?q=17.4413520,78.4804000" 
                     target="_blank" 
                     rel="noreferrer" 
                     className="inline-flex items-center justify-center space-x-2 bg-brand text-white px-4 py-2.5 rounded-xl font-bold uppercase tracking-widest text-[10px] hover:bg-brand-hover transition-all shadow-sm active:scale-95 group mt-2 w-full"
@@ -161,7 +161,7 @@ export default function AboutUs() {
           {/* Right Column: Map (Col Span 5) */}
           <div className="lg:col-span-5 min-h-[450px] relative rounded-[2rem] overflow-hidden shadow-lg border-2 border-white">
             <iframe 
-              src="https://maps.google.com/maps?q=Electronics+Market+Hyderabad&t=&z=14&ie=UTF8&iwloc=&output=embed" 
+              src="https://maps.google.com/maps?q=17.4413520,78.4804000&t=&z=16&ie=UTF8&iwloc=&output=embed" 
               width="100%" 
               height="100%" 
               style={{ border: 0, minHeight: "450px" }} 
