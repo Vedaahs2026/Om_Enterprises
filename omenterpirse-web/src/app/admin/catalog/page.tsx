@@ -157,9 +157,16 @@ export default function MasterCatalogPage() {
   }, [selectedLengthId, catalog]);
 
   // Filtered lists based on selections
-  const filteredBrands = catalog.filter((b) => 
-    !selectedCategory || b.category.toLowerCase() === selectedCategory.toLowerCase()
-  );
+  const selectedCatObj = categories.find(c => c.name.toLowerCase() === selectedCategory.toLowerCase()) || null;
+
+  const filteredBrands = catalog.filter((b) => {
+    if (!selectedCategory) return true;
+    if (b.category.toLowerCase() === selectedCategory.toLowerCase()) return true;
+    if (selectedCatObj && b.category.toLowerCase() === selectedCatObj.slug.toLowerCase()) return true;
+    if (selectedCategory.toLowerCase().startsWith(b.category.toLowerCase())) return true;
+    if (b.category.toLowerCase().startsWith(selectedCategory.toLowerCase())) return true;
+    return false;
+  });
 
   const selectedBrand = catalog.find((b) => b.id === selectedBrandId) || filteredBrands[0] || null;
   const availableLengths = selectedBrand ? selectedBrand.lengths : [];
