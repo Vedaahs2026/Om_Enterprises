@@ -7,7 +7,7 @@ import { isAdminNumber } from "@/lib/admin";
 
 export async function POST(request: Request) {
   try {
-    const { email, fullName } = await request.json();
+    const { email, fullName, phoneNumber } = await request.json();
 
     if (!email || !fullName) {
       return NextResponse.json({ success: false, error: "Email and Full Name are required" }, { status: 400 });
@@ -29,14 +29,16 @@ export async function POST(request: Request) {
       await db.insert(users).values({
         email: lowerEmail,
         fullName: fullName.trim(),
+        phoneNumber: phoneNumber ? phoneNumber.trim() : null,
         role: isAuthAdmin ? "admin" : "user",
         lastLoginAt: new Date().toISOString(),
       });
     } else {
-      // Update fullName and lastLoginAt
+      // Update fullName, phoneNumber and lastLoginAt
       await db.update(users)
         .set({ 
           fullName: fullName.trim(),
+          phoneNumber: phoneNumber ? phoneNumber.trim() : user.phoneNumber,
           lastLoginAt: new Date().toISOString(),
           ...(isAuthAdmin && user.role !== "admin" ? { role: "admin" } : {})
         })

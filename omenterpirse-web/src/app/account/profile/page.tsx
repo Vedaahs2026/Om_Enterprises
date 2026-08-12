@@ -44,7 +44,7 @@ export default function ProfilePage() {
       const res = await fetch("/api/auth/profile", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fullName }),
+        body: JSON.stringify({ fullName, phoneNumber }),
       });
       const data = await res.json();
       if (data.success) {
@@ -100,21 +100,22 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* Phone (Read Only) */}
+            {/* Phone (Editable) */}
             <div className="space-y-2">
               <label className="text-xs font-bold text-brand/60 uppercase tracking-widest ml-1">Phone Number</label>
-              <div className="relative opacity-60">
+              <div className="relative">
                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-brand/40">
                   <Phone size={18} />
                 </div>
                 <input
-                  type="text"
+                  type="tel"
                   value={phoneNumber}
-                  readOnly
-                  className="w-full bg-brand/5 border border-brand/10 rounded-2xl py-4 pl-12 pr-4 text-brand font-medium cursor-not-allowed"
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  className="w-full bg-brand-light border border-brand/10 rounded-2xl py-4 pl-12 pr-4 text-brand font-medium focus:outline-none focus:border-[#FF9800] focus:ring-1 focus:ring-[#FF9800] transition-all"
+                  placeholder="Your phone/mobile number"
+                  required
                 />
               </div>
-              <p className="text-[10px] text-brand/40 ml-1">Phone number cannot be changed</p>
             </div>
           </div>
 

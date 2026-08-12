@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import Image from "next/image";
-import { ArrowLeft, ShieldCheck, User, Mail, Loader2 } from "lucide-react";
+import { ArrowLeft, ShieldCheck, User, Mail, Loader2, Phone } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 
@@ -16,6 +16,7 @@ function LoginForm() {
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [fullName, setFullName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [timer, setTimer] = useState(0);
@@ -114,7 +115,10 @@ function LoginForm() {
 
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!fullName.trim()) return;
+    if (!fullName.trim() || !phoneNumber.trim()) {
+      setError("Both Name and Mobile Number are required.");
+      return;
+    }
     
     setLoading(true);
     setError("");
@@ -123,7 +127,11 @@ function LoginForm() {
       const res = await fetch("/api/auth/sync", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.trim(), fullName: fullName.trim() }),
+        body: JSON.stringify({ 
+          email: email.trim(), 
+          fullName: fullName.trim(),
+          phoneNumber: phoneNumber.trim()
+        }),
       });
       const data = await res.json();
       
@@ -288,7 +296,7 @@ function LoginForm() {
 
           {/* STEP 3: Profile Setup */}
           {step === "profile" && (
-            <form onSubmit={handleSaveProfile} className="space-y-8">
+            <form onSubmit={handleSaveProfile} className="space-y-6">
               <div className="space-y-3">
                 <label className="block text-[10px] font-black text-brand/30 uppercase tracking-[0.3em] ml-2">Full Name</label>
                 <div className="relative">
@@ -305,9 +313,27 @@ function LoginForm() {
                   />
                 </div>
               </div>
+
+              <div className="space-y-3">
+                <label className="block text-[10px] font-black text-brand/30 uppercase tracking-[0.3em] ml-2">Mobile Number</label>
+                <div className="relative">
+                  <div className="absolute left-6 top-1/2 -translate-y-1/2">
+                    <Phone className="text-[#FF9800]" size={20} />
+                  </div>
+                  <input 
+                    type="tel" 
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    placeholder="98498 45555" 
+                    className="w-full bg-brand/5 border-2 border-transparent focus:border-[#FF9800]/30 focus:bg-white focus:shadow-[0_0_40px_rgba(197,160,89,0.1)] rounded-2xl py-5 pl-14 pr-6 text-brand font-bold text-lg transition-all outline-none"
+                    required
+                  />
+                </div>
+              </div>
+
               <button 
                 type="submit" 
-                disabled={loading || !fullName.trim()} 
+                disabled={loading || !fullName.trim() || !phoneNumber.trim()} 
                 className="w-full bg-[#0D47A1] text-[#FF9800] font-black uppercase tracking-[0.2em] text-xs py-5 rounded-2xl shadow-xl hover:bg-[#FF9800] hover:text-white hover:shadow-[0_20px_40px_rgba(255,152,0,0.15)] disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-[0.98] flex justify-center items-center space-x-3"
               >
                 {loading ? (
