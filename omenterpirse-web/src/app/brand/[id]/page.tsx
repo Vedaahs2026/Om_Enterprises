@@ -90,8 +90,7 @@ export default function UnifiedBrandDetailPage({ params }: PageProps) {
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   const [cartSuccess, setCartSuccess] = useState(false);
 
-  // Define static 5 standard B2B colors as requested
-  const displayColors = ["RED", "YELLOW", "BLUE", "BLACK", "GREEN"];
+
 
   useEffect(() => {
     async function fetchBrandDetails() {
@@ -198,6 +197,27 @@ export default function UnifiedBrandDetailPage({ params }: PageProps) {
     matrixTitle = `${brand.name} Specifications`;
   }
 
+  const getVariationColors = (v: Variation): string[] => {
+    try {
+      const parsed = typeof v.colors === "string" ? JSON.parse(v.colors) : v.colors || [];
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    } catch (e) {
+      if (typeof v.colors === "string" && v.colors.trim()) {
+        return v.colors.split(",").map((c: string) => c.trim()).filter(Boolean);
+      }
+    }
+    return ["Standard"];
+  };
+
+  const displayColors = Array.from(
+    new Set(activeVariations.flatMap((v) => getVariationColors(v)))
+  );
+  if (displayColors.length === 0) {
+    displayColors.push("Standard");
+  }
+
   // Matrix quantities actions
   const handleQuantityChange = (variationId: number, color: string, value: string) => {
     let num = Math.max(0, parseInt(value, 10) || 0);
@@ -267,13 +287,13 @@ export default function UnifiedBrandDetailPage({ params }: PageProps) {
             image: brand.imageUrl || "/images/temp_logo.png",
             quantity: qty,
             size: v.thickness || "Default Spec",
-            color: color,
+            color: color === "Standard" ? "" : color,
             customizations: {
               brandName: brand.name,
               lengthInMeters: selectedLength ? selectedLength.lengthInMeters : null,
               modelName: selectedModel && selectedModel.name !== "Default" ? selectedModel.name : null,
               thickness: v.thickness || null,
-              color: color,
+              color: color === "Standard" ? null : color,
             },
             stock: v.stock || 100,
           });
@@ -507,22 +527,27 @@ export default function UnifiedBrandDetailPage({ params }: PageProps) {
                       {displayColors.map((color) => {
                         const key = `${v.id}_${color}`;
                         const currentVal = quantities[key] ?? "";
+                        const isSupported = getVariationColors(v).includes(color);
 
                         return (
                           <td key={color} className="py-2 px-1.5 border-r border-gray-200 text-center">
-                            <input
-                              type="number"
-                              min="0"
-                              max="50"
-                              placeholder="0"
-                              value={currentVal}
-                              onChange={(e) => handleQuantityChange(v.id, color, e.target.value)}
-                              className={`w-full max-w-[65px] mx-auto text-center py-1.5 px-1 rounded-lg border text-xs font-bold transition-all focus:outline-none focus:ring-2 focus:ring-[#0D47A1] ${
-                                Number(currentVal) > 0
-                                  ? "border-[#0D47A1] bg-[#0D47A1]/10 text-[#0D47A1] font-black shadow-xs"
-                                  : "border-gray-200 bg-white text-gray-700 hover:border-gray-300"
-                              }`}
-                            />
+                            {isSupported ? (
+                              <input
+                                type="number"
+                                min="0"
+                                max="50"
+                                placeholder="0"
+                                value={currentVal}
+                                onChange={(e) => handleQuantityChange(v.id, color, e.target.value)}
+                                className={`w-full max-w-[65px] mx-auto text-center py-1.5 px-1 rounded-lg border text-xs font-bold transition-all focus:outline-none focus:ring-2 focus:ring-[#0D47A1] ${
+                                  Number(currentVal) > 0
+                                    ? "border-[#0D47A1] bg-[#0D47A1]/10 text-[#0D47A1] font-black shadow-xs"
+                                    : "border-gray-200 bg-white text-gray-700 hover:border-gray-300"
+                                }`}
+                              />
+                            ) : (
+                              <span className="text-gray-300 font-normal">-</span>
+                            )}
                           </td>
                         );
                       })}

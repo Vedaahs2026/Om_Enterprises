@@ -155,20 +155,26 @@ export default function DedicatedMatrixOrderPage({ params }: PageProps) {
 
   const variations = modelObj.variations || [];
 
-  // Extract all unique colors across variations for the selected model
-  const allColors = Array.from(
-    new Set(
-      variations.flatMap((v) => {
-        try {
-          return typeof v.colors === "string" ? JSON.parse(v.colors) : v.colors || [];
-        } catch (e) {
-          return v.colors ? v.colors.split(",").map((c) => c.trim()) : [];
-        }
-      })
-    )
-  );
+  const getVariationColors = (v: Variation): string[] => {
+    try {
+      const parsed = typeof v.colors === "string" ? JSON.parse(v.colors) : v.colors || [];
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
+    } catch (e) {
+      if (typeof v.colors === "string" && v.colors.trim()) {
+        return v.colors.split(",").map((c: string) => c.trim()).filter(Boolean);
+      }
+    }
+    return ["Standard"];
+  };
 
-  const displayColors = allColors.length > 0 ? allColors : ["BLACK", "BLUE", "GREEN", "RED", "YELLOW", "WHITE"];
+  const displayColors = Array.from(
+    new Set(variations.flatMap((v) => getVariationColors(v)))
+  );
+  if (displayColors.length === 0) {
+    displayColors.push("Standard");
+  }
 
   // Quantity Change Handler
   const handleQuantityChange = (variationId: number, color: string, value: string) => {
@@ -236,13 +242,13 @@ export default function DedicatedMatrixOrderPage({ params }: PageProps) {
             image: brand.imageUrl || "/images/temp_logo.png",
             quantity: qty,
             size: v.thickness || "Default Spec",
-            color: color,
+            color: color === "Standard" ? "" : color,
             customizations: {
               brandName: brand.name,
               lengthInMeters: lengthObj.lengthInMeters,
               modelName: modelObj.name === "Default" ? null : modelObj.name,
               thickness: v.thickness || null,
-              color: color,
+              color: color === "Standard" ? null : color,
             },
             stock: v.stock || 100,
           });
@@ -344,22 +350,27 @@ export default function DedicatedMatrixOrderPage({ params }: PageProps) {
                       {displayColors.map((color) => {
                         const key = `${v.id}_${color}`;
                         const currentVal = quantities[key] ?? "";
+                        const isSupported = getVariationColors(v).includes(color);
 
                         return (
                           <td key={color} className="py-2 px-1.5 border-r border-gray-200 text-center">
-                            <input
-                              type="number"
-                              min="0"
-                              max="50"
-                              placeholder="0"
-                              value={currentVal}
-                              onChange={(e) => handleQuantityChange(v.id, color, e.target.value)}
-                              className={`w-full max-w-[65px] mx-auto text-center py-1.5 px-1 rounded-lg border text-xs font-bold transition-all focus:outline-none focus:ring-2 focus:ring-[#0D47A1] ${
-                                Number(currentVal) > 0
-                                  ? "border-[#0D47A1] bg-[#0D47A1]/10 text-[#0D47A1] font-black shadow-xs"
-                                  : "border-gray-200 bg-white text-gray-700 hover:border-gray-300"
-                              }`}
-                            />
+                            {isSupported ? (
+                              <input
+                                type="number"
+                                min="0"
+                                max="50"
+                                placeholder="0"
+                                value={currentVal}
+                                onChange={(e) => handleQuantityChange(v.id, color, e.target.value)}
+                                className={`w-full max-w-[65px] mx-auto text-center py-1.5 px-1 rounded-lg border text-xs font-bold transition-all focus:outline-none focus:ring-2 focus:ring-[#0D47A1] ${
+                                  Number(currentVal) > 0
+                                    ? "border-[#0D47A1] bg-[#0D47A1]/10 text-[#0D47A1] font-black shadow-xs"
+                                    : "border-gray-200 bg-white text-gray-700 hover:border-gray-300"
+                                }`}
+                              />
+                            ) : (
+                              <span className="text-gray-300 font-normal">-</span>
+                            )}
                           </td>
                         );
                       })}
