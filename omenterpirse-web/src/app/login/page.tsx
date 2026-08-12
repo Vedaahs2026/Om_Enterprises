@@ -324,7 +324,6 @@ function LoginForm() {
                     type="tel" 
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
-                    placeholder="98498 45555" 
                     className="w-full bg-brand/5 border-2 border-transparent focus:border-[#FF9800]/30 focus:bg-white focus:shadow-[0_0_40px_rgba(197,160,89,0.1)] rounded-2xl py-5 pl-14 pr-6 text-brand font-bold text-lg transition-all outline-none"
                     required
                   />

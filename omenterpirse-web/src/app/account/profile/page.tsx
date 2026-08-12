@@ -112,7 +112,6 @@ export default function ProfilePage() {
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   className="w-full bg-brand-light border border-brand/10 rounded-2xl py-4 pl-12 pr-4 text-brand font-medium focus:outline-none focus:border-[#FF9800] focus:ring-1 focus:ring-[#FF9800] transition-all"
-                  placeholder="Your phone/mobile number"
                   required
                 />
               </div>
