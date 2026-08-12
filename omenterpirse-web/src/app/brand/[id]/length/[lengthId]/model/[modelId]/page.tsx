@@ -119,10 +119,10 @@ export default function DedicatedMatrixOrderPage({ params }: PageProps) {
 
         if (!foundModel) throw new Error("Model option not found");
         setModelObj(foundModel);
+        setLoading(false);
       } catch (err: any) {
         console.error(err);
         setError(err.message || "Failed to load order matrix");
-      } finally {
         setLoading(false);
       }
     }

@@ -127,10 +127,10 @@ export default function UnifiedBrandDetailPage({ params }: PageProps) {
           setSelectedLength(null);
           setSelectedModel(null);
         }
+        setLoading(false);
       } catch (err: any) {
         console.error(err);
         setError(err.message || "Failed to load brand details");
-      } finally {
         setLoading(false);
       }
     }

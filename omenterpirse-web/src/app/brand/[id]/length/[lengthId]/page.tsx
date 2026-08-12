@@ -72,10 +72,10 @@ export default function SelectModelPage({ params }: PageProps) {
         if (defaultModel) {
           router.replace(`/brand/${resolvedParams.id}/length/${resolvedParams.lengthId}/model/${defaultModel.id}`);
         }
+        setLoading(false);
       } catch (err: any) {
         console.error(err);
         setError(err.message || "Failed to load models");
-      } finally {
         setLoading(false);
       }
     }
