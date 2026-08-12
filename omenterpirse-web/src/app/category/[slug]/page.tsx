@@ -67,27 +67,27 @@ export default async function CategoryPage({ params }: PageProps) {
               "9246999660",
               "9849033511"
             ].map((num) => (
-              <div key={num} className="flex items-center justify-between gap-4 py-3 px-5 bg-gray-50 rounded-xl border border-gray-100 max-w-xs mx-auto w-full hover:border-[#FF9800]/30 transition-all">
-                <a href={`tel:${num}`} className="font-black text-brand hover:text-[#FF9800] transition-colors text-sm md:text-base">
+              <div key={num} className="flex items-center justify-between gap-3 py-3 px-4 bg-gray-50 rounded-xl border border-gray-100 max-w-[290px] sm:max-w-[320px] mx-auto w-full hover:border-[#FF9800]/30 transition-all">
+                <a href={`tel:${num}`} className="font-black text-brand hover:text-[#FF9800] transition-colors text-sm md:text-base flex-shrink-0">
                   {num}
                 </a>
-                <span className="text-gray-300">|</span>
-                <div className="flex gap-4">
+                <span className="text-gray-300 flex-shrink-0">|</span>
+                <div className="flex items-center gap-3 flex-shrink-0 justify-end">
                   <a 
                     href={`tel:${num}`} 
-                    className="text-[#FF9800] hover:scale-115 transition-transform" 
+                    className="text-[#FF9800] hover:scale-115 transition-transform flex-shrink-0 flex items-center justify-center" 
                     title="Call"
                   >
-                    <PhoneCall size={16} />
+                    <PhoneCall size={16} className="flex-shrink-0" />
                   </a>
                   <a 
                     href={`https://wa.me/91${num}`} 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="text-emerald-600 hover:scale-115 transition-transform" 
+                    className="text-emerald-600 hover:scale-115 transition-transform flex-shrink-0 flex items-center justify-center" 
                     title="WhatsApp"
                   >
-                    <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                    <svg className="w-[18px] h-[18px] fill-current flex-shrink-0" viewBox="0 0 24 24">
                       <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.449 5.4 0 9.794-4.392 9.797-9.793.002-2.618-1.01-5.08-2.856-6.928C16.368 2.036 13.906 1.02 11.288 1.02c-5.4 0-9.793 4.393-9.797 9.794-.001 1.732.482 3.42 1.398 4.908L1.879 21.084l5.768-1.506zM17.65 19.24c-.115-.193-.419-.307-.874-.535-.456-.229-2.695-1.33-3.113-1.482-.418-.152-.722-.229-.988.172-.266.402-1.027 1.277-1.255 1.543-.228.266-.456.3-.912.071-.456-.228-1.926-.71-3.668-2.264-1.355-1.209-2.27-2.703-2.536-3.159-.266-.456-.028-.703.2-.93.205-.205.456-.534.684-.8.228-.266.304-.456.456-.76.152-.304.076-.57-.038-.8-.115-.229-.988-2.38-1.354-3.268-.357-.86-.721-.744-.988-.758-.256-.013-.55-.015-.844-.015-.294 0-.772.11-1.176.551-.404.441-1.543 1.51-1.543 3.68 0 2.17 1.58 4.267 1.8 4.568.22.301 3.109 4.747 7.531 6.66 1.052.455 1.873.727 2.514.931 1.057.336 2.019.289 2.78.175.847-.127 2.695-1.103 3.075-2.116.379-1.013.379-1.879.266-2.071z"/>
                     </svg>
                   </a>
