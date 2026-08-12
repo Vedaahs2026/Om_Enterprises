@@ -146,11 +146,15 @@ export default function MasterCatalogPage() {
   const selectedBrand = catalog.find((b) => b.id === selectedBrandId) || filteredBrands[0] || null;
   const availableLengths = selectedBrand ? selectedBrand.lengths : [];
 
-  const selectedLength = availableLengths.find((l) => l.id === selectedLengthId) || availableLengths[0] || null;
-  const availableModels = selectedLength ? selectedLength.models : [];
+  const selectedLength = availableLengths.find((l) => l.id === selectedLengthId) || null;
+  const availableModels = selectedLength 
+    ? (selectedLength.models || []) 
+    : (selectedBrand ? (selectedBrand.directModels || []) : []);
 
-  const selectedModel = availableModels.find((m) => m.id === selectedModelId) || availableModels[0] || null;
-  const availableVariations = selectedModel ? selectedModel.variations : [];
+  const selectedModel = availableModels.find((m) => m.id === selectedModelId) || null;
+  const availableVariations = selectedModel 
+    ? (selectedModel.variations || []) 
+    : (selectedBrand && !selectedLength ? (selectedBrand.directVariations || []) : []);
 
   // Handlers
   const handleAddBrand = async (e: React.FormEvent) => {
@@ -205,14 +209,15 @@ export default function MasterCatalogPage() {
 
   const handleAddModel = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedLength || !newModelName.trim()) return;
+    if (!selectedBrand || !newModelName.trim()) return;
     try {
       const res = await fetch("/api/admin/catalog", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           type: "model",
-          brandLengthId: selectedLength.id,
+          brandLengthId: selectedLength ? selectedLength.id : null,
+          brandId: selectedBrand.id,
           name: newModelName,
           description: newModelDesc,
         }),
@@ -231,15 +236,16 @@ export default function MasterCatalogPage() {
 
   const handleAddVariation = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedModel || !varThickness || !varPrice) return;
+    if (!selectedBrand || !varPrice) return;
     try {
       const res = await fetch("/api/admin/catalog", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           type: "variation",
-          modelId: selectedModel.id,
-          thickness: varThickness,
+          modelId: selectedModel ? selectedModel.id : null,
+          brandId: selectedBrand.id,
+          thickness: varThickness.trim() || null,
           colors: varColors,
           price: Number(varPrice),
           salePrice: varSalePrice ? Number(varSalePrice) : null,
@@ -482,7 +488,7 @@ export default function MasterCatalogPage() {
               <Package size={16} className="text-[#FF9800]" />
               3. Models ({availableModels.length})
             </h3>
-            {selectedLength && (
+            {selectedBrand && (
               <button
                 onClick={() => setActiveModal("model")}
                 className="p-1.5 bg-[#FF9800] text-white rounded-lg hover:bg-[#F57C00] transition-colors"
@@ -494,10 +500,10 @@ export default function MasterCatalogPage() {
           </div>
 
           <div className="space-y-2 max-h-[480px] overflow-y-auto pr-1">
-            {!selectedLength ? (
-              <p className="text-xs text-gray-400 py-6 text-center">Select a length option first.</p>
+            {!selectedBrand ? (
+              <p className="text-xs text-gray-400 py-6 text-center">Select a brand first.</p>
             ) : availableModels.length === 0 ? (
-              <p className="text-xs text-gray-400 py-6 text-center">No models added for {selectedLength.lengthInMeters}m. Click + to add.</p>
+              <p className="text-xs text-gray-400 py-6 text-center">No models added. Click + to add.</p>
             ) : (
               availableModels.map((m) => (
                 <div
@@ -532,7 +538,7 @@ export default function MasterCatalogPage() {
               <Tag size={16} className="text-[#FF9800]" />
               4. Specs & Prices ({availableVariations.length})
             </h3>
-            {selectedModel && (
+            {selectedBrand && (
               <button
                 onClick={() => setActiveModal("variation")}
                 className="p-1.5 bg-[#FF9800] text-white rounded-lg hover:bg-[#F57C00] transition-colors"
@@ -544,10 +550,10 @@ export default function MasterCatalogPage() {
           </div>
 
           <div className="space-y-3 max-h-[480px] overflow-y-auto pr-1">
-            {!selectedModel ? (
-              <p className="text-xs text-gray-400 py-6 text-center">Select a model first.</p>
+            {!selectedBrand ? (
+              <p className="text-xs text-gray-400 py-6 text-center">Select a brand first.</p>
             ) : availableVariations.length === 0 ? (
-              <p className="text-xs text-gray-400 py-6 text-center">No specs/prices for {selectedModel.name}. Click + to add.</p>
+              <p className="text-xs text-gray-400 py-6 text-center">No specifications added. Click + to add.</p>
             ) : (
               availableVariations.map((v) => {
                 let parsedColors: string[] = [];
@@ -560,7 +566,7 @@ export default function MasterCatalogPage() {
                 return (
                   <div key={v.id} className="p-3.5 rounded-2xl border border-gray-100 bg-gray-50/50 space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-black text-[#0D47A1]">{v.thickness}</span>
+                      <span className="text-xs font-black text-[#0D47A1]">{v.thickness || "Default Specification"}</span>
                       <button
                         onClick={() => handleDeleteItem("variation", v.id)}
                         className="text-gray-300 hover:text-red-500"
@@ -655,10 +661,10 @@ export default function MasterCatalogPage() {
       )}
 
       {/* 3. Add Model Modal */}
-      {activeModal === "model" && selectedLength && (
+      {activeModal === "model" && selectedBrand && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0D47A1]/50 backdrop-blur-sm">
           <form onSubmit={handleAddModel} className="bg-white rounded-3xl p-6 max-w-md w-full space-y-4 shadow-2xl">
-            <h3 className="text-lg font-bold text-[#0D47A1]">Add Model ({selectedLength.lengthInMeters}m)</h3>
+            <h3 className="text-lg font-bold text-[#0D47A1]">Add Model to {selectedLength ? `${selectedLength.lengthInMeters}m` : selectedBrand.name}</h3>
             <input
               type="text"
               placeholder="Model / Type Name (e.g. Flame Retardant FR, FRLSH)"
@@ -683,21 +689,36 @@ export default function MasterCatalogPage() {
       )}
 
       {/* 4. Add Variation Modal (Thickness, Colors, Price) */}
-      {activeModal === "variation" && selectedModel && (
+      {activeModal === "variation" && selectedBrand && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0D47A1]/50 backdrop-blur-sm">
           <form onSubmit={handleAddVariation} className="bg-white rounded-3xl p-6 max-w-md w-full space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
-            <h3 className="text-lg font-bold text-[#0D47A1]">Add Spec & Price ({selectedModel.name})</h3>
+            <h3 className="text-lg font-bold text-[#0D47A1]">Add Spec & Price ({selectedModel ? selectedModel.name : selectedBrand.name})</h3>
             
             <div>
-              <label className="text-[10px] font-black uppercase text-gray-500">Thickness / Gauge *</label>
+              <label className="text-[10px] font-black uppercase text-gray-500">Thickness / Gauge (optional)</label>
               <input
                 type="text"
                 placeholder="e.g. 1.0 sq mm, 1.5 sq mm, 2.5 sq mm"
                 value={varThickness}
                 onChange={(e) => setVarThickness(e.target.value)}
-                className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-[#0D47A1]"
-                required
+                className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-[#0D47A1] mb-2"
               />
+              <div className="flex flex-wrap gap-1.5">
+                {["1.0 sq mm", "1.5 sq mm", "2.5 sq mm", "4.0 sq mm"].map((size) => (
+                  <button
+                    key={size}
+                    type="button"
+                    onClick={() => setVarThickness(size)}
+                    className={`text-[10px] px-2.5 py-1 rounded-full font-bold border transition-all cursor-pointer ${
+                      varThickness === size 
+                        ? "bg-[#FF9800] text-white border-[#FF9800] shadow-sm" 
+                        : "bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100 hover:border-gray-300"
+                    }`}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div>

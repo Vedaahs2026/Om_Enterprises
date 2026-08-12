@@ -6,7 +6,6 @@ import Image from "next/image";
 import { Sparkles, ChevronDown, ShieldCheck, CheckCircle, Tag, Truck, Wrench, Users, Factory, Building2, Home as HomeIcon, Hammer, HardHat, PhoneCall, Mail, MapPin, ExternalLink, Zap } from "lucide-react";
 import ProductGrid from "@/components/ProductGrid";
 import HomeTabs from "@/components/HomeTabs";
-import BrandMarquee from "@/components/BrandMarquee";
 import { db } from "@/db";
 import { products, productVariations, pageSections, homeCategoryBanners, homeTabs, navigationMenu, categories } from "@/db/schema";
 import { eq, sql, inArray } from "drizzle-orm";
@@ -156,13 +155,28 @@ export default async function Home() {
       {/* Home Page Banner */}
       <div className="w-full">
         <img 
-          src="/images/Home_banner.png" 
+          src="/images/Home_banner_new.jpg" 
           alt="OM Enterprises Banner" 
           className="w-full h-auto"
         />
       </div>
 
       <main id="featured-content" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 space-y-10 pt-8">
+        {/* Authorised Dealers Section */}
+        <div className="space-y-6 text-center">
+          <div>
+            <span className="text-[10px] font-black text-brand uppercase tracking-[0.3em]">Partner Brands</span>
+            <h2 className="text-3xl md:text-4xl font-playfair font-bold mt-2 text-brand">Our Authorised Dealers</h2>
+          </div>
+          <div className="flex justify-center">
+            <img 
+              src="/images/authorized_dealers.png" 
+              alt="Our Authorised Dealers" 
+              className="max-w-4xl w-full h-auto rounded-2xl border border-gray-100 bg-white p-6 md:p-10 shadow-sm"
+            />
+          </div>
+        </div>
+
         {/* Home Tabs */}
         {tabs.length > 0 && (
           <div className="space-y-6">
@@ -174,15 +188,6 @@ export default async function Home() {
         )}
 
 
-
-        {/* Trusted Brands Section */}
-        <section className="py-6 border-t border-b border-gray-100 overflow-hidden">
-          <div className="text-center mb-6">
-            <span className="text-[10px] font-black text-brand uppercase tracking-[0.3em]">Authorized Dealer</span>
-            <h2 className="text-3xl font-bold mt-2 text-brand-dark">Brands We Partner With</h2>
-          </div>
-          <BrandMarquee />
-        </section>
 
         {/* Why Choose OM Enterprises */}
         <section className="space-y-12">

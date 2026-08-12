@@ -38,12 +38,14 @@ async function seed() {
     console.log("Seeding Users...");
     await db.insert(users).values([
       {
+        email: "admin@omenterprise.com",
         phoneNumber: "9876543210",
         fullName: "System Admin",
         role: "admin",
         lastLoginAt: new Date().toISOString(),
       },
       {
+        email: "omadmin@omenterprise.com",
         phoneNumber: "9849845555",
         fullName: "OM Admin",
         role: "admin",

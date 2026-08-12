@@ -178,17 +178,17 @@ export default function CartPage() {
     try {
       const totalWeightKg = calculateTotalWeight(items);
       let charge = 0;
-      let serviceName = "Porter Local Delivery";
+      let serviceName = "Portal Delivery";
       
       if (totalWeightKg <= 20) {
         charge = 150 + Math.ceil(totalWeightKg) * 8;
-        serviceName = "Porter (2 Wheeler)";
+        serviceName = "Portal (2 Wheeler)";
       } else if (totalWeightKg <= 300) {
         charge = 450 + Math.ceil(totalWeightKg - 20) * 5;
-        serviceName = "Porter (3 Wheeler)";
+        serviceName = "Portal (3 Wheeler)";
       } else {
         charge = 950 + Math.ceil(totalWeightKg - 300) * 3;
-        serviceName = "Porter (Tata Ace/Pickup)";
+        serviceName = "Portal (Tata Ace/Pickup)";
       }
       
       const porterRate = {
@@ -202,7 +202,7 @@ export default function CartPage() {
       setShippingCost(porterRate.charge);
     } catch (err) {
       console.error(err);
-      setShippingError("Failed to calculate Porter delivery charges.");
+      setShippingError("Failed to calculate Portal delivery charges.");
     } finally {
       setIsLoadingRates(false);
     }
@@ -344,8 +344,9 @@ export default function CartPage() {
   }
 
   const subtotal = getTotalPrice();
+  const gst = subtotal * 0.18;
   const shipping = 0;
-  const total = subtotal;
+  const total = subtotal + gst + shipping;
 
   const handleCheckout = async () => {
     setIsCheckoutModalOpen(true);
@@ -489,7 +490,8 @@ export default function CartPage() {
 ${itemsListText}
 
 💰 *SUBTOTAL:* ₹${subtotal.toLocaleString()}
-🚚 *PORTER CHARGES:* ₹${shipping.toLocaleString()}
+📈 *GST (18%):* ₹${gst.toLocaleString()}
+🚚 *PORTAL CHARGES:* ₹${shipping.toLocaleString()}
 ⭐ *TOTAL AMOUNT:* ₹${total.toLocaleString()}
 
 📍 *DELIVERY ADDRESS:*
@@ -629,9 +631,13 @@ Please confirm my order. Thank you!`;
                 <span className="text-xs font-bold tracking-widest uppercase">Est. Subtotal</span>
                 <span className="text-sm font-bold tracking-widest text-brand">₹{subtotal.toLocaleString()}</span>
               </div>
+              <div className="flex justify-between items-center text-brand/60">
+                <span className="text-xs font-bold tracking-widest uppercase">GST (18%)</span>
+                <span className="text-sm font-bold tracking-widest text-brand">₹{gst.toLocaleString()}</span>
+              </div>
               <div className="flex justify-between items-center text-brand/60 pb-4 border-b border-gray-100">
                 <span className="text-xs font-bold tracking-widest uppercase">Est. Shipping</span>
-                <span className="text-brand font-bold text-xs uppercase tracking-wide">Based on Porter charges</span>
+                <span className="text-brand font-bold text-xs uppercase tracking-wide">Based on Portal charges</span>
               </div>
               <div className="flex justify-between items-center pt-2">
                 <span className="text-sm font-black tracking-widest uppercase text-brand">Total Estimate</span>
@@ -659,7 +665,7 @@ Please confirm my order. Thank you!`;
                   <Truck size={18} className="stroke-[2.5]" />
                 </div>
                 <span className="text-[10px] font-black text-[#0D47A1] uppercase tracking-wide leading-tight">
-                  IBO<br/>Delivered
+                  Portal<br/>Delivery
                 </span>
               </div>
 
@@ -942,8 +948,12 @@ Please confirm my order. Thank you!`;
                         <span>₹{subtotal.toLocaleString()}</span>
                       </div>
                       <div className="flex justify-between items-center text-xs font-bold text-brand/60">
+                        <span>GST (18%)</span>
+                        <span>₹{gst.toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between items-center text-xs font-bold text-brand/60">
                         <span>Est. Shipping</span>
-                        <span className="text-[10px] uppercase font-black tracking-wide text-brand">Based on Porter charges</span>
+                        <span className="text-[10px] uppercase font-black tracking-wide text-brand">Based on Portal charges</span>
                       </div>
                       <div className="border-t border-brand/10 pt-2 flex justify-between items-center text-sm font-black text-brand">
                         <span>Total Estimate</span>
@@ -1260,9 +1270,13 @@ Please confirm my order. Thank you!`;
                           <span>Subtotal</span>
                           <span>₹{subtotal.toLocaleString()}</span>
                         </div>
-                         <div className="flex justify-between items-center text-xs font-bold text-gray-500">
+                        <div className="flex justify-between items-center text-xs font-bold text-gray-500">
+                          <span>GST (18%)</span>
+                          <span>₹{gst.toLocaleString()}</span>
+                        </div>
+                        <div className="flex justify-between items-center text-xs font-bold text-gray-500">
                           <span>Shipping</span>
-                          <span className="text-[10px] font-black uppercase tracking-wider text-brand">Based on Porter charges</span>
+                          <span className="text-[10px] font-black uppercase tracking-wider text-brand">Based on Portal charges</span>
                         </div>
                         <div className="border-t border-gray-200 pt-2 flex justify-between items-center text-sm font-black text-brand">
                           <span>Total Amount</span>

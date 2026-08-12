@@ -169,7 +169,8 @@ export const brandLengths = sqliteTable("brand_lengths", {
 
 export const brandModels = sqliteTable("brand_models", {
   id: integer("id").primaryKey({ autoIncrement: true }),
-  brandLengthId: integer("brand_length_id").notNull().references(() => brandLengths.id, { onDelete: "cascade" }),
+  brandLengthId: integer("brand_length_id").references(() => brandLengths.id, { onDelete: "cascade" }),
+  brandId: integer("brand_id").references(() => brands.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
   description: text("description"),
   isActive: integer("is_active", { mode: "boolean" }).notNull().default(true),
@@ -178,8 +179,9 @@ export const brandModels = sqliteTable("brand_models", {
 
 export const brandVariations = sqliteTable("brand_variations", {
   id: integer("id").primaryKey({ autoIncrement: true }),
-  modelId: integer("model_id").notNull().references(() => brandModels.id, { onDelete: "cascade" }),
-  thickness: text("thickness").notNull(),
+  modelId: integer("model_id").references(() => brandModels.id, { onDelete: "cascade" }),
+  brandId: integer("brand_id").references(() => brands.id, { onDelete: "cascade" }),
+  thickness: text("thickness"),
   colors: text("colors"),
   price: real("price").notNull(),
   salePrice: real("sale_price"),

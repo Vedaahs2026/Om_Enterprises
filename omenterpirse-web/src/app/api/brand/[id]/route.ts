@@ -30,25 +30,15 @@ export async function GET(
       .where(and(eq(brandLengths.brandId, brandId), eq(brandLengths.isActive, true)))
       .orderBy(asc(brandLengths.lengthInMeters));
 
-    const lengthIds = lengths.map((l) => l.id);
+    const models = await db
+      .select()
+      .from(brandModels)
+      .where(eq(brandModels.isActive, true));
 
-    let models: any[] = [];
-    if (lengthIds.length > 0) {
-      models = await db
-        .select()
-        .from(brandModels)
-        .where(eq(brandModels.isActive, true));
-    }
-
-    const modelIds = models.map((m) => m.id);
-
-    let variations: any[] = [];
-    if (modelIds.length > 0) {
-      variations = await db
-        .select()
-        .from(brandVariations)
-        .where(eq(brandVariations.isActive, true));
-    }
+    const variations = await db
+      .select()
+      .from(brandVariations)
+      .where(eq(brandVariations.isActive, true));
 
     const nestedLengths = lengths.map((l) => {
       const lModels = models
@@ -60,10 +50,21 @@ export async function GET(
       return { ...l, models: lModels };
     });
 
+    const directModels = models
+      .filter((m) => m.brandId === brandId && !m.brandLengthId)
+      .map((m) => {
+        const mVariations = variations.filter((v) => v.modelId === m.id);
+        return { ...m, variations: mVariations };
+      });
+
+    const directVariations = variations.filter((v) => v.brandId === brandId && !v.modelId);
+
     return NextResponse.json({
       success: true,
       brand,
       lengths: nestedLengths,
+      directModels,
+      directVariations,
     });
   } catch (error: any) {
     console.error("Error fetching brand catalog:", error);

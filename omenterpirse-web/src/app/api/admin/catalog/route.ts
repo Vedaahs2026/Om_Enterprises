@@ -29,6 +29,18 @@ export async function GET(req: Request) {
 
     // Nest the data hierarchically
     const nestedBrands = allBrands.map((b) => {
+      // 1. Fetch direct variations (belonging directly to brand, no modelId)
+      const directVariations = allVariations.filter((v) => v.brandId === b.id && !v.modelId);
+
+      // 2. Fetch direct models (belonging directly to brand, no brandLengthId)
+      const directModels = allModels
+        .filter((m) => m.brandId === b.id && !m.brandLengthId)
+        .map((m) => {
+          const variations = allVariations.filter((v) => v.modelId === m.id);
+          return { ...m, variations };
+        });
+
+      // 3. Fetch lengths (belonging to brand)
       const lengths = allLengths
         .filter((l) => l.brandId === b.id)
         .map((l) => {
@@ -40,7 +52,8 @@ export async function GET(req: Request) {
             });
           return { ...l, models };
         });
-      return { ...b, lengths };
+
+      return { ...b, lengths, directModels, directVariations };
     });
 
     return NextResponse.json({
@@ -91,14 +104,18 @@ export async function POST(req: Request) {
     }
 
     if (type === "model") {
-      const { brandLengthId, name, description } = body;
-      if (!brandLengthId || !name) {
-        return NextResponse.json({ error: "Length selection and Model Name are required" }, { status: 400 });
+      const { brandLengthId, brandId, name, description } = body;
+      if (!brandLengthId && !brandId) {
+        return NextResponse.json({ error: "Brand or Length selection is required" }, { status: 400 });
+      }
+      if (!name) {
+        return NextResponse.json({ error: "Model Name is required" }, { status: 400 });
       }
       const [inserted] = await db
         .insert(brandModels)
         .values({
-          brandLengthId: Number(brandLengthId),
+          brandLengthId: brandLengthId ? Number(brandLengthId) : null,
+          brandId: brandId ? Number(brandId) : null,
           name: name.trim(),
           description: description || null,
         })
@@ -107,15 +124,19 @@ export async function POST(req: Request) {
     }
 
     if (type === "variation") {
-      const { modelId, thickness, colors, price, salePrice, stock } = body;
-      if (!modelId || !thickness || price === undefined || isNaN(Number(price))) {
-        return NextResponse.json({ error: "Model, Thickness, and Price are required" }, { status: 400 });
+      const { modelId, brandId, thickness, colors, price, salePrice, stock } = body;
+      if (!modelId && !brandId) {
+        return NextResponse.json({ error: "Model or Brand selection is required" }, { status: 400 });
+      }
+      if (price === undefined || isNaN(Number(price))) {
+        return NextResponse.json({ error: "Price is required" }, { status: 400 });
       }
       const [inserted] = await db
         .insert(brandVariations)
         .values({
-          modelId: Number(modelId),
-          thickness: thickness.trim(),
+          modelId: modelId ? Number(modelId) : null,
+          brandId: brandId ? Number(brandId) : null,
+          thickness: thickness ? thickness.trim() : null,
           colors: Array.isArray(colors) ? JSON.stringify(colors) : (colors || "[]"),
           price: Number(price),
           salePrice: salePrice ? Number(salePrice) : null,

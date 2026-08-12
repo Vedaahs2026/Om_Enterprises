@@ -5,6 +5,21 @@ import { cookies } from "next/headers";
 import { eq, and } from "drizzle-orm";
 import crypto from "crypto";
 import Razorpay from "razorpay";
+import nodemailer from "nodemailer";
+
+// SMTP Transporter Config for Admin Notifications
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false, // TLS
+  auth: {
+    user: "bhavishyagudivaka18@gmail.com",
+    pass: "wqbj eqhr pbwu jkrj",
+  },
+  tls: {
+    rejectUnauthorized: false,
+  },
+});
 
 class OutOfStockError extends Error {
   constructor(message: string) {
@@ -190,6 +205,47 @@ export async function POST(req: Request) {
 
         return newOrder.id;
       });
+
+      // Send email to admin in background
+      try {
+        const mailOptions = {
+          from: '"OM Enterprises Portal" <bhavishyagudivaka18@gmail.com>',
+          to: "bhavishyagudivaka18@gmail.com",
+          subject: `New Order Received - Order #${orderId}`,
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 10px;">
+              <h2 style="color: #0D47A1; text-align: center;">New Order Received!</h2>
+              <hr style="border: 0; border-top: 1px solid #eeeeee; margin: 20px 0;">
+              <p>Hello Admin,</p>
+              <p>A customer has placed a new order on <strong>OM Enterprises</strong>.</p>
+              
+              <div style="background-color: #f9f9f9; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                <p style="margin: 0 0 8px 0;"><strong>Order ID:</strong> #${orderId}</p>
+                <p style="margin: 0 0 8px 0;"><strong>Total Amount:</strong> ₹${totalAmount.toLocaleString()}</p>
+                <p style="margin: 0 0 8px 0;"><strong>Payment Mode:</strong> ${paymentMethod === "quote" ? "Quote Request" : (paymentMethod === "whatsapp_order" ? "WhatsApp Order" : "Online Prepaid")}</p>
+                <p style="margin: 0 0 8px 0;"><strong>Customer Email:</strong> ${user.email}</p>
+              </div>
+              
+              <p style="margin-top: 20px;">Please check the Admin Panel to manage this order and see more details.</p>
+              
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="http://localhost:3000/admin/orders" style="background-color: #FF9800; color: white; padding: 12px 25px; text-decoration: none; font-weight: bold; border-radius: 5px; display: inline-block;">Go to Admin Panel</a>
+              </div>
+              
+              <hr style="border: 0; border-top: 1px solid #eeeeee; margin: 20px 0;">
+              <p style="font-size: 11px; color: #888888; text-align: center;">This is an automated notification from the OM Enterprises Portal.</p>
+            </div>
+          `,
+        };
+
+        transporter.sendMail(mailOptions).then((info) => {
+          console.log(`[Email] Admin notification sent: ${info.messageId}`);
+        }).catch((err) => {
+          console.error("[Email] Transporter error sending admin notification:", err);
+        });
+      } catch (emailErr) {
+        console.error("[Email] Exception sending admin notification:", emailErr);
+      }
 
       return NextResponse.json({ success: true, orderId });
 
