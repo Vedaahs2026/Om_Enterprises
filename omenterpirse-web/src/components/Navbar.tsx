@@ -150,15 +150,15 @@ export default function Navbar() {
   return (
     <>
       <header className="sticky top-0 z-50 w-full bg-brand border-b border-white/10 shadow-lg font-inter">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
 
             {/* Logo */}
-            <div className="flex-shrink-0 flex items-center mr-4 xl:mr-6">
-              <Link href="/" className="flex items-center space-x-2 transition-transform hover:scale-105 duration-300">
-                <Zap size={20} className="text-[#FF9800] fill-[#FF9800] flex-shrink-0" />
-                <span className="text-base md:text-lg xl:text-xl font-black tracking-wider text-white">
-                  OM <span className="text-[#FF9800]">ENTERPRISES</span>
+            <div className="flex-shrink-0 flex items-center mr-2 sm:mr-4 xl:mr-6">
+              <Link href="/" className="flex items-center space-x-1.5 transition-transform hover:scale-105 duration-300">
+                <Zap size={18} className="text-[#FF9800] fill-[#FF9800] flex-shrink-0" />
+                <span className="text-sm sm:text-base md:text-lg xl:text-xl font-black tracking-wider text-white">
+                  OM <span className="text-[#FF9800] max-[400px]:hidden">ENTERPRISES</span>
                 </span>
               </Link>
             </div>
@@ -200,31 +200,33 @@ export default function Navbar() {
             </div>
 
             {/* Mobile menu button */}
-            <div className="flex md:hidden items-center space-x-4">
-              <Link href="/" aria-label="Home" className="text-white p-2">
-                <Home className="h-5 w-5" />
+            <div className="flex md:hidden items-center space-x-1 sm:space-x-3 flex-shrink-0">
+              <Link href="/" aria-label="Home" className="text-white p-1 sm:p-2 flex-shrink-0">
+                <Home className="h-4.5 w-4.5 sm:h-5 sm:w-5" />
               </Link>
-              <Link href="/about" aria-label="Our Store" className="text-white p-2">
-                <BookOpen className="h-5 w-5" />
+              <Link href="/about" aria-label="Our Store" className="text-white p-1 sm:p-2 flex-shrink-0">
+                <BookOpen className="h-4.5 w-4.5 sm:h-5 sm:w-5" />
               </Link>
-              <Link href={user ? "/cart" : "/login"} aria-label="Cart" className="text-white relative p-2">
-                <ShoppingCart className="h-6 w-6" />
-                <span className="absolute -top-0.5 -right-0.5 bg-[#FF9800] text-white text-[10px] font-black h-5 w-5 rounded-full flex items-center justify-center border border-brand">
+              <Link href={user ? "/cart" : "/login"} aria-label="Cart" className="text-white relative p-1 sm:p-2 flex-shrink-0">
+                <ShoppingCart className="h-5 w-5 sm:h-6 sm:w-6" />
+                <span className="absolute -top-0.5 -right-0.5 bg-[#FF9800] text-white text-[9px] font-black h-4.5 w-4.5 rounded-full flex items-center justify-center border border-brand">
                   {cartCount}
                 </span>
               </Link>
               {user ? (
-                <ProfileDropdown
-                  user={user}
-                  onLogout={() => setIsLogoutModalOpen(true)}
-                />
+                <div className="flex-shrink-0">
+                  <ProfileDropdown
+                    user={user}
+                    onLogout={() => setIsLogoutModalOpen(true)}
+                  />
+                </div>
               ) : (
                 <button
                   onClick={() => window.location.href = "/login"}
-                  className="flex items-center justify-center bg-[#FF9800] text-white w-9 h-9 rounded-full hover:bg-[#F57C00] transition-all shadow-md cursor-pointer relative z-10"
+                  className="flex items-center justify-center bg-[#FF9800] text-white w-8 h-8 sm:w-9 sm:h-9 rounded-full hover:bg-[#F57C00] transition-all shadow-md cursor-pointer relative z-10 flex-shrink-0"
                   aria-label="Login"
                 >
-                  <User className="h-4.5 w-4.5" />
+                  <User className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
                 </button>
               )}
             </div>
