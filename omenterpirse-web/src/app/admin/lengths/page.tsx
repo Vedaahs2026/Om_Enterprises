@@ -222,17 +222,12 @@ export default function BrandLengthsPage() {
             </label>
             <div className="relative">
               <input
-                type="number"
-                step="0.1"
-                min="0.1"
-                placeholder="e.g. 90, 100, 180, 200"
+                type="text"
+                placeholder="e.g. 90, 180 (Coil), 200m"
                 value={lengthInMeters}
                 onChange={(e) => setLengthInMeters(e.target.value)}
-                className="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-bold text-[#0D47A1] focus:outline-none focus:border-[#FF9800] focus:bg-white transition-all pr-12"
+                className="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-2xl text-sm font-bold text-[#0D47A1] focus:outline-none focus:border-[#FF9800] focus:bg-white transition-all"
               />
-              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-black text-gray-400 uppercase">
-                Metres
-              </span>
             </div>
           </div>
 

@@ -90,14 +90,14 @@ export async function POST(req: Request) {
 
     if (type === "length") {
       const { brandId, lengthInMeters } = body;
-      if (!brandId || !lengthInMeters || isNaN(Number(lengthInMeters))) {
-        return NextResponse.json({ error: "Brand and valid length in meters are required" }, { status: 400 });
+      if (!brandId || !lengthInMeters || !String(lengthInMeters).trim()) {
+        return NextResponse.json({ error: "Brand and length option are required" }, { status: 400 });
       }
       const [inserted] = await db
         .insert(brandLengths)
         .values({
           brandId: Number(brandId),
-          lengthInMeters: Number(lengthInMeters),
+          lengthInMeters: String(lengthInMeters).trim(),
         })
         .returning();
       return NextResponse.json({ success: true, data: inserted });

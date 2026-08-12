@@ -162,7 +162,7 @@ export const brands = sqliteTable("brands", {
 export const brandLengths = sqliteTable("brand_lengths", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   brandId: integer("brand_id").notNull().references(() => brands.id, { onDelete: "cascade" }),
-  lengthInMeters: real("length_in_meters").notNull(),
+  lengthInMeters: text("length_in_meters").notNull(),
   isActive: integer("is_active", { mode: "boolean" }).notNull().default(true),
   createdAt: text("created_at").$defaultFn(() => new Date().toISOString()),
 });

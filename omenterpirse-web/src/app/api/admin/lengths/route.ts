@@ -32,15 +32,15 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { brandId, lengthInMeters, isActive } = body;
 
-    if (!brandId || lengthInMeters === undefined || lengthInMeters === null || isNaN(Number(lengthInMeters))) {
-      return NextResponse.json({ error: "Brand and valid length in meters are required" }, { status: 400 });
+    if (!brandId || lengthInMeters === undefined || lengthInMeters === null || !String(lengthInMeters).trim()) {
+      return NextResponse.json({ error: "Brand and length option are required" }, { status: 400 });
     }
 
     const [inserted] = await db
       .insert(brandLengths)
       .values({
         brandId: Number(brandId),
-        lengthInMeters: Number(lengthInMeters),
+        lengthInMeters: String(lengthInMeters).trim(),
         isActive: isActive !== undefined ? Boolean(isActive) : true,
       })
       .returning();
@@ -63,7 +63,7 @@ export async function PUT(req: Request) {
 
     const updateData: any = {};
     if (brandId !== undefined) updateData.brandId = Number(brandId);
-    if (lengthInMeters !== undefined) updateData.lengthInMeters = Number(lengthInMeters);
+    if (lengthInMeters !== undefined) updateData.lengthInMeters = String(lengthInMeters).trim();
     if (isActive !== undefined) updateData.isActive = Boolean(isActive);
 
     const [updated] = await db
