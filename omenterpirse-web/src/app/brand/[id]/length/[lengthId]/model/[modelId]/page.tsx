@@ -35,8 +35,9 @@ function getColorStyles(colorName: string) {
 
 type Variation = {
   id: number;
-  modelId: number;
-  thickness: string;
+  modelId?: number | null;
+  brandId?: number | null;
+  thickness?: string | null;
   colors: string; // JSON string or comma-separated
   price: number;
   salePrice?: number | null;
@@ -46,7 +47,8 @@ type Variation = {
 
 type BrandModel = {
   id: number;
-  brandLengthId: number;
+  brandLengthId?: number | null;
+  brandId?: number | null;
   name: string;
   description?: string | null;
   isActive: boolean;
@@ -231,13 +233,13 @@ export default function DedicatedMatrixOrderPage({ params }: PageProps) {
             price: unitPrice,
             image: brand.imageUrl || "/images/temp_logo.png",
             quantity: qty,
-            size: v.thickness,
+            size: v.thickness || "Default Spec",
             color: color,
             customizations: {
               brandName: brand.name,
               lengthInMeters: lengthObj.lengthInMeters,
               modelName: modelObj.name,
-              thickness: v.thickness,
+              thickness: v.thickness || null,
               color: color,
             },
             stock: v.stock || 100,

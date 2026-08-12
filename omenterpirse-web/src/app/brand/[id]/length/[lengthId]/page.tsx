@@ -7,7 +7,8 @@ import { useRouter } from "next/navigation";
 
 type BrandModel = {
   id: number;
-  brandLengthId: number;
+  brandLengthId?: number | null;
+  brandId?: number | null;
   name: string;
   description?: string | null;
   isActive: boolean;

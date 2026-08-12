@@ -46,8 +46,9 @@ type Category = {
 
 type Variation = {
   id: number;
-  modelId: number;
-  thickness: string;
+  modelId?: number | null;
+  brandId?: number | null;
+  thickness?: string | null;
   colors: string; // JSON string
   price: number;
   salePrice?: number | null;
@@ -57,7 +58,8 @@ type Variation = {
 
 type BrandModel = {
   id: number;
-  brandLengthId: number;
+  brandLengthId?: number | null;
+  brandId?: number | null;
   name: string;
   description?: string | null;
   isActive: boolean;
@@ -80,6 +82,8 @@ type Brand = {
   displayOrder: number;
   isActive: boolean;
   lengths: BrandLength[];
+  directModels?: BrandModel[];
+  directVariations?: Variation[];
 };
 
 export default function MasterCatalogPage() {
