@@ -252,6 +252,16 @@ export default function MasterCatalogPage() {
     }
   };
 
+  const openAddVariationModal = () => {
+    setVarThickness("");
+    setVarColors(["Red", "Yellow", "Blue", "Black", "Green"]);
+    setColorInput("");
+    setVarPrice("");
+    setVarSalePrice("");
+    setVarStock("100");
+    setActiveModal("variation");
+  };
+
   const handleAddVariation = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedBrand || !varPrice) return;
@@ -274,8 +284,11 @@ export default function MasterCatalogPage() {
       if (res.ok) {
         setSuccess("Variation added!");
         setVarThickness("");
+        setVarColors(["Red", "Yellow", "Blue", "Black", "Green"]);
+        setColorInput("");
         setVarPrice("");
         setVarSalePrice("");
+        setVarStock("100");
         setActiveModal(null);
         fetchCatalog();
       }
@@ -559,7 +572,7 @@ export default function MasterCatalogPage() {
             </h3>
             {selectedBrand && (
               <button
-                onClick={() => setActiveModal("variation")}
+                onClick={openAddVariationModal}
                 className="p-1.5 bg-[#FF9800] text-white rounded-lg hover:bg-[#F57C00] transition-colors"
                 title="Add Spec & Price"
               >
