@@ -87,3 +87,22 @@ body {
 }
 
 
+
+@keyframes whatsapp-pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3), 0 0 0 0 rgba(37, 211, 102, 0.5);
+  }
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4), 0 0 0 12px rgba(37, 211, 102, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3), 0 0 0 0 rgba(37, 211, 102, 0);
+  }
+}
+
+.animate-whatsapp {
+  animation: whatsapp-pulse 2s infinite ease-in-out;
+}

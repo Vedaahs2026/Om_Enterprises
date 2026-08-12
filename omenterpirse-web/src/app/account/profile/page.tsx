@@ -40,6 +40,12 @@ export default function ProfilePage() {
     setError("");
     setSuccess(false);
 
+    if (phoneNumber.length !== 10) {
+      setError("Phone Number must be exactly 10 digits.");
+      setIsSaving(false);
+      return;
+    }
+
     try {
       const res = await fetch("/api/auth/profile", {
         method: "POST",
@@ -110,8 +116,13 @@ export default function ProfilePage() {
                 <input
                   type="tel"
                   value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  maxLength={10}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/\D/g, "").slice(0, 10);
+                    setPhoneNumber(val);
+                  }}
                   className="w-full bg-brand-light border border-brand/10 rounded-2xl py-4 pl-12 pr-4 text-brand font-medium focus:outline-none focus:border-[#FF9800] focus:ring-1 focus:ring-[#FF9800] transition-all"
+                  placeholder="10 Digits"
                   required
                 />
               </div>
