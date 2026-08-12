@@ -157,8 +157,8 @@ export default function Navbar() {
             <div className="flex-shrink-0 flex items-center mr-2 sm:mr-4 xl:mr-6">
               <Link href="/" className="flex items-center space-x-1.5 transition-transform hover:scale-105 duration-300">
                 <Zap size={18} className="text-[#FF9800] fill-[#FF9800] flex-shrink-0" />
-                <span className="text-sm sm:text-base md:text-lg xl:text-xl font-black tracking-wider text-white">
-                  OM <span className="text-[#FF9800] max-[400px]:hidden">ENTERPRISES</span>
+                <span className="text-xs sm:text-sm md:text-base xl:text-xl font-black tracking-wider text-white">
+                  OM <span className="text-[#FF9800]">ENTERPRISES</span>
                 </span>
               </Link>
             </div>
