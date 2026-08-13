@@ -264,16 +264,24 @@ export default function DedicatedMatrixOrderPage({ params }: PageProps) {
     }
   };
 
+  const handleGoBack = () => {
+    if (modelObj.name === "Default") {
+      router.push(`/brand/${brand.id}`);
+    } else {
+      router.back();
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50/50 py-6 px-3 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-6">
       {/* Top Header */}
       <div className="flex items-center justify-between bg-white px-6 py-4 rounded-2xl shadow-xs border border-gray-200/60">
         <button
-          onClick={() => router.back()}
+          onClick={handleGoBack}
           className="flex items-center gap-2 text-xs font-bold text-gray-600 hover:text-[#0D47A1] transition-colors"
         >
           <ArrowLeft size={16} />
-          <span>Back to Models</span>
+          <span>{modelObj.name === "Default" ? "Back to Lengths" : "Back to Models"}</span>
         </button>
 
         <div className="flex items-center gap-3 text-right">
