@@ -218,3 +218,88 @@ export async function DELETE(req: Request) {
     return NextResponse.json({ success: false, error: "Failed to delete item" }, { status: 500 });
   }
 }
+
+export async function PUT(req: Request) {
+  try {
+    const body = await req.json();
+    const { type, id } = body;
+
+    if (!type || !id) {
+      return NextResponse.json({ error: "Type and ID are required" }, { status: 400 });
+    }
+
+    const numId = Number(id);
+
+    if (type === "brand") {
+      const { name, category, imageUrl } = body;
+      if (!name || !category) {
+        return NextResponse.json({ error: "Brand name and Category are required" }, { status: 400 });
+      }
+      const [updated] = await db
+        .update(brands)
+        .set({
+          name: name.trim(),
+          category: category.trim(),
+          imageUrl: imageUrl || null,
+        })
+        .where(eq(brands.id, numId))
+        .returning();
+      return NextResponse.json({ success: true, data: updated });
+    }
+
+    if (type === "length") {
+      const { lengthInMeters } = body;
+      if (!lengthInMeters || !String(lengthInMeters).trim()) {
+        return NextResponse.json({ error: "Length option is required" }, { status: 400 });
+      }
+      const [updated] = await db
+        .update(brandLengths)
+        .set({
+          lengthInMeters: String(lengthInMeters).trim(),
+        })
+        .where(eq(brandLengths.id, numId))
+        .returning();
+      return NextResponse.json({ success: true, data: updated });
+    }
+
+    if (type === "model") {
+      const { name, description } = body;
+      if (!name) {
+        return NextResponse.json({ error: "Model Name is required" }, { status: 400 });
+      }
+      const [updated] = await db
+        .update(brandModels)
+        .set({
+          name: name.trim(),
+          description: description || null,
+        })
+        .where(eq(brandModels.id, numId))
+        .returning();
+      return NextResponse.json({ success: true, data: updated });
+    }
+
+    if (type === "variation") {
+      const { thickness, colors, price, salePrice, stock } = body;
+      if (price === undefined || isNaN(Number(price))) {
+        return NextResponse.json({ error: "Price is required" }, { status: 400 });
+      }
+      const [updated] = await db
+        .update(brandVariations)
+        .set({
+          thickness: thickness ? thickness.trim() : null,
+          colors: Array.isArray(colors) ? JSON.stringify(colors) : (colors || "[]"),
+          price: Number(price),
+          salePrice: salePrice ? Number(salePrice) : null,
+          stock: stock ? Number(stock) : 100,
+        })
+        .where(eq(brandVariations.id, numId))
+        .returning();
+      return NextResponse.json({ success: true, data: updated });
+    }
+
+    return NextResponse.json({ error: "Invalid entity type" }, { status: 400 });
+  } catch (error: any) {
+    console.error("Error updating catalog item:", error);
+    return NextResponse.json({ success: false, error: error.message || "Failed to update item" }, { status: 500 });
+  }
+}

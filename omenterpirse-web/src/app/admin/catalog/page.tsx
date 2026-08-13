@@ -8,6 +8,7 @@ import {
   Package, 
   Plus, 
   Trash2, 
+  Pencil,
   Check, 
   X, 
   RefreshCw, 
@@ -101,6 +102,7 @@ export default function MasterCatalogPage() {
 
   // Modal / Form state
   const [activeModal, setActiveModal] = useState<"brand" | "length" | "model" | "variation" | null>(null);
+  const [editingId, setEditingId] = useState<number | null>(null);
 
   // Form Fields
   const [newBrandName, setNewBrandName] = useState("");
@@ -182,25 +184,80 @@ export default function MasterCatalogPage() {
     : (selectedBrand && !selectedLength ? (selectedBrand.directVariations || []) : []);
 
   // Handlers
-  const handleAddBrand = async (e: React.FormEvent) => {
+  // Start editing helpers
+  const startEditBrand = (b: Brand) => {
+    setNewBrandName(b.name);
+    setNewBrandImage(b.imageUrl || "");
+    setEditingId(b.id);
+    setActiveModal("brand");
+  };
+
+  const startEditLength = (l: BrandLength) => {
+    setNewLength(String(l.lengthInMeters));
+    setEditingId(l.id);
+    setActiveModal("length");
+  };
+
+  const startEditModel = (m: BrandModel) => {
+    setNewModelName(m.name);
+    setNewModelDesc(m.description || "");
+    setEditingId(m.id);
+    setActiveModal("model");
+  };
+
+  const startEditVariation = (v: Variation) => {
+    setVarThickness(v.thickness || "");
+    let parsedColors: string[] = [];
+    try {
+      parsedColors = typeof v.colors === "string" ? JSON.parse(v.colors) : v.colors || [];
+    } catch (e) {
+      parsedColors = v.colors ? v.colors.split(",") : [];
+    }
+    setVarColors(parsedColors);
+    setColorInput("");
+    setVarPrice(String(v.price));
+    setVarSalePrice(v.salePrice ? String(v.salePrice) : "");
+    setVarStock(String(v.stock));
+    setEditingId(v.id);
+    setActiveModal("variation");
+  };
+
+  const closeModal = () => {
+    setActiveModal(null);
+    setEditingId(null);
+    setNewBrandName("");
+    setNewBrandImage("");
+    setNewLength("");
+    setNewModelName("");
+    setNewModelDesc("");
+    setVarThickness("");
+    setVarColors(["Red", "Yellow", "Blue", "Black", "Green"]);
+    setColorInput("");
+    setVarPrice("");
+    setVarSalePrice("");
+    setVarStock("100");
+  };
+
+  // Handlers
+  const handleSaveBrand = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newBrandName.trim()) return;
     try {
+      const isEditing = editingId !== null;
       const res = await fetch("/api/admin/catalog", {
-        method: "POST",
+        method: isEditing ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           type: "brand",
+          id: editingId,
           name: newBrandName,
           category: selectedCategory || "Electrical Wires",
           imageUrl: newBrandImage || null,
         }),
       });
       if (res.ok) {
-        setSuccess("Brand added!");
-        setNewBrandName("");
-        setNewBrandImage("");
-        setActiveModal(null);
+        setSuccess(isEditing ? "Brand updated!" : "Brand added!");
+        closeModal();
         fetchCatalog();
       }
     } catch (err) {
@@ -208,23 +265,24 @@ export default function MasterCatalogPage() {
     }
   };
 
-  const handleAddLength = async (e: React.FormEvent) => {
+  const handleSaveLength = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedBrand || !newLength) return;
     try {
+      const isEditing = editingId !== null;
       const res = await fetch("/api/admin/catalog", {
-        method: "POST",
+        method: isEditing ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           type: "length",
+          id: editingId,
           brandId: selectedBrand.id,
           lengthInMeters: newLength.trim(),
         }),
       });
       if (res.ok) {
-        setSuccess("Length option added!");
-        setNewLength("");
-        setActiveModal(null);
+        setSuccess(isEditing ? "Length updated!" : "Length option added!");
+        closeModal();
         fetchCatalog();
       }
     } catch (err) {
@@ -232,15 +290,17 @@ export default function MasterCatalogPage() {
     }
   };
 
-  const handleAddModel = async (e: React.FormEvent) => {
+  const handleSaveModel = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedBrand || !newModelName.trim()) return;
     try {
+      const isEditing = editingId !== null;
       const res = await fetch("/api/admin/catalog", {
-        method: "POST",
+        method: isEditing ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           type: "model",
+          id: editingId,
           brandLengthId: selectedLength ? selectedLength.id : null,
           brandId: selectedBrand.id,
           name: newModelName,
@@ -248,10 +308,8 @@ export default function MasterCatalogPage() {
         }),
       });
       if (res.ok) {
-        setSuccess("Model added!");
-        setNewModelName("");
-        setNewModelDesc("");
-        setActiveModal(null);
+        setSuccess(isEditing ? "Model updated!" : "Model added!");
+        closeModal();
         fetchCatalog();
       }
     } catch (err) {
@@ -266,18 +324,21 @@ export default function MasterCatalogPage() {
     setVarPrice("");
     setVarSalePrice("");
     setVarStock("100");
+    setEditingId(null);
     setActiveModal("variation");
   };
 
-  const handleAddVariation = async (e: React.FormEvent) => {
+  const handleSaveVariation = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedBrand || !varPrice) return;
     try {
+      const isEditing = editingId !== null;
       const res = await fetch("/api/admin/catalog", {
-        method: "POST",
+        method: isEditing ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           type: "variation",
+          id: editingId,
           modelId: selectedModel ? selectedModel.id : null,
           brandId: selectedBrand.id,
           brandLengthId: selectedLength ? selectedLength.id : null,
@@ -289,14 +350,8 @@ export default function MasterCatalogPage() {
         }),
       });
       if (res.ok) {
-        setSuccess("Variation added!");
-        setVarThickness("");
-        setVarColors(["Red", "Yellow", "Blue", "Black", "Green"]);
-        setColorInput("");
-        setVarPrice("");
-        setVarSalePrice("");
-        setVarStock("100");
-        setActiveModal(null);
+        setSuccess(isEditing ? "Variation updated!" : "Variation added!");
+        closeModal();
         fetchCatalog();
       }
     } catch (err) {
@@ -450,10 +505,18 @@ export default function MasterCatalogPage() {
                     )}
                     <span className="text-xs font-bold text-[#0D47A1] truncate">{b.name}</span>
                   </div>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-0.5">
+                    <button
+                      onClick={(e) => { e.stopPropagation(); startEditBrand(b); }}
+                      className="text-gray-300 hover:text-[#0D47A1] p-1"
+                      title="Edit Brand"
+                    >
+                      <Pencil size={12} />
+                    </button>
                     <button
                       onClick={(e) => { e.stopPropagation(); handleDeleteItem("brand", b.id); }}
                       className="text-gray-300 hover:text-red-500 p-1"
+                      title="Delete Brand"
                     >
                       <Trash2 size={12} />
                     </button>
@@ -505,10 +568,18 @@ export default function MasterCatalogPage() {
                   <span className="text-xs font-bold text-[#0D47A1]">
                     {l.lengthInMeters} <span className="text-[10px] text-gray-400">metres</span>
                   </span>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-0.5">
+                    <button
+                      onClick={(e) => { e.stopPropagation(); startEditLength(l); }}
+                      className="text-gray-300 hover:text-[#0D47A1] p-1"
+                      title="Edit Length"
+                    >
+                      <Pencil size={12} />
+                    </button>
                     <button
                       onClick={(e) => { e.stopPropagation(); handleDeleteItem("length", l.id); }}
                       className="text-gray-300 hover:text-red-500 p-1"
+                      title="Delete Length"
                     >
                       <Trash2 size={12} />
                     </button>
@@ -555,10 +626,18 @@ export default function MasterCatalogPage() {
                   }`}
                 >
                   <span className="text-xs font-bold text-[#0D47A1] truncate">{m.name}</span>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-0.5">
+                    <button
+                      onClick={(e) => { e.stopPropagation(); startEditModel(m); }}
+                      className="text-gray-300 hover:text-[#0D47A1] p-1"
+                      title="Edit Model"
+                    >
+                      <Pencil size={12} />
+                    </button>
                     <button
                       onClick={(e) => { e.stopPropagation(); handleDeleteItem("model", m.id); }}
                       className="text-gray-300 hover:text-red-500 p-1"
+                      title="Delete Model"
                     >
                       <Trash2 size={12} />
                     </button>
@@ -606,12 +685,22 @@ export default function MasterCatalogPage() {
                   <div key={v.id} className="p-3.5 rounded-2xl border border-gray-100 bg-gray-50/50 space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-black text-[#0D47A1]">{v.thickness || "Default Specification"}</span>
-                      <button
-                        onClick={() => handleDeleteItem("variation", v.id)}
-                        className="text-gray-300 hover:text-red-500"
-                      >
-                        <Trash2 size={12} />
-                      </button>
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          onClick={() => startEditVariation(v)}
+                          className="text-gray-300 hover:text-[#0D47A1]"
+                          title="Edit Spec & Price"
+                        >
+                          <Pencil size={12} />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteItem("variation", v.id)}
+                          className="text-gray-300 hover:text-red-500"
+                          title="Delete Spec & Price"
+                        >
+                          <Trash2 size={12} />
+                        </button>
+                      </div>
                     </div>
 
                     <div className="flex items-center gap-2 text-xs font-bold text-[#0D47A1]">
@@ -644,13 +733,15 @@ export default function MasterCatalogPage() {
 
       </div>
 
-      {/* MODALS FOR ADDING HIERARCHICAL ITEMS */}
+      {/* MODALS FOR ADDING/EDITING HIERARCHICAL ITEMS */}
 
-      {/* 1. Add Brand Modal */}
+      {/* 1. Brand Modal */}
       {activeModal === "brand" && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0D47A1]/50 backdrop-blur-sm">
-          <form onSubmit={handleAddBrand} className="bg-white rounded-3xl p-6 max-w-md w-full space-y-4 shadow-2xl">
-            <h3 className="text-lg font-bold text-[#0D47A1]">Add Brand to {selectedCategory}</h3>
+          <form onSubmit={handleSaveBrand} className="bg-white rounded-3xl p-6 max-w-md w-full space-y-4 shadow-2xl">
+            <h3 className="text-lg font-bold text-[#0D47A1]">
+              {editingId ? "Edit Brand" : `Add Brand to ${selectedCategory}`}
+            </h3>
             <input
               type="text"
               placeholder="Brand Name (e.g. Polycab, Havells)"
@@ -667,18 +758,22 @@ export default function MasterCatalogPage() {
               className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl text-sm font-bold text-[#0D47A1]"
             />
             <div className="flex gap-3">
-              <button type="button" onClick={() => setActiveModal(null)} className="flex-1 py-2.5 bg-gray-100 text-xs font-bold text-gray-600 rounded-xl">Cancel</button>
-              <button type="submit" className="flex-1 py-2.5 bg-[#FF9800] text-xs font-bold text-white rounded-xl">Add Brand</button>
+              <button type="button" onClick={closeModal} className="flex-1 py-2.5 bg-gray-100 text-xs font-bold text-gray-600 rounded-xl">Cancel</button>
+              <button type="submit" className="flex-1 py-2.5 bg-[#FF9800] text-xs font-bold text-white rounded-xl">
+                {editingId ? "Save Changes" : "Add Brand"}
+              </button>
             </div>
           </form>
         </div>
       )}
 
-      {/* 2. Add Length Modal */}
+      {/* 2. Length Modal */}
       {activeModal === "length" && selectedBrand && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0D47A1]/50 backdrop-blur-sm">
-          <form onSubmit={handleAddLength} className="bg-white rounded-3xl p-6 max-w-md w-full space-y-4 shadow-2xl">
-            <h3 className="text-lg font-bold text-[#0D47A1]">Add Length to {selectedBrand.name}</h3>
+          <form onSubmit={handleSaveLength} className="bg-white rounded-3xl p-6 max-w-md w-full space-y-4 shadow-2xl">
+            <h3 className="text-lg font-bold text-[#0D47A1]">
+              {editingId ? "Edit Length" : `Add Length to ${selectedBrand.name}`}
+            </h3>
             <div className="relative">
               <input
                 type="text"
@@ -690,18 +785,22 @@ export default function MasterCatalogPage() {
               />
             </div>
             <div className="flex gap-3">
-              <button type="button" onClick={() => setActiveModal(null)} className="flex-1 py-2.5 bg-gray-100 text-xs font-bold text-gray-600 rounded-xl">Cancel</button>
-              <button type="submit" className="flex-1 py-2.5 bg-[#FF9800] text-xs font-bold text-white rounded-xl">Add Length</button>
+              <button type="button" onClick={closeModal} className="flex-1 py-2.5 bg-gray-100 text-xs font-bold text-gray-600 rounded-xl">Cancel</button>
+              <button type="submit" className="flex-1 py-2.5 bg-[#FF9800] text-xs font-bold text-white rounded-xl">
+                {editingId ? "Save Changes" : "Add Length"}
+              </button>
             </div>
           </form>
         </div>
       )}
 
-      {/* 3. Add Model Modal */}
+      {/* 3. Model Modal */}
       {activeModal === "model" && selectedBrand && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0D47A1]/50 backdrop-blur-sm">
-          <form onSubmit={handleAddModel} className="bg-white rounded-3xl p-6 max-w-md w-full space-y-4 shadow-2xl">
-            <h3 className="text-lg font-bold text-[#0D47A1]">Add Model to {selectedLength ? `${selectedLength.lengthInMeters}m` : selectedBrand.name}</h3>
+          <form onSubmit={handleSaveModel} className="bg-white rounded-3xl p-6 max-w-md w-full space-y-4 shadow-2xl">
+            <h3 className="text-lg font-bold text-[#0D47A1]">
+              {editingId ? "Edit Model" : `Add Model to ${selectedLength ? `${selectedLength.lengthInMeters}m` : selectedBrand.name}`}
+            </h3>
             <input
               type="text"
               placeholder="Model / Type Name (e.g. Flame Retardant FR, FRLSH)"
@@ -718,18 +817,22 @@ export default function MasterCatalogPage() {
               rows={2}
             />
             <div className="flex gap-3">
-              <button type="button" onClick={() => setActiveModal(null)} className="flex-1 py-2.5 bg-gray-100 text-xs font-bold text-gray-600 rounded-xl">Cancel</button>
-              <button type="submit" className="flex-1 py-2.5 bg-[#FF9800] text-xs font-bold text-white rounded-xl">Add Model</button>
+              <button type="button" onClick={closeModal} className="flex-1 py-2.5 bg-gray-100 text-xs font-bold text-gray-600 rounded-xl">Cancel</button>
+              <button type="submit" className="flex-1 py-2.5 bg-[#FF9800] text-xs font-bold text-white rounded-xl">
+                {editingId ? "Save Changes" : "Add Model"}
+              </button>
             </div>
           </form>
         </div>
       )}
 
-      {/* 4. Add Variation Modal (Thickness, Colors, Price) */}
+      {/* 4. Variation Modal (Thickness, Colors, Price) */}
       {activeModal === "variation" && selectedBrand && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0D47A1]/50 backdrop-blur-sm">
-          <form onSubmit={handleAddVariation} className="bg-white rounded-3xl p-6 max-w-md w-full space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
-            <h3 className="text-lg font-bold text-[#0D47A1]">Add Spec & Price ({selectedModel ? selectedModel.name : selectedBrand.name})</h3>
+          <form onSubmit={handleSaveVariation} className="bg-white rounded-3xl p-6 max-w-md w-full space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <h3 className="text-lg font-bold text-[#0D47A1]">
+              {editingId ? "Edit Spec & Price" : `Add Spec & Price (${selectedModel ? selectedModel.name : selectedBrand.name})`}
+            </h3>
             
             <div>
               <label className="text-[10px] font-black uppercase text-gray-500">Thickness / Gauge (optional)</label>
@@ -812,8 +915,10 @@ export default function MasterCatalogPage() {
             </div>
 
             <div className="flex gap-3 pt-2">
-              <button type="button" onClick={() => setActiveModal(null)} className="flex-1 py-2.5 bg-gray-100 text-xs font-bold text-gray-600 rounded-xl">Cancel</button>
-              <button type="submit" className="flex-1 py-2.5 bg-[#FF9800] text-xs font-bold text-white rounded-xl">Save Specification</button>
+              <button type="button" onClick={closeModal} className="flex-1 py-2.5 bg-gray-100 text-xs font-bold text-gray-600 rounded-xl">Cancel</button>
+              <button type="submit" className="flex-1 py-2.5 bg-[#FF9800] text-xs font-bold text-white rounded-xl">
+                {editingId ? "Save Changes" : "Save Specification"}
+              </button>
             </div>
           </form>
         </div>
