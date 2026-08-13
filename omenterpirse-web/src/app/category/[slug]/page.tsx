@@ -59,7 +59,7 @@ export default async function CategoryPage({ params }: PageProps) {
           </div>
 
           <p className="text-brand/70 max-w-md mx-auto text-sm md:text-base leading-relaxed mb-4">
-            For <span className="font-bold text-[#0D47A1]">{categoryName}</span> service please call/whatsapp:
+            For <span className="font-bold text-[#0D47A1]">Quotations and Enquiries</span> Please Call or WhatsApp:
           </p>
           <div className="flex flex-col space-y-2 mb-6">
             {[
