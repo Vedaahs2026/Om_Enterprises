@@ -13,6 +13,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/store/useCartStore";
+import { formatLength, formatLengthShort } from "@/lib/utils";
 
 function getColorStyles(colorName: string) {
   const name = (colorName || "").toLowerCase().trim();
@@ -236,8 +237,8 @@ export default function DedicatedMatrixOrderPage({ params }: PageProps) {
             id: cartItemId,
             productId: v.id,
             name: modelObj.name === "Default" 
-              ? `${brand.name} (${lengthObj.lengthInMeters}m)` 
-              : `${brand.name} ${modelObj.name} (${lengthObj.lengthInMeters}m)`,
+              ? `${brand.name} (${formatLengthShort(lengthObj.lengthInMeters)})` 
+              : `${brand.name} ${modelObj.name} (${formatLengthShort(lengthObj.lengthInMeters)})`,
             price: unitPrice,
             image: brand.imageUrl || "/images/temp_logo.png",
             quantity: qty,
@@ -291,7 +292,7 @@ export default function DedicatedMatrixOrderPage({ params }: PageProps) {
           <div>
             <h1 className="text-lg font-black text-[#0D47A1] tracking-tight">{brand.name}</h1>
             <span className="text-[10px] font-bold text-[#FF9800] uppercase tracking-wider block">
-              {modelObj.name === "Default" ? "" : `${modelObj.name} • `}{lengthObj.lengthInMeters} MTR
+              {modelObj.name === "Default" ? "" : `${modelObj.name} • `}{formatLength(lengthObj.lengthInMeters)}
             </span>
           </div>
         </div>
@@ -302,7 +303,7 @@ export default function DedicatedMatrixOrderPage({ params }: PageProps) {
         {/* Header Title */}
         <div className="bg-gray-100/80 px-6 py-3.5 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <h2 className="text-xs sm:text-sm font-black text-[#0D47A1] uppercase tracking-wide">
-            Grid For <span className="text-[#FF9800]">{modelObj.name === "Default" ? `${brand.name}` : modelObj.name}</span> - {lengthObj.lengthInMeters} MTR
+            Grid For <span className="text-[#FF9800]">{modelObj.name === "Default" ? `${brand.name}` : modelObj.name}</span> - {formatLength(lengthObj.lengthInMeters)}
           </h2>
           <span className="text-[10px] font-bold text-gray-400 uppercase">Enter Quantities per Color</span>
         </div>

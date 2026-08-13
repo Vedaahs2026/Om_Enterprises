@@ -4,6 +4,7 @@ import React, { useState, useEffect, use } from "react";
 import { ArrowLeft, Package, ChevronRight, AlertCircle, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { formatLength } from "@/lib/utils";
 
 type BrandModel = {
   id: number;
@@ -127,7 +128,7 @@ export default function SelectModelPage({ params }: PageProps) {
           <div className="text-right sm:text-left">
             <h1 className="text-lg font-black text-[#0D47A1] tracking-tight">{brand.name}</h1>
             <span className="text-[10px] font-bold text-[#FF9800] uppercase tracking-wider">
-              {lengthObj.lengthInMeters} MTR COILS
+              {formatLength(lengthObj.lengthInMeters)} COILS
             </span>
           </div>
         </div>
@@ -138,13 +139,13 @@ export default function SelectModelPage({ params }: PageProps) {
         <div className="text-center py-2">
           <h2 className="text-2xl font-playfair font-bold text-[#0D47A1]">Select Material / Model</h2>
           <p className="text-xs text-gray-500 mt-1">
-            Showing available types for <span className="font-bold text-[#0D47A1]">{brand.name}</span> ({lengthObj.lengthInMeters} MTR)
+            Showing available types for <span className="font-bold text-[#0D47A1]">{brand.name}</span> ({formatLength(lengthObj.lengthInMeters)})
           </p>
         </div>
 
         {models.length === 0 ? (
           <div className="bg-white p-8 text-center rounded-2xl border border-gray-200 text-gray-400 text-xs">
-            No models/materials configured for {lengthObj.lengthInMeters}m yet.
+            No models/materials configured for {formatLength(lengthObj.lengthInMeters)} yet.
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -163,7 +164,7 @@ export default function SelectModelPage({ params }: PageProps) {
                       {model.name}
                     </h3>
                     <p className="text-[10px] font-semibold text-gray-400 truncate">
-                      {model.description || `${lengthObj.lengthInMeters} MTR Specification`}
+                      {model.description || `${formatLength(lengthObj.lengthInMeters)} Specification`}
                     </p>
                   </div>
                 </div>

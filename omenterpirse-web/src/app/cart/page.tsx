@@ -6,6 +6,7 @@ import { useCartStore } from "@/store/useCartStore";
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, Loader2, CreditCard, ShieldCheck, CheckCircle2, Scissors, Sparkles, MapPin, AlertTriangle, Truck, Star, Pencil, ClipboardList, QrCode, Building, Lock, X, Wallet, MessageCircle, Award, XCircle, PhoneCall, Box } from "lucide-react";
 import { useRouter } from "next/navigation";
 import PincodeEstimatorModal from "@/components/PincodeEstimatorModal";
+import { formatLength } from "@/lib/utils";
 
 const PACKAGE_DIMENSIONS: Record<number, { L: number; B: number; H: number }> = {
   0.5 : { L: 10, B: 10, H: 10 },
@@ -477,7 +478,7 @@ export default function CartPage() {
         const specs = [
           item.size ? `Size: ${item.size}` : null,
           item.color ? `Color: ${item.color}` : null,
-          item.customizations?.lengthInMeters ? `Length: ${item.customizations.lengthInMeters} MTR` : null
+          item.customizations?.lengthInMeters ? `Length: ${formatLength(item.customizations.lengthInMeters)}` : null
         ].filter(Boolean).join(" | ");
 
         return `${idx + 1}. *${item.name}*\n   • ${specs}\n   • Qty: ${item.quantity} Coils @ ₹${item.price.toLocaleString()} = ₹${(item.quantity * item.price).toLocaleString()}`;

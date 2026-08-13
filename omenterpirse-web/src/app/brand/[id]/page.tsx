@@ -15,6 +15,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/store/useCartStore";
+import { formatLength, formatLengthShort } from "@/lib/utils";
 
 function getColorStyles(colorName: string) {
   const name = (colorName || "").toLowerCase().trim();
@@ -187,7 +188,7 @@ export default function UnifiedBrandDetailPage({ params }: PageProps) {
   if (selectedModel) {
     activeVariations = selectedModel.variations || [];
     matrixTitle = selectedModel.name === "Default"
-      ? `${brand.name} ${selectedLength ? `(${selectedLength.lengthInMeters}m)` : ""}`
+      ? `${brand.name} ${selectedLength ? `(${formatLengthShort(selectedLength.lengthInMeters)})` : ""}`
       : selectedModel.name;
   } else if (selectedLength && !selectedModel) {
     // Should not render matrix if model is not selected yet
@@ -275,7 +276,7 @@ export default function UnifiedBrandDetailPage({ params }: PageProps) {
             `_v${v.id}_${color}`;
 
           const cartItemName = `${brand.name}` +
-            (selectedLength ? ` (${selectedLength.lengthInMeters}m)` : "") +
+            (selectedLength ? ` (${formatLengthShort(selectedLength.lengthInMeters)})` : "") +
             (selectedModel && selectedModel.name !== "Default" ? ` ${selectedModel.name}` : "") +
             (v.thickness ? ` - ${v.thickness}` : "");
 
@@ -347,7 +348,7 @@ export default function UnifiedBrandDetailPage({ params }: PageProps) {
               {selectedLength && (
                 <>
                   <ChevronRight size={10} className="stroke-[3]" />
-                  <span className="text-[#FF9800]">{selectedLength.lengthInMeters} MTR</span>
+                  <span className="text-[#FF9800]">{formatLength(selectedLength.lengthInMeters)}</span>
                 </>
               )}
               {selectedModel && selectedModel.name !== "Default" && (
@@ -388,7 +389,7 @@ export default function UnifiedBrandDetailPage({ params }: PageProps) {
                   </div>
                   <div>
                     <h3 className="text-xl font-black text-[#0D47A1] group-hover:text-[#FF9800] transition-colors">
-                      {length.lengthInMeters} MTR
+                      {formatLength(length.lengthInMeters)}
                     </h3>
                     <p className="text-[10px] font-semibold text-gray-400">Available Length</p>
                   </div>
@@ -419,7 +420,7 @@ export default function UnifiedBrandDetailPage({ params }: PageProps) {
             <h2 className="text-2xl font-playfair font-bold text-[#0D47A1]">Select Material / Model</h2>
             <p className="text-xs text-gray-500 mt-1">
               Showing available types for <span className="font-bold text-[#0D47A1]">{brand.name}</span>
-              {selectedLength && ` (${selectedLength.lengthInMeters} MTR)`}
+              {selectedLength && ` (${formatLength(selectedLength.lengthInMeters)})`}
             </p>
           </div>
 
@@ -463,7 +464,7 @@ export default function UnifiedBrandDetailPage({ params }: PageProps) {
 
   // LAYOUT 3: DIRECT VARIATIONS GRID OR MODEL MATRIX GRID
   const matrixSubtext = selectedLength 
-    ? `${brand.name} • ${selectedLength.lengthInMeters} MTR` 
+    ? `${brand.name} • ${formatLength(selectedLength.lengthInMeters)}` 
     : brand.name;
 
   return (
