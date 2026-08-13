@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
-import { brands, brandLengths, brandModels, brandVariations } from "@/db/schema";
+import { brands, brandLengths, brandModels, brandVariations, categories } from "@/db/schema";
 import { eq, and, asc } from "drizzle-orm";
 
 export async function GET(
@@ -22,6 +22,17 @@ export async function GET(
 
     if (!brand) {
       return NextResponse.json({ error: "Brand not found" }, { status: 404 });
+    }
+
+    let categorySlug = "general";
+    const [categoryObj] = await db
+      .select()
+      .from(categories)
+      .where(eq(categories.name, brand.category))
+      .limit(1);
+
+    if (categoryObj) {
+      categorySlug = categoryObj.slug;
     }
 
     const lengths = await db
@@ -62,6 +73,7 @@ export async function GET(
     return NextResponse.json({
       success: true,
       brand,
+      categorySlug,
       lengths: nestedLengths,
       directModels,
       directVariations,

@@ -114,7 +114,7 @@ export default function SelectModelPage({ params }: PageProps) {
       {/* Top Header */}
       <div className="flex items-center justify-between bg-white px-6 py-4 rounded-2xl shadow-xs border border-gray-200/60">
         <button
-          onClick={() => router.back()}
+          onClick={() => router.push(`/brand/${brand.id}`)}
           className="flex items-center gap-2 text-xs font-bold text-gray-600 hover:text-[#0D47A1] transition-colors"
         >
           <ArrowLeft size={16} />

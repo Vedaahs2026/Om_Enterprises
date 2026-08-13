@@ -82,6 +82,7 @@ export default function UnifiedBrandDetailPage({ params }: PageProps) {
   const [directVariations, setDirectVariations] = useState<Variation[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [categorySlug, setCategorySlug] = useState("general");
 
   // Navigation state inside page
   const [selectedLength, setSelectedLength] = useState<BrandLength | null>(null);
@@ -110,6 +111,7 @@ export default function UnifiedBrandDetailPage({ params }: PageProps) {
         if (!res.ok) throw new Error("Brand not found");
         const data = await res.json();
         setBrand(data.brand);
+        setCategorySlug(data.categorySlug || "general");
         setLengths(data.lengths || []);
         setDirectModels(data.directModels || []);
         setDirectVariations(data.directVariations || []);
@@ -313,15 +315,24 @@ export default function UnifiedBrandDetailPage({ params }: PageProps) {
   // Back navigation handlers
   const handleGoBack = () => {
     if (selectedModel) {
-      setSelectedModel(null);
-    } else if (selectedLength) {
-      setSelectedLength(null);
-    } else {
-      if (typeof window !== "undefined" && window.history.length > 1) {
-        router.back();
+      if (selectedModel.name === "Default") {
+        setSelectedModel(null);
+        if (hasLengths) {
+          setSelectedLength(null);
+        } else {
+          router.push(`/category/${categorySlug}`);
+        }
       } else {
-        router.push("/");
+        setSelectedModel(null);
       }
+    } else if (selectedLength) {
+      if (hasLengths) {
+        setSelectedLength(null);
+      } else {
+        router.push(`/category/${categorySlug}`);
+      }
+    } else {
+      router.push(`/category/${categorySlug}`);
     }
   };
 

@@ -269,7 +269,7 @@ export default function DedicatedMatrixOrderPage({ params }: PageProps) {
     if (modelObj.name === "Default") {
       router.push(`/brand/${brand.id}`);
     } else {
-      router.back();
+      router.push(`/brand/${brand.id}/length/${lengthObj.id}`);
     }
   };
 
