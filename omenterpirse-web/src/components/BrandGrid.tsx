@@ -67,7 +67,7 @@ export default function BrandGrid({ brands, categoryTitle }: BrandGridProps) {
               href={`/brand/${brand.id}`}
               className="block group h-full cursor-pointer"
             >
-              <div className="relative h-48 bg-white rounded-2xl border border-gray-100 p-4 flex flex-col items-center justify-between shadow-md hover:shadow-xl hover:border-[#FF9800]/30 transition-all duration-300 overflow-hidden">
+              <div className="relative h-56 bg-white rounded-2xl border border-gray-100 p-4 flex flex-col items-center justify-between shadow-md hover:shadow-xl hover:border-[#FF9800]/30 transition-all duration-300 overflow-hidden">
                 {/* Top Badge */}
                 <div className="w-full flex items-center justify-between text-[9px] font-black uppercase tracking-wider text-[#0D47A1]/40 border-b border-gray-100 pb-2">
                   <span className="flex items-center gap-1">
@@ -85,7 +85,7 @@ export default function BrandGrid({ brands, categoryTitle }: BrandGridProps) {
                     <img
                       src={brand.imageUrl}
                       alt={brand.name}
-                      className="max-h-20 max-w-[80%] object-contain drop-shadow-sm"
+                      className="max-h-28 max-w-[90%] object-contain drop-shadow-sm"
                     />
                   ) : (
                     <div className="w-14 h-14 rounded-xl bg-[#0D47A1]/5 flex items-center justify-center text-[#0D47A1]">
