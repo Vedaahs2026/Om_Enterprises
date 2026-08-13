@@ -15,7 +15,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/store/useCartStore";
-import { formatLength, formatLengthShort } from "@/lib/utils";
+import { formatLength } from "@/lib/utils";
 
 function getColorStyles(colorName: string) {
   const name = (colorName || "").toLowerCase().trim();
@@ -188,7 +188,7 @@ export default function UnifiedBrandDetailPage({ params }: PageProps) {
   if (selectedModel) {
     activeVariations = selectedModel.variations || [];
     matrixTitle = selectedModel.name === "Default"
-      ? `${brand.name} ${selectedLength ? `(${formatLengthShort(selectedLength.lengthInMeters)})` : ""}`
+      ? `${brand.name} ${selectedLength ? `(${formatLength(selectedLength.lengthInMeters)})` : ""}`
       : selectedModel.name;
   } else if (selectedLength && !selectedModel) {
     // Should not render matrix if model is not selected yet
@@ -276,7 +276,7 @@ export default function UnifiedBrandDetailPage({ params }: PageProps) {
             `_v${v.id}_${color}`;
 
           const cartItemName = `${brand.name}` +
-            (selectedLength ? ` (${formatLengthShort(selectedLength.lengthInMeters)})` : "") +
+            (selectedLength ? ` (${formatLength(selectedLength.lengthInMeters)})` : "") +
             (selectedModel && selectedModel.name !== "Default" ? ` ${selectedModel.name}` : "") +
             (v.thickness ? ` - ${v.thickness}` : "");
 

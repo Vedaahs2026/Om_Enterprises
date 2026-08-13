@@ -13,7 +13,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/store/useCartStore";
-import { formatLength, formatLengthShort } from "@/lib/utils";
+import { formatLength } from "@/lib/utils";
 
 function getColorStyles(colorName: string) {
   const name = (colorName || "").toLowerCase().trim();
@@ -237,8 +237,8 @@ export default function DedicatedMatrixOrderPage({ params }: PageProps) {
             id: cartItemId,
             productId: v.id,
             name: modelObj.name === "Default" 
-              ? `${brand.name} (${formatLengthShort(lengthObj.lengthInMeters)})` 
-              : `${brand.name} ${modelObj.name} (${formatLengthShort(lengthObj.lengthInMeters)})`,
+              ? `${brand.name} (${formatLength(lengthObj.lengthInMeters)})` 
+              : `${brand.name} ${modelObj.name} (${formatLength(lengthObj.lengthInMeters)})`,
             price: unitPrice,
             image: brand.imageUrl || "/images/temp_logo.png",
             quantity: qty,
