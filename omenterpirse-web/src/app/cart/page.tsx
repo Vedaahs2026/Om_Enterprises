@@ -491,7 +491,7 @@ ${itemsListText}
 
 💰 *SUBTOTAL:* ₹${subtotal.toLocaleString()}
 📈 *GST (18%):* ₹${gst.toLocaleString()}
-🚚 *PORTAL CHARGES:* ₹${shipping.toLocaleString()}
+🚚 *DELIVERY CHARGES:* As per Porter
 ⭐ *TOTAL AMOUNT:* ₹${total.toLocaleString()}
 
 📍 *DELIVERY ADDRESS:*
