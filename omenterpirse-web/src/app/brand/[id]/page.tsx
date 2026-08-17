@@ -15,7 +15,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/store/useCartStore";
-import { formatLength } from "@/lib/utils";
+import { formatLength, formatPrice } from "@/lib/utils";
 
 function getColorStyles(colorName: string) {
   const name = (colorName || "").toLowerCase().trim();
@@ -536,7 +536,7 @@ export default function UnifiedBrandDetailPage({ params }: PageProps) {
 
                       {/* Price Column */}
                       <td className="py-3 px-3 text-center text-gray-700 border-r border-gray-200">
-                        ₹{unitPrice.toLocaleString()}
+                        ₹{formatPrice(unitPrice)}
                       </td>
 
                       {/* Color Input Cells */}
@@ -577,7 +577,7 @@ export default function UnifiedBrandDetailPage({ params }: PageProps) {
 
                       {/* Row Amount Column */}
                       <td className="py-3 px-4 text-right text-[#0D47A1] font-black">
-                        ₹{rowAmount.toLocaleString()}
+                        ₹{formatPrice(rowAmount)}
                       </td>
                     </tr>
                   );
@@ -593,7 +593,7 @@ export default function UnifiedBrandDetailPage({ params }: PageProps) {
           <div className="flex items-center gap-4">
             <div>
               <span className="text-[10px] font-black uppercase text-gray-500 tracking-wider block">Grand Total Amount</span>
-              <span className="text-2xl font-black text-[#0D47A1] tracking-tight">₹{grandTotalAmount.toLocaleString()}</span>
+              <span className="text-2xl font-black text-[#0D47A1] tracking-tight">₹{formatPrice(grandTotalAmount)}</span>
             </div>
             {grandTotalItems > 0 && (
               <span className="bg-[#FF9800]/15 text-[#FF9800] border border-[#FF9800]/30 px-3 py-1 rounded-full text-xs font-bold">

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { formatPrice } from '@/lib/utils';
 
 interface Product {
   id: string;
@@ -54,10 +55,10 @@ export default function ProductCard({ product }: { product: Product }) {
           <span className="text-[10px] font-black text-gray-400 tracking-wider mb-0.5">Starting From</span>
           <div className="flex flex-wrap items-baseline justify-start gap-x-2 gap-y-0.5">
             <span className="text-brand font-bold text-xl whitespace-nowrap">
-              ₹ {(product.price || 0).toLocaleString()}
+              ₹ {formatPrice(product.price)}
             </span>
             <span className="text-gray-400 text-xs font-medium line-through whitespace-nowrap">
-              MRP ₹ {mrp.toLocaleString()}
+              MRP ₹ {formatPrice(mrp)}
             </span>
           </div>
         </div>

@@ -6,7 +6,7 @@ import { useCartStore } from "@/store/useCartStore";
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, Loader2, CreditCard, ShieldCheck, CheckCircle2, Scissors, Sparkles, MapPin, AlertTriangle, Truck, Star, Pencil, ClipboardList, QrCode, Building, Lock, X, Wallet, MessageCircle, Award, XCircle, PhoneCall, Box } from "lucide-react";
 import { useRouter } from "next/navigation";
 import PincodeEstimatorModal from "@/components/PincodeEstimatorModal";
-import { formatLength } from "@/lib/utils";
+import { formatLength, formatPrice } from "@/lib/utils";
 
 const PACKAGE_DIMENSIONS: Record<number, { L: number; B: number; H: number }> = {
   0.5 : { L: 10, B: 10, H: 10 },
@@ -481,7 +481,7 @@ export default function CartPage() {
           item.customizations?.lengthInMeters ? `Length: ${formatLength(item.customizations.lengthInMeters)}` : null
         ].filter(Boolean).join(" | ");
 
-        return `${idx + 1}. *${item.name}*\n   • ${specs}\n   • Qty: ${item.quantity} Coils @ ₹${item.price.toLocaleString()} = ₹${(item.quantity * item.price).toLocaleString()}`;
+        return `${idx + 1}. *${item.name}*\n   • ${specs}\n   • Qty: ${item.quantity} Coils @ ₹${formatPrice(item.price)} = ₹${formatPrice(item.quantity * item.price)}`;
       }).join("\n\n");
 
       const waText = `🛒 *NEW ORDER ON OM ENTERPRISES*
@@ -490,10 +490,10 @@ export default function CartPage() {
 📦 *ITEMS ORDERED:*
 ${itemsListText}
 
-💰 *SUBTOTAL:* ₹${subtotal.toLocaleString()}
-📈 *GST (18%):* ₹${gst.toLocaleString()}
+💰 *SUBTOTAL:* ₹${formatPrice(subtotal)}
+📈 *GST (18%):* ₹${formatPrice(gst)}
 🚚 *DELIVERY CHARGES:* As per Porter
-⭐ *TOTAL AMOUNT:* ₹${total.toLocaleString()}
+⭐ *TOTAL AMOUNT:* ₹${formatPrice(total)}
 
 📍 *DELIVERY ADDRESS:*
 ${shippingAddressStr}
@@ -580,7 +580,7 @@ Please confirm my order. Thank you!`;
                     </div>
                   </div>
                   <div className="mt-2 sm:mt-0 text-lg font-bold text-brand">
-                    ₹{item.price.toLocaleString()}
+                    ₹{formatPrice(item.price)}
                   </div>
                 </div>
 
@@ -630,11 +630,11 @@ Please confirm my order. Thank you!`;
             <div className="space-y-4 mb-8">
               <div className="flex justify-between items-center text-brand/60">
                 <span className="text-xs font-bold tracking-widest uppercase">Est. Subtotal</span>
-                <span className="text-sm font-bold tracking-widest text-brand">₹{subtotal.toLocaleString()}</span>
+                <span className="text-sm font-bold tracking-widest text-brand">₹{formatPrice(subtotal)}</span>
               </div>
               <div className="flex justify-between items-center text-brand/60">
                 <span className="text-xs font-bold tracking-widest uppercase">GST (18%)</span>
-                <span className="text-sm font-bold tracking-widest text-brand">₹{gst.toLocaleString()}</span>
+                <span className="text-sm font-bold tracking-widest text-brand">₹{formatPrice(gst)}</span>
               </div>
               <div className="flex justify-between items-center text-brand/60 pb-4 border-b border-gray-100">
                 <span className="text-xs font-bold tracking-widest uppercase">Est. Shipping</span>
@@ -642,7 +642,7 @@ Please confirm my order. Thank you!`;
               </div>
               <div className="flex justify-between items-center pt-2">
                 <span className="text-sm font-black tracking-widest uppercase text-brand">Total Estimate</span>
-                <span className="text-xl font-black text-brand tracking-widest">₹{total.toLocaleString()}</span>
+                <span className="text-xl font-black text-brand tracking-widest">₹{formatPrice(total)}</span>
               </div>
             </div>
 
@@ -946,11 +946,11 @@ Please confirm my order. Thank you!`;
                     <div className="bg-brand-light border border-brand/30 rounded-2xl p-4 space-y-2.5 mt-4 animate-in fade-in slide-in-from-top-2 duration-200">
                       <div className="flex justify-between items-center text-xs font-bold text-brand/60">
                         <span>Est. Subtotal</span>
-                        <span>₹{subtotal.toLocaleString()}</span>
+                        <span>₹{formatPrice(subtotal)}</span>
                       </div>
                       <div className="flex justify-between items-center text-xs font-bold text-brand/60">
                         <span>GST (18%)</span>
-                        <span>₹{gst.toLocaleString()}</span>
+                        <span>₹{formatPrice(gst)}</span>
                       </div>
                       <div className="flex justify-between items-center text-xs font-bold text-brand/60">
                         <span>Est. Shipping</span>
@@ -958,7 +958,7 @@ Please confirm my order. Thank you!`;
                       </div>
                       <div className="border-t border-brand/10 pt-2 flex justify-between items-center text-sm font-black text-brand">
                         <span>Total Estimate</span>
-                        <span className="text-brand">₹{total.toLocaleString()}</span>
+                        <span className="text-brand">₹{formatPrice(total)}</span>
                       </div>
                     </div>
                   )}
@@ -1006,7 +1006,7 @@ Please confirm my order. Thank you!`;
                     {/* Price Summary */}
                     <div className="bg-white/10 rounded-2xl p-4">
                       <p className="text-[10px] text-white/60 font-black uppercase tracking-widest mb-1">Price Summary</p>
-                      <h3 className="text-3xl font-black tracking-widest">₹{total.toLocaleString()}</h3>
+                      <h3 className="text-3xl font-black tracking-widest">₹{formatPrice(total)}</h3>
                     </div>
 
                     {/* Contact Number */}
@@ -1269,11 +1269,11 @@ Please confirm my order. Thank you!`;
                       <div className="w-full max-w-sm bg-gray-50 border border-gray-150 rounded-2xl p-4 space-y-2.5">
                         <div className="flex justify-between items-center text-xs font-bold text-gray-500">
                           <span>Subtotal</span>
-                          <span>₹{subtotal.toLocaleString()}</span>
+                          <span>₹{formatPrice(subtotal)}</span>
                         </div>
                         <div className="flex justify-between items-center text-xs font-bold text-gray-500">
                           <span>GST (18%)</span>
-                          <span>₹{gst.toLocaleString()}</span>
+                          <span>₹{formatPrice(gst)}</span>
                         </div>
                         <div className="flex justify-between items-center text-xs font-bold text-gray-500">
                           <span>Shipping</span>
@@ -1281,7 +1281,7 @@ Please confirm my order. Thank you!`;
                         </div>
                         <div className="border-t border-gray-200 pt-2 flex justify-between items-center text-sm font-black text-brand">
                           <span>Total Amount</span>
-                          <span>₹{total.toLocaleString()}</span>
+                          <span>₹{formatPrice(total)}</span>
                         </div>
                       </div>
 
@@ -1298,7 +1298,7 @@ Please confirm my order. Thank you!`;
                           onClick={handleRazorpayPayment}
                           className="flex-[2] py-4 bg-brand text-white hover:bg-brand-hover rounded-xl text-xs font-black uppercase tracking-wider shadow-lg hover:shadow-xl active:scale-[0.98] transition-all"
                         >
-                          Pay ₹{total.toLocaleString()}
+                          Pay ₹{formatPrice(total)}
                         </button>
                       </div>
                     </div>

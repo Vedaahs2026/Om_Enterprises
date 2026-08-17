@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Search, X, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { formatPrice } from "@/lib/utils";
 
 type Product = {
   id: number;
@@ -130,11 +131,11 @@ export default function SearchModal({ isOpen, onClose }: { isOpen: boolean; onCl
                       <div className="mt-auto">
                         {product.salePrice ? (
                           <div className="flex items-center gap-2">
-                            <span className="text-[#FF9800] font-bold text-sm md:text-base">₹{product.salePrice}</span>
-                            <span className="text-brand-dark/40 text-xs line-through">₹{product.basePrice}</span>
+                            <span className="text-[#FF9800] font-bold text-sm md:text-base">₹{formatPrice(product.salePrice)}</span>
+                            <span className="text-brand-dark/40 text-xs line-through">₹{formatPrice(product.basePrice)}</span>
                           </div>
                         ) : (
-                          <span className="text-[#FF9800] font-bold text-sm md:text-base">₹{product.basePrice}</span>
+                          <span className="text-[#FF9800] font-bold text-sm md:text-base">₹{formatPrice(product.basePrice)}</span>
                         )}
                       </div>
                     </div>

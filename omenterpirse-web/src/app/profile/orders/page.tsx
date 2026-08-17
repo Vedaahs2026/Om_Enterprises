@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { ShoppingBag, Loader2, Package, CheckCircle2, Clock, Ruler, XCircle, AlertTriangle, Image as ImageIcon, MapPin, Check, X, Truck, Plane, Bike, CheckSquare, Cog, ExternalLink } from "lucide-react";
 import Link from "next/link";
+import { formatPrice } from "@/lib/utils";
 
 function getColorStyles(colorName: string) {
   const name = (colorName || "").toLowerCase().trim();
@@ -216,7 +217,7 @@ export default function MyOrdersPage() {
                   </div>
                   <div className="flex flex-col text-left md:text-right min-w-[80px]">
                     <p className="text-[10px] font-bold text-white/50 uppercase tracking-widest mb-1.5">Total</p>
-                    <span className="text-xl font-black tracking-widest">₹{order.totalAmount.toLocaleString()}</span>
+                     <span className="text-xl font-black tracking-widest">₹{formatPrice(order.totalAmount)}</span>
                   </div>
                 </div>
               </div>
@@ -385,7 +386,7 @@ export default function MyOrdersPage() {
                                 </div>
                               </div>
                             </div>
-                            <span className="text-sm font-black text-brand tracking-widest shrink-0 ml-4">₹{(item.price * item.quantity).toLocaleString()}</span>
+                             <span className="text-sm font-black text-brand tracking-widest shrink-0 ml-4">₹{formatPrice(item.price * item.quantity)}</span>
                           </div>
                         );
                       })}
